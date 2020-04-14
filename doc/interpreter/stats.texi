@@ -1,0 +1,1515 @@
+@c DO NOT EDIT!  Generated automatically by munge-texi.pl.
+
+@c Copyright (C) 1996-2018 John W. Eaton
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@node Statistics
+@chapter Statistics
+
+Octave has support for various statistical methods.  The emphasis is on basic
+descriptive statistics, but the Octave Forge statistics package includes
+probability distributions, statistical tests, random number generation, and
+much more.
+
+The functions that analyze data all assume that multi-dimensional data is
+arranged in a matrix where each row is an observation, and each column is a
+variable.  Thus, the matrix defined by
+
+@example
+@group
+a = [ 0.9, 0.7;
+      0.1, 0.1;
+      0.5, 0.4 ];
+@end group
+@end example
+
+@noindent
+contains three observations from a two-dimensional distribution.  While this is
+the default data arrangement, most functions support different arrangements.
+
+It should be noted that the statistics functions don't test for data containing
+NaN, NA, or Inf.  These values need to be detected and dealt with explicitly.
+See @ref{XREFisnan,,isnan}, @ref{XREFisna,,isna}, @ref{XREFisinf,,isinf},
+@ref{XREFisfinite,,isfinite}.
+
+@menu
+* Descriptive Statistics::
+* Basic Statistical Functions::
+* Correlation and Regression Analysis::
+* Distributions::
+* Random Number Generation::
+@end menu
+
+@node Descriptive Statistics
+@section Descriptive Statistics
+
+One principal goal of descriptive statistics is to represent the essence of a
+large data set concisely.  Octave provides the mean, median, and mode functions
+which all summarize a data set with just a single number corresponding to
+the central tendency of the data.
+
+@c mean scripts/statistics/mean.m
+@anchor{XREFmean}
+@deftypefn  {} {} mean (@var{x})
+@deftypefnx {} {} mean (@var{x}, @var{dim})
+@deftypefnx {} {} mean (@var{x}, @var{opt})
+@deftypefnx {} {} mean (@var{x}, @var{dim}, @var{opt})
+@deftypefnx {} {} mean (@dots{}, @var{outtype})
+Compute the mean of the elements of the vector @var{x}.
+
+The mean is defined as
+
+@tex
+$$ {\rm mean}(x) = \bar{x} = {1\over N} \sum_{i=1}^N x_i $$
+where $N$ is the number of elements of @var{x}.
+
+@end tex
+@ifnottex
+
+@example
+mean (@var{x}) = SUM_i @var{x}(i) / N
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} vector.
+
+@end ifnottex
+If @var{x} is a matrix, compute the mean for each column and return them
+in a row vector.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+The optional argument @var{opt} selects the type of mean to compute.
+The following options are recognized:
+
+@table @asis
+@item @qcode{"a"}
+Compute the (ordinary) arithmetic mean.  [default]
+
+@item @qcode{"g"}
+Compute the geometric mean.
+
+@item @qcode{"h"}
+Compute the harmonic mean.
+@end table
+
+The optional argument @var{outtype} selects the data type of the
+output value.  The following options are recognized:
+
+@table @asis
+@item @qcode{"default"}
+Output will be of class double unless @var{x} is of class single,
+in which case the output will also be single.
+
+@item @qcode{"double"}
+Output will be of class double.
+
+@item @qcode{"native"}
+Output will be the same class as @var{x} unless @var{x} is of class
+logical in which case it returns of class double.
+
+@end table
+
+Both @var{dim} and @var{opt} are optional.  If both are supplied, either
+may appear first.
+@seealso{@ref{XREFmedian,,median}, @ref{XREFmode,,mode}}
+@end deftypefn
+
+
+@c median scripts/statistics/median.m
+@anchor{XREFmedian}
+@deftypefn  {} {} median (@var{x})
+@deftypefnx {} {} median (@var{x}, @var{dim})
+Compute the median value of the elements of the vector @var{x}.
+
+When the elements of @var{x} are sorted, say
+@code{@var{s} = sort (@var{x})}, the median is defined as
+@tex
+$$
+{\rm median} (x) =
+  \cases{s(\lceil N/2\rceil), & $N$ odd;\cr
+          (s(N/2)+s(N/2+1))/2, & $N$ even.}
+$$
+where $N$ is the number of elements of @var{x}.
+
+@end tex
+@ifnottex
+
+@example
+@group
+             |  @var{s}(ceil(N/2))           N odd
+median (@var{x}) = |
+             | (@var{s}(N/2) + @var{s}(N/2+1))/2   N even
+@end group
+@end example
+
+@end ifnottex
+If @var{x} is of a discrete type such as integer or logical, then
+the case of even @math{N} rounds up (or toward @code{true}).
+
+If @var{x} is a matrix, compute the median value for each column and
+return them in a row vector.
+
+If the optional @var{dim} argument is given, operate along this dimension.
+@seealso{@ref{XREFmean,,mean}, @ref{XREFmode,,mode}}
+@end deftypefn
+
+
+@c mode scripts/statistics/mode.m
+@anchor{XREFmode}
+@deftypefn  {} {} mode (@var{x})
+@deftypefnx {} {} mode (@var{x}, @var{dim})
+@deftypefnx {} {[@var{m}, @var{f}, @var{c}] =} mode (@dots{})
+Compute the most frequently occurring value in a dataset (mode).
+
+@code{mode} determines the frequency of values along the first non-singleton
+dimension and returns the value with the highest frequency.  If two, or
+more, values have the same frequency @code{mode} returns the smallest.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+The return variable @var{f} is the number of occurrences of the mode in
+the dataset.
+
+The cell array @var{c} contains all of the elements with the maximum
+frequency.
+@seealso{@ref{XREFmean,,mean}, @ref{XREFmedian,,median}}
+@end deftypefn
+
+
+Using just one number, such as the mean, to represent an entire data set may
+not give an accurate picture of the data.  One way to characterize the fit is
+to measure the dispersion of the data.  Octave provides several functions for
+measuring dispersion.
+
+@c bounds scripts/statistics/bounds.m
+@anchor{XREFbounds}
+@deftypefn  {} {[@var{s}, @var{l}] =} bounds (@var{x})
+@deftypefnx {} {[@var{s}, @var{l}] =} bounds (@var{x}, @var{dim})
+@deftypefnx {} {[@var{s}, @var{l}] =} bounds (@dots{}, "nanflag")
+Return the smallest and largest values of the input data @var{x}.
+
+If @var{x} is a vector, the bounds are calculated over the elements of
+@var{x}.  If @var{x} is a matrix, the bounds are calculated for each column.
+For a multi-dimensional array, the bounds are calculated over the first
+non-singleton dimension.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+The optional argument @qcode{"nanflag"} defaults to @qcode{"omitnan"} which
+does not include NaN values in the result.  If the argument
+@qcode{"includenan"} is given, and there is a NaN present, then the result
+for both smallest (@var{s}) and largest (@var{l}) elements will be NaN.
+
+The bounds are a quickly computed measure of the dispersion of a data set,
+but are less accurate than @code{iqr} if there are outlying data points.
+@seealso{@ref{XREFrange,,range}, @ref{XREFiqr,,iqr}, @ref{XREFmad,,mad}, @ref{XREFstd,,std}}
+@end deftypefn
+
+
+@c range scripts/statistics/range.m
+@anchor{XREFrange}
+@deftypefn  {} {} range (@var{x})
+@deftypefnx {} {} range (@var{x}, @var{dim})
+Return the range, i.e., the difference between the maximum and the minimum
+of the input data.
+
+If @var{x} is a vector, the range is calculated over the elements of
+@var{x}.  If @var{x} is a matrix, the range is calculated over each column
+of @var{x}.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+The range is a quickly computed measure of the dispersion of a data set, but
+is less accurate than @code{iqr} if there are outlying data points.
+@seealso{@ref{XREFbounds,,bounds}, @ref{XREFiqr,,iqr}, @ref{XREFmad,,mad}, @ref{XREFstd,,std}}
+@end deftypefn
+
+
+@c iqr scripts/statistics/iqr.m
+@anchor{XREFiqr}
+@deftypefn  {} {} iqr (@var{x})
+@deftypefnx {} {} iqr (@var{x}, @var{dim})
+Return the interquartile range, i.e., the difference between the upper
+and lower quartile of the input data.
+
+If @var{x} is a matrix, do the above for first non-singleton dimension of
+@var{x}.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+As a measure of dispersion, the interquartile range is less affected by
+outliers than either @code{range} or @code{std}.
+@seealso{@ref{XREFbounds,,bounds}, @ref{XREFmad,,mad}, @ref{XREFrange,,range}, @ref{XREFstd,,std}}
+@end deftypefn
+
+
+@c mad scripts/statistics/mad.m
+@anchor{XREFmad}
+@deftypefn  {} {} mad (@var{x})
+@deftypefnx {} {} mad (@var{x}, @var{opt})
+@deftypefnx {} {} mad (@var{x}, @var{opt}, @var{dim})
+Compute the mean or median absolute deviation of the elements of @var{x}.
+
+The mean absolute deviation is defined as
+
+@example
+@var{mad} = mean (abs (@var{x} - mean (@var{x})))
+@end example
+
+The median absolute deviation is defined as
+
+@example
+@var{mad} = median (abs (@var{x} - median (@var{x})))
+@end example
+
+If @var{x} is a matrix, compute @code{mad} for each column and return
+results in a row vector.  For a multi-dimensional array, the calculation is
+done over the first non-singleton dimension.
+
+The optional argument @var{opt} determines whether mean or median absolute
+deviation is calculated.  The default is 0 which corresponds to mean
+absolute deviation; A value of 1 corresponds to median absolute deviation.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+As a measure of dispersion, @code{mad} is less affected by outliers than
+@code{std}.
+@seealso{@ref{XREFbounds,,bounds}, @ref{XREFrange,,range}, @ref{XREFiqr,,iqr}, @ref{XREFstd,,std}, @ref{XREFmean,,mean}, @ref{XREFmedian,,median}}
+@end deftypefn
+
+
+@c meansq scripts/statistics/meansq.m
+@anchor{XREFmeansq}
+@deftypefn  {} {} meansq (@var{x})
+@deftypefnx {} {} meansq (@var{x}, @var{dim})
+Compute the mean square of the elements of the vector @var{x}.
+
+The mean square is defined as
+@tex
+$$
+{\rm meansq} (x) = {\sum_{i=1}^N {x_i}^2 \over N}
+$$
+where $N$ is the number of elements of @var{x}.
+
+@end tex
+@ifnottex
+
+@example
+@group
+meansq (@var{x}) = 1/N SUM_i @var{x}(i)^2
+@end group
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} vector.
+
+@end ifnottex
+If @var{x} is a matrix, return a row vector containing the mean square
+of each column.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+@seealso{@ref{XREFvar,,var}, @ref{XREFstd,,std}, @ref{XREFmoment,,moment}}
+@end deftypefn
+
+
+@c std scripts/statistics/std.m
+@anchor{XREFstd}
+@deftypefn  {} {} std (@var{x})
+@deftypefnx {} {} std (@var{x}, @var{opt})
+@deftypefnx {} {} std (@var{x}, @var{opt}, @var{dim})
+Compute the standard deviation of the elements of the vector @var{x}.
+
+The standard deviation is defined as
+@tex
+$$
+{\rm std} (x) = \sigma = \sqrt{{\sum_{i=1}^N (x_i - \bar{x})^2 \over N - 1}}
+$$
+where $\bar{x}$ is the mean value of @var{x} and $N$ is the number of elements of @var{x}.
+@end tex
+@ifnottex
+
+@example
+@group
+std (@var{x}) = sqrt ( 1/(N-1) SUM_i (@var{x}(i) - mean(@var{x}))^2 )
+@end group
+@end example
+
+@noindent
+where @math{N} is the number of elements of the @var{x} vector.
+@end ifnottex
+
+If @var{x} is a matrix, compute the standard deviation for each column and
+return them in a row vector.
+
+The argument @var{opt} determines the type of normalization to use.
+Valid values are
+
+@table @asis
+@item 0:
+  normalize with @math{N-1}, provides the square root of the best unbiased
+estimator of the variance [default]
+
+@item 1:
+  normalize with @math{N}, this provides the square root of the second
+moment around the mean
+@end table
+
+If the optional argument @var{dim} is given, operate along this dimension.
+@seealso{@ref{XREFvar,,var}, @ref{XREFbounds,,bounds}, @ref{XREFmad,,mad}, @ref{XREFrange,,range}, @ref{XREFiqr,,iqr}, @ref{XREFmean,,mean}, @ref{XREFmedian,,median}}
+@end deftypefn
+
+
+In addition to knowing the size of a dispersion it is useful to know the shape
+of the data set.  For example, are data points massed to the left or right
+of the mean?  Octave provides several common measures to describe the shape
+of the data set.  Octave can also calculate moments allowing arbitrary shape
+measures to be developed.
+
+@c var scripts/statistics/var.m
+@anchor{XREFvar}
+@deftypefn  {} {} var (@var{x})
+@deftypefnx {} {} var (@var{x}, @var{opt})
+@deftypefnx {} {} var (@var{x}, @var{opt}, @var{dim})
+Compute the variance of the elements of the vector @var{x}.
+
+The variance is defined as
+@tex
+$$
+{\rm var} (x) = \sigma^2 = {\sum_{i=1}^N (x_i - \bar{x})^2 \over N - 1}
+$$
+where $\bar{x}$ is the mean value of @var{x} and $N$ is the number of
+elements of @var{x}.
+
+@end tex
+@ifnottex
+
+@example
+@group
+var (@var{x}) = 1/(N-1) SUM_i (@var{x}(i) - mean(@var{x}))^2
+@end group
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} vector.
+
+@end ifnottex
+If @var{x} is a matrix, compute the variance for each column and return
+them in a row vector.
+
+The argument @var{opt} determines the type of normalization to use.
+Valid values are
+
+@table @asis
+@item 0:
+  normalize with @math{N-1}, provides the best unbiased estimator of the
+variance [default]
+
+@item 1:
+  normalizes with @math{N}, this provides the second moment around the mean
+@end table
+
+If @math{N} is equal to 1 the value of @var{opt} is ignored and
+normalization by @math{N} is used.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+@seealso{@ref{XREFcov,,cov}, @ref{XREFstd,,std}, @ref{XREFskewness,,skewness}, @ref{XREFkurtosis,,kurtosis}, @ref{XREFmoment,,moment}}
+@end deftypefn
+
+
+@c skewness scripts/statistics/skewness.m
+@anchor{XREFskewness}
+@deftypefn  {} {} skewness (@var{x})
+@deftypefnx {} {} skewness (@var{x}, @var{flag})
+@deftypefnx {} {} skewness (@var{x}, @var{flag}, @var{dim})
+Compute the sample skewness of the elements of @var{x}.
+
+The sample skewness is defined as
+@tex
+$$
+{\rm skewness} (@var{x}) = {{{1\over N}\,
+         \sum_{i=1}^N (x_i - \bar{x})^3} \over \sigma^3},
+$$
+where $N$ is the length of @var{x}, $\bar{x}$ its mean and $\sigma$
+its (uncorrected) standard deviation.
+@end tex
+@ifnottex
+
+@example
+@group
+               mean ((@var{x} - mean (@var{x})).^3)
+skewness (@var{X}) = ------------------------.
+                      std (@var{x}).^3
+@end group
+@end example
+
+@end ifnottex
+
+@noindent
+The optional argument @var{flag} controls which normalization is used.
+If @var{flag} is equal to 1 (default value, used when @var{flag} is omitted
+or empty), return the sample skewness as defined above.  If @var{flag} is
+equal to 0, return the adjusted skewness coefficient instead:
+@tex
+$$
+{\rm skewness} (@var{x}) = {\sqrt{N (N - 1)} \over N - 2} \times \,
+  {{{1 \over N} \sum_{i=1}^N (x_i - \bar{x})^3} \over \sigma^3}
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+                  sqrt (N*(N-1))   mean ((@var{x} - mean (@var{x})).^3)
+skewness (@var{X}, 0) = -------------- * ------------------------.
+                      (N - 2)             std (@var{x}).^3
+@end group
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} vector.
+
+@end ifnottex
+The adjusted skewness coefficient is obtained by replacing the sample second
+and third central moments by their bias-corrected versions.
+
+If @var{x} is a matrix, or more generally a multi-dimensional array, return
+the skewness along the first non-singleton dimension.  If the optional
+@var{dim} argument is given, operate along this dimension.
+
+@seealso{@ref{XREFvar,,var}, @ref{XREFkurtosis,,kurtosis}, @ref{XREFmoment,,moment}}
+@end deftypefn
+
+
+@c kurtosis scripts/statistics/kurtosis.m
+@anchor{XREFkurtosis}
+@deftypefn  {} {} kurtosis (@var{x})
+@deftypefnx {} {} kurtosis (@var{x}, @var{flag})
+@deftypefnx {} {} kurtosis (@var{x}, @var{flag}, @var{dim})
+Compute the sample kurtosis of the elements of @var{x}.
+
+The sample kurtosis is defined as
+@tex
+$$
+\kappa_1 = {{{1\over N}\,
+         \sum_{i=1}^N (x_i - \bar{x})^4} \over \sigma^4},
+$$
+where $N$ is the length of @var{x}, $\bar{x}$ its mean, and $\sigma$
+its (uncorrected) standard deviation.
+@end tex
+@ifnottex
+
+@example
+@group
+     mean ((@var{x} - mean (@var{x})).^4)
+k1 = ------------------------
+            std (@var{x}).^4
+@end group
+@end example
+
+@end ifnottex
+
+@noindent
+The optional argument @var{flag} controls which normalization is used.
+If @var{flag} is equal to 1 (default value, used when @var{flag} is omitted
+or empty), return the sample kurtosis as defined above.  If @var{flag} is
+equal to 0, return the @w{"bias-corrected"} kurtosis coefficient instead:
+@tex
+$$
+\kappa_0 = 3 + {\scriptstyle N - 1 \over \scriptstyle (N - 2)(N - 3)} \,
+    \left( (N + 1)\, \kappa_1 - 3 (N - 1) \right)
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+              N - 1
+k0 = 3 + -------------- * ((N + 1) * k1 - 3 * (N - 1))
+         (N - 2)(N - 3)
+@end group
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} vector.
+
+@end ifnottex
+The bias-corrected kurtosis coefficient is obtained by replacing the sample
+second and fourth central moments by their unbiased versions.  It is an
+unbiased estimate of the population kurtosis for normal populations.
+
+If @var{x} is a matrix, or more generally a multi-dimensional array, return
+the kurtosis along the first non-singleton dimension.  If the optional
+@var{dim} argument is given, operate along this dimension.
+
+@seealso{@ref{XREFvar,,var}, @ref{XREFskewness,,skewness}, @ref{XREFmoment,,moment}}
+@end deftypefn
+
+
+@c moment scripts/statistics/moment.m
+@anchor{XREFmoment}
+@deftypefn  {} {} moment (@var{x}, @var{p})
+@deftypefnx {} {} moment (@var{x}, @var{p}, @var{type})
+@deftypefnx {} {} moment (@var{x}, @var{p}, @var{dim})
+@deftypefnx {} {} moment (@var{x}, @var{p}, @var{type}, @var{dim})
+@deftypefnx {} {} moment (@var{x}, @var{p}, @var{dim}, @var{type})
+Compute the @var{p}-th central moment of the vector @var{x}.
+
+The @var{p}-th central moment of @var{x} is defined as:
+
+@tex
+$$
+{\sum_{i=1}^N (x_i - \bar{x})^p \over N}
+$$
+where $\bar{x}$ is the mean value of @var{x} and $N$ is the number of elements of @var{x}.
+
+
+@end tex
+@ifnottex
+
+@example
+@group
+1/N SUM_i (@var{x}(i) - mean(@var{x}))^@var{p}
+@end group
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} vector.
+
+@end ifnottex
+
+If @var{x} is a matrix, return the row vector containing the @var{p}-th
+central moment of each column.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+The optional string @var{type} specifies the type of moment to be computed.
+Valid options are:
+
+@table @asis
+@item @qcode{"c"}
+  Central Moment (default).
+
+@item  @qcode{"a"}
+@itemx @qcode{"ac"}
+  Absolute Central Moment.  The moment about the mean ignoring sign
+defined as
+@tex
+$$
+{\sum_{i=1}^N {\left| x_i - \bar{x} \right|}^p \over N}
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+1/N SUM_i (abs (@var{x}(i) - mean(@var{x})))^@var{p}
+@end group
+@end example
+
+@end ifnottex
+
+@item @qcode{"r"}
+  Raw Moment.  The moment about zero defined as
+
+@tex
+$$
+{\rm moment} (x) = { \sum_{i=1}^N {x_i}^p \over N }
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+moment (@var{x}) = 1/N SUM_i @var{x}(i)^@var{p}
+@end group
+@end example
+
+@end ifnottex
+
+@item @nospell{@qcode{"ar"}}
+  Absolute Raw Moment.  The moment about zero ignoring sign defined as
+@tex
+$$
+{\sum_{i=1}^N {\left| x_i \right|}^p \over N}
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+1/N SUM_i ( abs (@var{x}(i)) )^@var{p}
+@end group
+@end example
+
+@end ifnottex
+@end table
+
+If both @var{type} and @var{dim} are given they may appear in any order.
+@seealso{@ref{XREFvar,,var}, @ref{XREFskewness,,skewness}, @ref{XREFkurtosis,,kurtosis}}
+@end deftypefn
+
+
+@c quantile scripts/statistics/quantile.m
+@anchor{XREFquantile}
+@deftypefn  {} {@var{q} =} quantile (@var{x})
+@deftypefnx {} {@var{q} =} quantile (@var{x}, @var{p})
+@deftypefnx {} {@var{q} =} quantile (@var{x}, @var{p}, @var{dim})
+@deftypefnx {} {@var{q} =} quantile (@var{x}, @var{p}, @var{dim}, @var{method})
+For a sample, @var{x}, calculate the quantiles, @var{q}, corresponding to
+the cumulative probability values in @var{p}.  All non-numeric values (NaNs)
+of @var{x} are ignored.
+
+If @var{x} is a matrix, compute the quantiles for each column and
+return them in a matrix, such that the i-th row of @var{q} contains
+the @var{p}(i)th quantiles of each column of @var{x}.
+
+If @var{p} is unspecified, return the quantiles for
+@code{[0.00 0.25 0.50 0.75 1.00]}.
+The optional argument @var{dim} determines the dimension along which
+the quantiles are calculated.  If @var{dim} is omitted it defaults to
+the first non-singleton dimension.
+
+The methods available to calculate sample quantiles are the nine methods
+used by R (@url{https://www.r-project.org/}).  The default value is
+@w{@var{method} = 5}.
+
+Discontinuous sample quantile methods 1, 2, and 3
+
+@enumerate 1
+@item Method 1: Inverse of empirical distribution function.
+
+@item Method 2: Similar to method 1 but with averaging at discontinuities.
+
+@item Method 3: SAS definition: nearest even order statistic.
+@end enumerate
+
+Continuous sample quantile methods 4 through 9, where
+@tex
+$p(k)$
+@end tex
+@ifnottex
+@var{p}(k)
+@end ifnottex
+is the linear
+interpolation function respecting each method's representative cdf.
+
+@enumerate 4
+@item Method 4:
+@tex
+$p(k) = k / N$.
+@end tex
+@ifnottex
+@var{p}(k) = k / N.
+@end ifnottex
+That is, linear interpolation of the empirical cdf, where @math{N} is the
+length of @var{P}.
+
+@item Method 5:
+@tex
+$p(k) = (k - 0.5) / N$.
+@end tex
+@ifnottex
+@var{p}(k) = (k - 0.5) / N.
+@end ifnottex
+That is, a piecewise linear function where the knots are the values midway
+through the steps of the empirical cdf.
+
+@item Method 6:
+@tex
+$p(k) = k / (N + 1)$.
+@end tex
+@ifnottex
+@var{p}(k) = k / (N + 1).
+@end ifnottex
+
+@item Method 7:
+@tex
+$p(k) = (k - 1) / (N - 1)$.
+@end tex
+@ifnottex
+@var{p}(k) = (k - 1) / (N - 1).
+@end ifnottex
+
+@item Method 8:
+@tex
+$p(k) = (k - 1/3) / (N + 1/3)$.
+@end tex
+@ifnottex
+@var{p}(k) = (k - 1/3) / (N + 1/3).
+@end ifnottex
+The resulting quantile estimates are approximately median-unbiased
+regardless of the distribution of @var{x}.
+
+@item Method 9:
+@tex
+$p(k) = (k - 3/8) / (N + 1/4)$.
+@end tex
+@ifnottex
+@var{p}(k) = (k - 3/8) / (N + 1/4).
+@end ifnottex
+The resulting quantile estimates are approximately unbiased for the
+expected order statistics if @var{x} is normally distributed.
+@end enumerate
+
+@nospell{Hyndman and Fan} (1996) recommend method 8.  Maxima, S, and R
+(versions prior to 2.0.0) use 7 as their default.  Minitab and SPSS
+use method 6.  @sc{matlab} uses method 5.
+
+References:
+
+@itemize @bullet
+@item @nospell{Becker, R. A., Chambers, J. M. and Wilks, A. R.} (1988)
+The New S Language.  @nospell{Wadsworth & Brooks/Cole}.
+
+@item @nospell{Hyndman, R. J. and Fan, Y.} (1996) Sample quantiles in
+statistical packages, American Statistician, 50, 361--365.
+
+@item R: A Language and Environment for Statistical Computing;
+@url{https://cran.r-project.org/doc/manuals/fullrefman.pdf}.
+@end itemize
+
+Examples:
+@c Set example in small font to prevent overfull line
+
+@smallexample
+@group
+x = randi (1000, [10, 1]);  # Create empirical data in range 1-1000
+q = quantile (x, [0, 1]);   # Return minimum, maximum of distribution
+q = quantile (x, [0.25 0.5 0.75]); # Return quartiles of distribution
+@end group
+@end smallexample
+@seealso{@ref{XREFprctile,,prctile}}
+@end deftypefn
+
+
+@c prctile scripts/statistics/prctile.m
+@anchor{XREFprctile}
+@deftypefn  {} {@var{q} =} prctile (@var{x})
+@deftypefnx {} {@var{q} =} prctile (@var{x}, @var{p})
+@deftypefnx {} {@var{q} =} prctile (@var{x}, @var{p}, @var{dim})
+For a sample @var{x}, compute the quantiles, @var{q}, corresponding
+to the cumulative probability values, @var{p}, in percent.
+
+If @var{x} is a matrix, compute the percentiles for each column and return
+them in a matrix, such that the i-th row of @var{q} contains the
+@var{p}(i)th percentiles of each column of @var{x}.
+
+If @var{p} is unspecified, return the quantiles for @code{[0 25 50 75 100]}.
+
+The optional argument @var{dim} determines the dimension along which the
+percentiles are calculated.  If @var{dim} is omitted it defaults to the
+first non-singleton dimension.
+
+Programming Note: All non-numeric values (NaNs) of @var{x} are ignored.
+@seealso{@ref{XREFquantile,,quantile}}
+@end deftypefn
+
+
+A summary view of a data set can be generated quickly with the
+@code{statistics} function.
+
+@c statistics scripts/statistics/statistics.m
+@anchor{XREFstatistics}
+@deftypefn  {} {} statistics (@var{x})
+@deftypefnx {} {} statistics (@var{x}, @var{dim})
+Return a vector with the minimum, first quartile, median, third quartile,
+maximum, mean, standard deviation, skewness, and kurtosis of the elements of
+the vector @var{x}.
+
+If @var{x} is a matrix, calculate statistics over the first non-singleton
+dimension.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+@seealso{@ref{XREFmin,,min}, @ref{XREFmax,,max}, @ref{XREFmedian,,median}, @ref{XREFmean,,mean}, @ref{XREFstd,,std}, @ref{XREFskewness,,skewness}, @ref{XREFkurtosis,,kurtosis}}
+@end deftypefn
+
+
+@node Basic Statistical Functions
+@section Basic Statistical Functions
+
+Octave supports various helpful statistical functions.  Many are useful as
+initial steps to prepare a data set for further analysis.  Others provide
+different measures from those of the basic descriptive statistics.
+
+@c center scripts/statistics/center.m
+@anchor{XREFcenter}
+@deftypefn  {} {} center (@var{x})
+@deftypefnx {} {} center (@var{x}, @var{dim})
+Center data by subtracting its mean.
+
+If @var{x} is a vector, subtract its mean.
+
+If @var{x} is a matrix, do the above for each column.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+
+Programming Note: @code{center} has obvious application for normalizing
+statistical data.  It is also useful for improving the precision of general
+numerical calculations.  Whenever there is a large value that is common
+to a batch of data, the mean can be subtracted off, the calculation
+performed, and then the mean added back to obtain the final answer.
+@seealso{@ref{XREFzscore,,zscore}}
+@end deftypefn
+
+
+@c zscore scripts/statistics/zscore.m
+@anchor{XREFzscore}
+@deftypefn  {} {@var{z} =} zscore (@var{x})
+@deftypefnx {} {@var{z} =} zscore (@var{x}, @var{opt})
+@deftypefnx {} {@var{z} =} zscore (@var{x}, @var{opt}, @var{dim})
+@deftypefnx {} {[@var{z}, @var{mu}, @var{sigma}] =} zscore (@dots{})
+Compute the Z score of @var{x}.
+
+If @var{x} is a vector, subtract its mean and divide by its standard
+deviation.  If the standard deviation is zero, divide by 1 instead.
+
+The optional parameter @var{opt} determines the normalization to use when
+computing the standard deviation and has the same definition as the
+corresponding parameter for @code{std}.
+
+If @var{x} is a matrix, calculate along the first non-singleton dimension.
+If the third optional argument @var{dim} is given, operate along this
+dimension.
+
+The optional outputs @var{mu} and @var{sigma} contain the mean and standard
+deviation.
+
+@seealso{@ref{XREFmean,,mean}, @ref{XREFstd,,std}, @ref{XREFcenter,,center}}
+@end deftypefn
+
+
+@c histc scripts/statistics/histc.m
+@anchor{XREFhistc}
+@deftypefn  {} {@var{n} =} histc (@var{x}, @var{edges})
+@deftypefnx {} {@var{n} =} histc (@var{x}, @var{edges}, @var{dim})
+@deftypefnx {} {[@var{n}, @var{idx}] =} histc (@dots{})
+Compute histogram counts.
+
+When @var{x} is a vector, the function counts the number of elements of
+@var{x} that fall in the histogram bins defined by @var{edges}.  This
+must be a vector of monotonically increasing values that define the edges
+of the histogram bins.
+@tex
+$n(k)$
+@end tex
+@ifnottex
+@code{@var{n}(k)}
+@end ifnottex
+contains the number of elements in @var{x} for which
+@tex
+$@var{edges}(k) <= @var{x} < @var{edges}(k+1)$.
+@end tex
+@ifnottex
+@code{@var{edges}(k) <= @var{x} < @var{edges}(k+1)}.
+@end ifnottex
+The final element of @var{n} contains the number of elements of @var{x}
+exactly equal to the last element of @var{edges}.
+
+When @var{x} is an @math{N}-dimensional array, the computation is carried
+out along dimension @var{dim}.  If not specified @var{dim} defaults to the
+first non-singleton dimension.
+
+When a second output argument is requested an index matrix is also returned.
+The @var{idx} matrix has the same size as @var{x}.  Each element of
+@var{idx} contains the index of the histogram bin in which the
+corresponding element of @var{x} was counted.
+@seealso{@ref{XREFhist,,hist}}
+@end deftypefn
+
+
+@noindent
+@code{unique} function documented at @ref{XREFunique,,unique} is often
+useful for statistics.
+
+@c nchoosek scripts/specfun/nchoosek.m
+@anchor{XREFnchoosek}
+@deftypefn  {} {@var{c} =} nchoosek (@var{n}, @var{k})
+@deftypefnx {} {@var{c} =} nchoosek (@var{set}, @var{k})
+
+Compute the binomial coefficient of @var{n} or list all possible
+combinations of a @var{set} of items.
+
+If @var{n} is a scalar then calculate the binomial coefficient
+of @var{n} and @var{k} which is defined as
+@tex
+$$
+ {n \choose k} = {n (n-1) (n-2) \cdots (n-k+1) \over k!}
+               = {n! \over k! (n-k)!}
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+ /   \
+ | n |    n (n-1) (n-2) @dots{} (n-k+1)       n!
+ |   |  = ------------------------- =  ---------
+ | k |               k!                k! (n-k)!
+ \   /
+@end group
+@end example
+
+@end ifnottex
+@noindent
+This is the number of combinations of @var{n} items taken in groups of
+size @var{k}.
+
+If the first argument is a vector, @var{set}, then generate all
+combinations of the elements of @var{set}, taken @var{k} at a time, with
+one row per combination.  The result @var{c} has @var{k} columns and
+@w{@code{nchoosek (length (@var{set}), @var{k})}} rows.
+
+For example:
+
+How many ways can three items be grouped into pairs?
+
+@example
+@group
+nchoosek (3, 2)
+   @result{} 3
+@end group
+@end example
+
+What are the possible pairs?
+
+@example
+@group
+nchoosek (1:3, 2)
+   @result{}  1   2
+       1   3
+       2   3
+@end group
+@end example
+
+Programming Note: When calculating the binomial coefficient @code{nchoosek}
+works only for non-negative, integer arguments.  Use @code{bincoeff} for
+non-integer and negative scalar arguments, or for computing many binomial
+coefficients at once with vector inputs for @var{n} or @var{k}.
+
+@seealso{@ref{XREFbincoeff,,bincoeff}, @ref{XREFperms,,perms}}
+@end deftypefn
+
+
+@c perms scripts/specfun/perms.m
+@anchor{XREFperms}
+@deftypefn {} {} perms (@var{v})
+Generate all permutations of vector @var{v} with one row per permutation.
+
+Results are returned in inverse lexicographic order.  The result has size
+@code{factorial (@var{n}) * @var{n}}, where @var{n} is the length of
+@var{v}.  Any repetitions are included in the output.  To generate just the
+unique permutations use @code{unique (perms (@var{v}), "rows")(end:-1:1,:)}.
+
+Example
+
+@example
+@group
+perms ([1, 2, 3])
+@result{}
+  3   2   1
+  3   1   2
+  2   3   1
+  2   1   3
+  1   3   2
+  1   2   3
+@end group
+@end example
+
+Programming Note: The maximum length of @var{v} should be less than or
+equal to 10 to limit memory consumption.
+@seealso{@ref{XREFpermute,,permute}, @ref{XREFrandperm,,randperm}, @ref{XREFnchoosek,,nchoosek}}
+@end deftypefn
+
+
+@c ranks scripts/statistics/ranks.m
+@anchor{XREFranks}
+@deftypefn {} {} ranks (@var{x}, @var{dim})
+Return the ranks of @var{x} along the first non-singleton dimension
+adjusted for ties.
+
+If the optional argument @var{dim} is given, operate along this dimension.
+@seealso{@ref{XREFspearman,,spearman}, @ref{XREFkendall,,kendall}}
+@end deftypefn
+
+
+@c run_count scripts/statistics/run_count.m
+@anchor{XREFrun_count}
+@deftypefn  {} {} run_count (@var{x}, @var{n})
+@deftypefnx {} {} run_count (@var{x}, @var{n}, @var{dim})
+Count the upward runs along the first non-singleton dimension of @var{x}
+of length 1, 2, @dots{}, @var{n}-1 and greater than or equal to @var{n}.
+
+If the optional argument @var{dim} is given then operate along this
+dimension.
+@seealso{@ref{XREFrunlength,,runlength}}
+@end deftypefn
+
+
+@c runlength scripts/statistics/runlength.m
+@anchor{XREFrunlength}
+@deftypefn  {} {count =} runlength (@var{x})
+@deftypefnx {} {[count, value] =} runlength (@var{x})
+Find the lengths of all sequences of common values.
+
+@var{count} is a vector with the lengths of each repeated value.
+
+The optional output @var{value} contains the value that was repeated in
+the sequence.
+
+@example
+@group
+runlength ([2, 2, 0, 4, 4, 4, 0, 1, 1, 1, 1])
+@result{}  [2, 1, 3, 1, 4]
+@end group
+@end example
+@seealso{@ref{XREFrun_count,,run_count}}
+@end deftypefn
+
+
+@node Correlation and Regression Analysis
+@section Correlation and Regression Analysis
+
+@c FIXME: Need Intro Here
+
+@c cov scripts/statistics/cov.m
+@anchor{XREFcov}
+@deftypefn  {} {} cov (@var{x})
+@deftypefnx {} {} cov (@var{x}, @var{opt})
+@deftypefnx {} {} cov (@var{x}, @var{y})
+@deftypefnx {} {} cov (@var{x}, @var{y}, @var{opt})
+Compute the covariance matrix.
+
+If each row of @var{x} and @var{y} is an observation, and each column is
+a variable, then the @w{(@var{i}, @var{j})-th} entry of
+@code{cov (@var{x}, @var{y})} is the covariance between the @var{i}-th
+variable in @var{x} and the @var{j}-th variable in @var{y}.
+@tex
+$$
+\sigma_{ij} = {1 \over N-1} \sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})
+$$
+where $\bar{x}$ and $\bar{y}$ are the mean values of @var{x} and @var{y}.
+@end tex
+@ifnottex
+
+@example
+cov (@var{x}) = 1/(N-1) * SUM_i (@var{x}(i) - mean(@var{x})) * (@var{y}(i) - mean(@var{y}))
+@end example
+
+@noindent
+where @math{N} is the length of the @var{x} and @var{y} vectors.
+
+@end ifnottex
+
+If called with one argument, compute @code{cov (@var{x}, @var{x})}, the
+covariance between the columns of @var{x}.
+
+The argument @var{opt} determines the type of normalization to use.
+Valid values are
+
+@table @asis
+@item 0:
+  normalize with @math{N-1}, provides the best unbiased estimator of the
+covariance [default]
+
+@item 1:
+  normalize with @math{N}, this provides the second moment around the mean
+@end table
+
+Compatibility Note:: Octave always treats rows of @var{x} and @var{y}
+as multivariate random variables.
+For two inputs, however, @sc{matlab} treats @var{x} and @var{y} as two
+univariate distributions regardless of their shapes, and will calculate
+@code{cov ([@var{x}(:), @var{y}(:)])} whenever the number of elements in
+@var{x} and @var{y} are equal.  This will result in a 2x2 matrix.
+Code relying on @sc{matlab}'s definition will need to be changed when
+running in Octave.
+@seealso{@ref{XREFcorr,,corr}}
+@end deftypefn
+
+
+@c corr scripts/statistics/corr.m
+@anchor{XREFcorr}
+@deftypefn  {} {} corr (@var{x})
+@deftypefnx {} {} corr (@var{x}, @var{y})
+Compute matrix of correlation coefficients.
+
+If each row of @var{x} and @var{y} is an observation and each column is
+a variable, then the @w{(@var{i}, @var{j})-th} entry of
+@code{corr (@var{x}, @var{y})} is the correlation between the
+@var{i}-th variable in @var{x} and the @var{j}-th variable in @var{y}.
+@tex
+$$
+{\rm corr}(x,y) = {{\rm cov}(x,y) \over {\rm std}(x) \, {\rm std}(y)}
+$$
+@end tex
+@ifnottex
+
+@example
+corr (@var{x},@var{y}) = cov (@var{x},@var{y}) / (std (@var{x}) * std (@var{y}))
+@end example
+
+@end ifnottex
+If called with one argument, compute @code{corr (@var{x}, @var{x})},
+the correlation between the columns of @var{x}.
+@seealso{@ref{XREFcov,,cov}}
+@end deftypefn
+
+
+@c corrcoef scripts/statistics/corrcoef.m
+@anchor{XREFcorrcoef}
+@deftypefn  {} {@var{r} =} corrcoef (@var{x})
+@deftypefnx {} {@var{r} =} corrcoef (@var{x}, @var{y})
+@deftypefnx {} {[@var{r}, @var{p}] =} corrcoef (@dots{})
+@deftypefnx {} {[@var{r}, @var{p}, @var{lci}, @var{hci}] =} corrcoef (@dots{})
+@deftypefnx {} {[@dots{}] =} corrcoef (@dots{}, @var{param}, @var{value}, @dots{})
+Compute a matrix of correlation coefficients.
+
+@var{x} is an array where each column contains a variable and each row is
+an observation.
+
+If a second input @var{y} (of the same size as @var{x}) is given then
+calculate the correlation coefficients between @var{x} and @var{y}.
+
+@var{r} is a matrix of Pearson's product moment correlation coefficients for
+each pair of variables.
+
+@var{p} is a matrix of pair-wise p-values testing for the null hypothesis of
+a correlation coefficient of zero.
+
+@var{lci} and @var{hci} are matrices containing, respectively, the lower and
+higher bounds of the 95% confidence interval of each correlation
+coefficient.
+
+@var{param}, @var{value} are pairs of optional parameters and values.
+Valid options are:
+
+@table @asis
+@item @qcode{"alpha"}
+Confidence level used for the definition of the bounds of the confidence
+interval, @var{lci} and @var{hci}.  Default is 0.05, i.e., 95% confidence
+interval.
+
+@item @qcode{"rows"}
+Determine processing of NaN values.  Acceptable values are @qcode{"all"},
+@qcode{"complete"}, and @qcode{"pairwise"}.  Default is @qcode{"all"}.
+With @qcode{"complete"}, only the rows without NaN values are considered.
+With @qcode{"pairwise"}, the selection of NaN-free rows is made for each
+pair of variables.
+
+@end table
+
+@seealso{@ref{XREFcorr,,corr}, @ref{XREFcov,,cov}}
+@end deftypefn
+
+
+@c spearman scripts/statistics/spearman.m
+@anchor{XREFspearman}
+@deftypefn  {} {} spearman (@var{x})
+@deftypefnx {} {} spearman (@var{x}, @var{y})
+@cindex Spearman's Rho
+Compute Spearman's rank correlation coefficient
+@tex
+$\rho$.
+@end tex
+@ifnottex
+@var{rho}.
+@end ifnottex
+
+For two data vectors @var{x} and @var{y}, Spearman's
+@tex
+$\rho$
+@end tex
+@ifnottex
+@var{rho}
+@end ifnottex
+is the correlation coefficient of the ranks of @var{x} and @var{y}.
+
+If @var{x} and @var{y} are drawn from independent distributions,
+@tex
+$\rho$
+@end tex
+@ifnottex
+@var{rho}
+@end ifnottex
+has zero mean and variance
+@tex
+$1 / (N - 1)$,
+@end tex
+@ifnottex
+@code{1 / (N - 1)},
+@end ifnottex
+where @math{N} is the length of the @var{x} and @var{y} vectors, and is
+asymptotically normally distributed.
+
+@code{spearman (@var{x})} is equivalent to
+@code{spearman (@var{x}, @var{x})}.
+@seealso{@ref{XREFranks,,ranks}, @ref{XREFkendall,,kendall}}
+@end deftypefn
+
+
+@c kendall scripts/statistics/kendall.m
+@anchor{XREFkendall}
+@deftypefn  {} {} kendall (@var{x})
+@deftypefnx {} {} kendall (@var{x}, @var{y})
+@cindex Kendall's Tau
+Compute Kendall's
+@tex
+$\tau$.
+@end tex
+@ifnottex
+@var{tau}.
+@end ifnottex
+
+For two data vectors @var{x}, @var{y} of common length @math{N}, Kendall's
+@tex
+$\tau$
+@end tex
+@ifnottex
+@var{tau}
+@end ifnottex
+is the correlation of the signs of all rank differences of
+@var{x} and @var{y}; i.e., if both @var{x} and @var{y} have distinct
+entries, then
+
+@tex
+$$ \tau = {1 \over N(N-1)} \sum_{i,j} {\rm sign}(q_i-q_j) \, {\rm sign}(r_i-r_j) $$
+@end tex
+@ifnottex
+
+@example
+@group
+         1
+@var{tau} = -------   SUM sign (@var{q}(i) - @var{q}(j)) * sign (@var{r}(i) - @var{r}(j))
+      N (N-1)   i,j
+@end group
+@end example
+
+@end ifnottex
+@noindent
+in which the
+@tex
+$q_i$ and $r_i$
+@end tex
+@ifnottex
+@var{q}(i) and @var{r}(i)
+@end ifnottex
+are the ranks of @var{x} and @var{y}, respectively.
+
+If @var{x} and @var{y} are drawn from independent distributions,
+Kendall's
+@tex
+$\tau$
+@end tex
+@ifnottex
+@var{tau}
+@end ifnottex
+is asymptotically normal with mean 0 and variance
+@tex
+${2 (2N+5) \over 9N(N-1)}$.
+@end tex
+@ifnottex
+@code{(2 * (2N+5)) / (9 * N * (N-1))}.
+@end ifnottex
+
+@code{kendall (@var{x})} is equivalent to @code{kendall (@var{x},
+@var{x})}.
+@seealso{@ref{XREFranks,,ranks}, @ref{XREFspearman,,spearman}}
+@end deftypefn
+
+
+@node Distributions
+@section Distributions
+
+Octave has functions for computing the Probability Density Function (PDF), the
+Cumulative Distribution function (CDF), and the quantile (the inverse of the
+CDF) for arbitrary user-defined distributions (discrete) and for experimental
+data (empirical).
+
+The following table summarizes the supported distributions (in alphabetical
+order).
+
+@tex
+\vskip 6pt
+{\hbox to \hsize {\hfill\vbox{\offinterlineskip \tabskip=0pt
+\halign{
+\vrule height2.0ex depth1.ex width 0.6pt #\tabskip=0.3em &
+# \hfil & \vrule # & # \hfil & \vrule # & # \hfil & \vrule # & # \hfil &
+# \vrule width 0.6pt \tabskip=0pt\cr
+\noalign{\hrule height 0.6pt}
+& {\bf Distribution} && {\bf PDF}      && {\bf CDF}     && {\bf Quantile}&\cr
+\noalign{\hrule}
+&Univariate Discrete       && discrete\_pdf  && discrete\_cdf && discrete\_inv&\cr
+&Empirical    && empirical\_pdf  && empirical\_cdf && empirical\_inv&\cr
+\noalign{\hrule height 0.6pt}
+}}\hfill}}
+@end tex
+@ifnottex
+@multitable @columnfractions .31 .23 .23 .23
+@headitem Distribution
+  @tab PDF
+  @tab CDF
+  @tab Quantile
+@item Univariate Discrete Distribution
+  @tab @code{discrete_pdf}
+  @tab @code{discrete_cdf}
+  @tab @code{discrete_inv}
+@item Empirical Distribution
+  @tab @code{empirical_pdf}
+  @tab @code{empirical_cdf}
+  @tab @code{empirical_inv}
+@end multitable
+@end ifnottex
+
+@c discrete_pdf scripts/statistics/discrete_pdf.m
+@anchor{XREFdiscrete_pdf}
+@deftypefn {} {} discrete_pdf (@var{x}, @var{v}, @var{p})
+For each element of @var{x}, compute the probability density function (PDF)
+at @var{x} of a univariate discrete distribution which assumes the values
+in @var{v} with probabilities @var{p}.
+@end deftypefn
+
+
+@c discrete_cdf scripts/statistics/discrete_cdf.m
+@anchor{XREFdiscrete_cdf}
+@deftypefn {} {} discrete_cdf (@var{x}, @var{v}, @var{p})
+For each element of @var{x}, compute the cumulative distribution function
+(CDF) at @var{x} of a univariate discrete distribution which assumes the
+values in @var{v} with probabilities @var{p}.
+@end deftypefn
+
+
+@c discrete_inv scripts/statistics/discrete_inv.m
+@anchor{XREFdiscrete_inv}
+@deftypefn {} {} discrete_inv (@var{x}, @var{v}, @var{p})
+For each element of @var{x}, compute the quantile (the inverse of the CDF)
+at @var{x} of the univariate distribution which assumes the values in
+@var{v} with probabilities @var{p}.
+@end deftypefn
+
+
+@c empirical_pdf scripts/statistics/empirical_pdf.m
+@anchor{XREFempirical_pdf}
+@deftypefn {} {} empirical_pdf (@var{x}, @var{data})
+For each element of @var{x}, compute the probability density function (PDF)
+at @var{x} of the empirical distribution obtained from the
+univariate sample @var{data}.
+@end deftypefn
+
+
+@c empirical_cdf scripts/statistics/empirical_cdf.m
+@anchor{XREFempirical_cdf}
+@deftypefn {} {} empirical_cdf (@var{x}, @var{data})
+For each element of @var{x}, compute the cumulative distribution function
+(CDF) at @var{x} of the empirical distribution obtained from
+the univariate sample @var{data}.
+@end deftypefn
+
+
+@c empirical_inv scripts/statistics/empirical_inv.m
+@anchor{XREFempirical_inv}
+@deftypefn {} {} empirical_inv (@var{x}, @var{data})
+For each element of @var{x}, compute the quantile (the inverse of the CDF)
+at @var{x} of the empirical distribution obtained from the
+univariate sample @var{data}.
+@end deftypefn
+
+
+@node Random Number Generation
+@section Random Number Generation
+
+Octave can generate random numbers from a large number of distributions.  The
+random number generators are based on the random number generators described in
+@ref{Special Utility Matrices}.
+
+The following table summarizes the available random number generators (in
+alphabetical order).
+
+@tex
+\vskip 6pt
+{\hbox to \hsize {\hfill\vbox{\offinterlineskip \tabskip=0pt
+\halign{
+\vrule height2.0ex depth1.ex width 0.6pt #\tabskip=0.3em &
+# \hfil & \vrule # & # \hfil & # \vrule width 0.6pt \tabskip=0pt\cr
+\noalign{\hrule height 0.6pt}
+& {\bf Distribution}                && {\bf Function} &\cr
+\noalign{\hrule}
+& Univariate Discrete Distribution  && discrete\_rnd &\cr
+& Empirical Distribution            && empirical\_rnd &\cr
+& Exponential Distribution          && rande &\cr
+& Gamma Distribution                && randg &\cr
+& Poisson Distribution              && randp &\cr
+& Standard Normal Distribution      && randn &\cr
+& Uniform Distribution              && rand &\cr
+& Uniform Distribution (integers)   && randi &\cr
+\noalign{\hrule height 0.6pt}
+}}\hfill}}
+@end tex
+@ifnottex
+@multitable @columnfractions .4 .3
+@headitem Distribution                  @tab Function
+@item Univariate Discrete Distribution  @tab @code{discrete_rnd}
+@item Empirical Distribution            @tab @code{empirical_rnd}
+@item Exponential Distribution          @tab @code{rande}
+@item Gamma Distribution                @tab @code{randg}
+@item Poisson Distribution              @tab @code{randp}
+@item Standard Normal Distribution      @tab @code{randn}
+@item Uniform Distribution              @tab @code{rand}
+@item Uniform Distribution (integers)   @tab @code{randi}
+@end multitable
+@end ifnottex
+
+@c discrete_rnd scripts/statistics/discrete_rnd.m
+@anchor{XREFdiscrete_rnd}
+@deftypefn  {} {} discrete_rnd (@var{v}, @var{p})
+@deftypefnx {} {} discrete_rnd (@var{v}, @var{p}, @var{r})
+@deftypefnx {} {} discrete_rnd (@var{v}, @var{p}, @var{r}, @var{c}, @dots{})
+@deftypefnx {} {} discrete_rnd (@var{v}, @var{p}, [@var{sz}])
+Return a matrix of random samples from the univariate distribution which
+assumes the values in @var{v} with probabilities @var{p}.
+
+When called with a single size argument, return a square matrix with
+the dimension specified.  When called with more than one scalar argument the
+first two arguments are taken as the number of rows and columns and any
+further arguments specify additional matrix dimensions.  The size may also
+be specified with a vector of dimensions @var{sz}.
+
+If no size arguments are given then the result matrix is the common size of
+@var{v} and @var{p}.
+@end deftypefn
+
+
+@c empirical_rnd scripts/statistics/empirical_rnd.m
+@anchor{XREFempirical_rnd}
+@deftypefn  {} {} empirical_rnd (@var{data})
+@deftypefnx {} {} empirical_rnd (@var{data}, @var{r})
+@deftypefnx {} {} empirical_rnd (@var{data}, @var{r}, @var{c}, @dots{})
+@deftypefnx {} {} empirical_rnd (@var{data}, [@var{sz}])
+Return a matrix of random samples from the empirical distribution obtained
+from the univariate sample @var{data}.
+
+When called with a single size argument, return a square matrix with
+the dimension specified.  When called with more than one scalar argument the
+first two arguments are taken as the number of rows and columns and any
+further arguments specify additional matrix dimensions.  The size may also
+be specified with a vector of dimensions @var{sz}.
+
+If no size arguments are given then the result matrix is a random ordering
+of the sample @var{data}.
+@end deftypefn
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Distributions (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Distributions (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Distributions (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Statistics.html#Statistics" rel="up" title="Statistics">
+<link href="Random-Number-Generation.html#Random-Number-Generation" rel="next" title="Random Number Generation">
+<link href="Correlation-and-Regression-Analysis.html#Correlation-and-Regression-Analysis" rel="prev" title="Correlation and Regression Analysis">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Distributions"></a>
+<div class="header">
+<p>
+Next: <a href="Random-Number-Generation.html#Random-Number-Generation" accesskey="n" rel="next">Random Number Generation</a>, Previous: <a href="Correlation-and-Regression-Analysis.html#Correlation-and-Regression-Analysis" accesskey="p" rel="prev">Correlation and Regression Analysis</a>, Up: <a href="Statistics.html#Statistics" accesskey="u" rel="up">Statistics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Distributions-1"></a>
+<h3 class="section">26.4 Distributions</h3>
+
+<p>Octave has functions for computing the Probability Density Function (PDF), the
+Cumulative Distribution function (CDF), and the quantile (the inverse of the
+CDF) for arbitrary user-defined distributions (discrete) and for experimental
+data (empirical).
+</p>
+<p>The following table summarizes the supported distributions (in alphabetical
+order).
+</p>
+<table>
+<thead><tr><th width="31%">Distribution</th><th width="23%">PDF</th><th width="23%">CDF</th><th width="23%">Quantile</th></tr></thead>
+<tr><td width="31%">Univariate Discrete Distribution</td><td width="23%"><code>discrete_pdf</code></td><td width="23%"><code>discrete_cdf</code></td><td width="23%"><code>discrete_inv</code></td></tr>
+<tr><td width="31%">Empirical Distribution</td><td width="23%"><code>empirical_pdf</code></td><td width="23%"><code>empirical_cdf</code></td><td width="23%"><code>empirical_inv</code></td></tr>
+</table>
+
+<a name="XREFdiscrete_005fpdf"></a><dl>
+<dt><a name="index-discrete_005fpdf"></a><em></em> <strong>discrete_pdf</strong> <em>(<var>x</var>, <var>v</var>, <var>p</var>)</em></dt>
+<dd><p>For each element of <var>x</var>, compute the probability density function (PDF)
+at <var>x</var> of a univariate discrete distribution which assumes the values
+in <var>v</var> with probabilities <var>p</var>.
+</p></dd></dl>
+
+
+<a name="XREFdiscrete_005fcdf"></a><dl>
+<dt><a name="index-discrete_005fcdf"></a><em></em> <strong>discrete_cdf</strong> <em>(<var>x</var>, <var>v</var>, <var>p</var>)</em></dt>
+<dd><p>For each element of <var>x</var>, compute the cumulative distribution function
+(CDF) at <var>x</var> of a univariate discrete distribution which assumes the
+values in <var>v</var> with probabilities <var>p</var>.
+</p></dd></dl>
+
+
+<a name="XREFdiscrete_005finv"></a><dl>
+<dt><a name="index-discrete_005finv"></a><em></em> <strong>discrete_inv</strong> <em>(<var>x</var>, <var>v</var>, <var>p</var>)</em></dt>
+<dd><p>For each element of <var>x</var>, compute the quantile (the inverse of the CDF)
+at <var>x</var> of the univariate distribution which assumes the values in
+<var>v</var> with probabilities <var>p</var>.
+</p></dd></dl>
+
+
+<a name="XREFempirical_005fpdf"></a><dl>
+<dt><a name="index-empirical_005fpdf"></a><em></em> <strong>empirical_pdf</strong> <em>(<var>x</var>, <var>data</var>)</em></dt>
+<dd><p>For each element of <var>x</var>, compute the probability density function (PDF)
+at <var>x</var> of the empirical distribution obtained from the
+univariate sample <var>data</var>.
+</p></dd></dl>
+
+
+<a name="XREFempirical_005fcdf"></a><dl>
+<dt><a name="index-empirical_005fcdf"></a><em></em> <strong>empirical_cdf</strong> <em>(<var>x</var>, <var>data</var>)</em></dt>
+<dd><p>For each element of <var>x</var>, compute the cumulative distribution function
+(CDF) at <var>x</var> of the empirical distribution obtained from
+the univariate sample <var>data</var>.
+</p></dd></dl>
+
+
+<a name="XREFempirical_005finv"></a><dl>
+<dt><a name="index-empirical_005finv"></a><em></em> <strong>empirical_inv</strong> <em>(<var>x</var>, <var>data</var>)</em></dt>
+<dd><p>For each element of <var>x</var>, compute the quantile (the inverse of the CDF)
+at <var>x</var> of the empirical distribution obtained from the
+univariate sample <var>data</var>.
+</p></dd></dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Random-Number-Generation.html#Random-Number-Generation" accesskey="n" rel="next">Random Number Generation</a>, Previous: <a href="Correlation-and-Regression-Analysis.html#Correlation-and-Regression-Analysis" accesskey="p" rel="prev">Correlation and Regression Analysis</a>, Up: <a href="Statistics.html#Statistics" accesskey="u" rel="up">Statistics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

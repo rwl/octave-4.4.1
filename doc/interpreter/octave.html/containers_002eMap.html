@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>containers.Map (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="containers.Map (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="containers.Map (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Data-Containers.html#Data-Containers" rel="up" title="Data Containers">
+<link href="Cell-Arrays.html#Cell-Arrays" rel="next" title="Cell Arrays">
+<link href="Processing-Data-in-Structures.html#Processing-Data-in-Structures" rel="prev" title="Processing Data in Structures">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="containers_002eMap"></a>
+<div class="header">
+<p>
+Next: <a href="Cell-Arrays.html#Cell-Arrays" accesskey="n" rel="next">Cell Arrays</a>, Previous: <a href="Structures.html#Structures" accesskey="p" rel="prev">Structures</a>, Up: <a href="Data-Containers.html#Data-Containers" accesskey="u" rel="up">Data Containers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="containers_002eMap-1"></a>
+<h3 class="section">6.2 containers.Map</h3>
+<a name="index-Map"></a>
+<a name="index-key_002fvalue-store"></a>
+<a name="index-hash-table"></a>
+
+
+<a name="XREFcontainers_002eMap"></a><dl>
+<dt><a name="index-containers_002eMap"></a><em><var>m</var> =</em> <strong>containers.Map</strong> <em>()</em></dt>
+<dt><a name="index-containers_002eMap-1"></a><em><var>m</var> =</em> <strong>containers.Map</strong> <em>(<var>keys</var>, <var>vals</var>)</em></dt>
+<dt><a name="index-containers_002eMap-2"></a><em><var>m</var> =</em> <strong>containers.Map</strong> <em>(<var>keys</var>, <var>vals</var>, <code>&quot;UniformValues&quot;</code>, <var>is_uniform</var>)</em></dt>
+<dt><a name="index-containers_002eMap-3"></a><em><var>m</var> =</em> <strong>containers.Map</strong> <em>(<code>&quot;KeyType&quot;</code>, <var>kt</var>, <code>&quot;ValueType&quot;</code>, <var>vt</var>)</em></dt>
+<dd>
+<p>Create an object of the containers.Map class that stores a list of key/value
+pairs.
+</p>
+<p><var>keys</var> is an array of <em>unique</em> keys for the map.  The keys can be
+numeric scalars or strings.  The type for numeric keys may be one of
+<code>&quot;double&quot;</code>, <code>&quot;single&quot;</code>, <code>&quot;int32&quot;</code>, <code>&quot;uint32&quot;</code>,
+<code>&quot;int64&quot;</code>, or <code>&quot;uint64&quot;</code>.  Other numeric or logical keys will
+be converted to <code>&quot;double&quot;</code>.  A single string key may be entered as is.
+Multiple string keys are entered as a cell array of strings.
+</p>
+<p><var>vals</var> is an array of values for the map with the <em>same</em> number
+of elements as <var>keys</var>.
+</p>
+<p>When called with no input arguments a default map is created with strings
+as the key type and <code>&quot;any&quot;</code> as the value type.
+</p>
+<p>The <code>&quot;UniformValues&quot;</code> option specifies whether the values of
+the map must be strictly of the same type.  If <var>is_uniform</var> is true, any
+values which would be added to the map are first validated to ensure they
+are of the correct type.
+</p>
+<p>When called with <code>&quot;KeyType&quot;</code> and <code>&quot;ValueType&quot;</code> arguments, create
+an empty map with the specified types.  The inputs <var>kt</var> and <var>vt</var> are
+the types for the keys and values of the map respectively.  Allowed values
+for <var>kt</var> are <code>&quot;char&quot;</code>, <code>&quot;double&quot;</code>, <code>&quot;single&quot;</code>,
+<code>&quot;int32&quot;</code>, <code>&quot;uint32&quot;</code>, <code>&quot;int64&quot;</code>, <code>&quot;uint64&quot;</code>.
+Allowed values for <var>vt</var> are <code>&quot;any&quot;</code>, <code>&quot;char&quot;</code>,
+<code>&quot;double&quot;</code>, <code>&quot;single&quot;</code>, <code>&quot;int32&quot;</code>, <code>&quot;uint32&quot;</code>,
+<code>&quot;int64&quot;</code>, <code>&quot;uint64&quot;</code>, <code>&quot;logical&quot;</code>.
+</p>
+<p>The return value <var>m</var> is an object of the containers.Map class.
+</p>
+<p><strong>See also:</strong> <a href="Creating-Structures.html#XREFstruct">struct</a>.
+</p></dd></dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Cell-Arrays.html#Cell-Arrays" accesskey="n" rel="next">Cell Arrays</a>, Previous: <a href="Structures.html#Structures" accesskey="p" rel="prev">Structures</a>, Up: <a href="Data-Containers.html#Data-Containers" accesskey="u" rel="up">Data Containers</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

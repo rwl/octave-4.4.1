@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Properties (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Properties (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Properties (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="classdef-Classes.html#classdef-Classes" rel="up" title="classdef Classes">
+<link href="Methods.html#Methods" rel="next" title="Methods">
+<link href="Creating-a-classdef-Class.html#Creating-a-classdef-Class" rel="prev" title="Creating a classdef Class">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Properties"></a>
+<div class="header">
+<p>
+Next: <a href="Methods.html#Methods" accesskey="n" rel="next">Methods</a>, Previous: <a href="Creating-a-classdef-Class.html#Creating-a-classdef-Class" accesskey="p" rel="prev">Creating a classdef Class</a>, Up: <a href="classdef-Classes.html#classdef-Classes" accesskey="u" rel="up">classdef Classes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Properties-3"></a>
+<h4 class="subsection">34.6.2 Properties</h4>
+
+<p>All class properties must be defined within <code>properties</code> blocks.  The
+definition of a default value for a property is optional and can be omitted.
+The default initial value for each class property is <code>[]</code>.
+</p>
+<p>A <code>properties</code> block can have additional attributes to specify access
+rights or to define constants:
+</p>
+<div class="example">
+<pre class="example">classdef some_class
+  properties (Access = <var>mode</var>)
+    <var>prop1</var>
+  endproperties
+
+  properties (SetAccess = <var>mode</var>, GetAccess = <var>mode</var>)
+    <var>prop2</var>
+  endproperties
+
+  properties (Constant = true)
+    <var>prop3</var> = pi ()
+  endproperties
+
+  properties
+    <var>prop4</var> = 1337
+  endproperties
+endclassdef
+</pre></div>
+
+<p>where <var>mode</var> can be one of:
+</p>
+<dl compact="compact">
+<dt><code>public</code></dt>
+<dd><p>The properties can be accessed from everywhere.
+</p>
+</dd>
+<dt><code>private</code></dt>
+<dd><p>The properties can only be accessed from class methods.  Subclasses of that
+class cannot access them.
+</p>
+</dd>
+<dt><code>protected</code></dt>
+<dd><p>The properties can only be accessed from class methods and from subclasses
+of that class.
+</p></dd>
+</dl>
+
+<p>When creating an object of <code>some_class</code>, <var>prop1</var> has the default
+value <code>[]</code> and reading from and writing to <var>prop1</var> is defined by
+a single <var>mode</var>.  For <var>prop2</var> the read and write access can be set
+differently.  Finally, <var>prop3</var> is a constant property which can only be
+initialized once within the <code>properties</code> block.
+</p>
+<p>By default, in the example <var>prop4</var>, properties are not constant and have
+public read and write access.
+</p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+/*
+
+This class provides a simple color picker based on tQColorButton
+by Harald Jedele, 23.03.01, GPL version 2 or any later version.
+
+Copyright (C) FZI Forschungszentrum Informatik Karlsruhe
+Copyright (C) 2013-2018 Torsten
+This file is part of Octave.
+
+Octave is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Octave is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Octave; see the file COPYING.  If not, see
+<https://www.gnu.org/licenses/>.
+
+*/
+
+// Author: Torsten <ttl@justmail.de>
+
+#if defined (HAVE_CONFIG_H)
+#  include "config.h"
+#endif
+
+#include "color-picker.h"
+
+namespace octave
+{
+  // Constructor with initial color as parameter
+  color_picker::color_picker (QColor old_color, QWidget *p)
+    : QPushButton (p)
+  {
+    m_color = old_color;
+    setFlat (true);
+    setFocusPolicy (Qt::NoFocus);  // no focus, would changes the color
+    update_button ();
+    connect (this, SIGNAL (clicked (void)), SLOT (select_color (void)));
+  }
+
+  // Slot for button clicked: select a new color using QColorDialog
+  void color_picker::select_color (void)
+  {
+    QColor new_color = QColorDialog::getColor (m_color);
+
+    if (new_color.isValid () && new_color != m_color)
+      {
+        m_color = new_color;
+        update_button ();
+      }
+  }
+
+  // Draw the button with the actual color (using a stylesheet)
+  void color_picker::update_button (void)
+  {
+    // Is this the right place to look for a "foreground" color that would
+    // provide a reasonable border for the color swatches?
+    QWidget *p = parentWidget ();
+
+    QString bordercolor
+      = (p ? p->palette ().text ().color ().name () : QString ("#000000"));
+
+    setStyleSheet (QString ("background-color: %1; border: 1px solid %2;")
+                   .arg (m_color.name ())
+                   .arg (bordercolor));
+
+    repaint ();
+  }
+}

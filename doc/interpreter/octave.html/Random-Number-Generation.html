@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Random Number Generation (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Random Number Generation (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Random Number Generation (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Statistics.html#Statistics" rel="up" title="Statistics">
+<link href="Sets.html#Sets" rel="next" title="Sets">
+<link href="Distributions.html#Distributions" rel="prev" title="Distributions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Random-Number-Generation"></a>
+<div class="header">
+<p>
+Previous: <a href="Distributions.html#Distributions" accesskey="p" rel="prev">Distributions</a>, Up: <a href="Statistics.html#Statistics" accesskey="u" rel="up">Statistics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Random-Number-Generation-1"></a>
+<h3 class="section">26.5 Random Number Generation</h3>
+
+<p>Octave can generate random numbers from a large number of distributions.  The
+random number generators are based on the random number generators described in
+<a href="Special-Utility-Matrices.html#Special-Utility-Matrices">Special Utility Matrices</a>.
+</p>
+<p>The following table summarizes the available random number generators (in
+alphabetical order).
+</p>
+<table>
+<thead><tr><th width="40%">Distribution</th><th width="30%">Function</th></tr></thead>
+<tr><td width="40%">Univariate Discrete Distribution</td><td width="30%"><code>discrete_rnd</code></td></tr>
+<tr><td width="40%">Empirical Distribution</td><td width="30%"><code>empirical_rnd</code></td></tr>
+<tr><td width="40%">Exponential Distribution</td><td width="30%"><code>rande</code></td></tr>
+<tr><td width="40%">Gamma Distribution</td><td width="30%"><code>randg</code></td></tr>
+<tr><td width="40%">Poisson Distribution</td><td width="30%"><code>randp</code></td></tr>
+<tr><td width="40%">Standard Normal Distribution</td><td width="30%"><code>randn</code></td></tr>
+<tr><td width="40%">Uniform Distribution</td><td width="30%"><code>rand</code></td></tr>
+<tr><td width="40%">Uniform Distribution (integers)</td><td width="30%"><code>randi</code></td></tr>
+</table>
+
+<a name="XREFdiscrete_005frnd"></a><dl>
+<dt><a name="index-discrete_005frnd"></a><em></em> <strong>discrete_rnd</strong> <em>(<var>v</var>, <var>p</var>)</em></dt>
+<dt><a name="index-discrete_005frnd-1"></a><em></em> <strong>discrete_rnd</strong> <em>(<var>v</var>, <var>p</var>, <var>r</var>)</em></dt>
+<dt><a name="index-discrete_005frnd-2"></a><em></em> <strong>discrete_rnd</strong> <em>(<var>v</var>, <var>p</var>, <var>r</var>, <var>c</var>, &hellip;)</em></dt>
+<dt><a name="index-discrete_005frnd-3"></a><em></em> <strong>discrete_rnd</strong> <em>(<var>v</var>, <var>p</var>, [<var>sz</var>])</em></dt>
+<dd><p>Return a matrix of random samples from the univariate distribution which
+assumes the values in <var>v</var> with probabilities <var>p</var>.
+</p>
+<p>When called with a single size argument, return a square matrix with
+the dimension specified.  When called with more than one scalar argument the
+first two arguments are taken as the number of rows and columns and any
+further arguments specify additional matrix dimensions.  The size may also
+be specified with a vector of dimensions <var>sz</var>.
+</p>
+<p>If no size arguments are given then the result matrix is the common size of
+<var>v</var> and <var>p</var>.
+</p></dd></dl>
+
+
+<a name="XREFempirical_005frnd"></a><dl>
+<dt><a name="index-empirical_005frnd"></a><em></em> <strong>empirical_rnd</strong> <em>(<var>data</var>)</em></dt>
+<dt><a name="index-empirical_005frnd-1"></a><em></em> <strong>empirical_rnd</strong> <em>(<var>data</var>, <var>r</var>)</em></dt>
+<dt><a name="index-empirical_005frnd-2"></a><em></em> <strong>empirical_rnd</strong> <em>(<var>data</var>, <var>r</var>, <var>c</var>, &hellip;)</em></dt>
+<dt><a name="index-empirical_005frnd-3"></a><em></em> <strong>empirical_rnd</strong> <em>(<var>data</var>, [<var>sz</var>])</em></dt>
+<dd><p>Return a matrix of random samples from the empirical distribution obtained
+from the univariate sample <var>data</var>.
+</p>
+<p>When called with a single size argument, return a square matrix with
+the dimension specified.  When called with more than one scalar argument the
+first two arguments are taken as the number of rows and columns and any
+further arguments specify additional matrix dimensions.  The size may also
+be specified with a vector of dimensions <var>sz</var>.
+</p>
+<p>If no size arguments are given then the result matrix is a random ordering
+of the sample <var>data</var>.
+</p></dd></dl>
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Distributions.html#Distributions" accesskey="p" rel="prev">Distributions</a>, Up: <a href="Statistics.html#Statistics" accesskey="u" rel="up">Statistics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

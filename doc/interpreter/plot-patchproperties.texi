@@ -1,0 +1,347 @@
+@c DO NOT EDIT!  Generated automatically by genpropdoc.m.
+
+@c Copyright (C) 2014-2018 Pantxo Diribarne
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@table @asis
+
+@anchor{XREFpatchalphadatamapping}
+@prindex patch alphadatamapping
+@item @code{alphadatamapping}: @qcode{"direct"} | @qcode{"none"} | @{@qcode{"scaled"}@}
+Transparency is not yet implemented for patch objects.  @code{alphadatamapping} is unused.
+
+
+@anchor{XREFpatchambientstrength}
+@prindex patch ambientstrength
+@item @code{ambientstrength}: scalar, def. @code{0.30000}
+Strength of the ambient light. Value between 0.0 and 1.0
+
+
+@anchor{XREFpatchbackfacelighting}
+@prindex patch backfacelighting
+@item @code{backfacelighting}: @qcode{"lit"} | @{@qcode{"reverselit"}@} | @qcode{"unlit"}
+@qcode{"lit"}: The normals are used as is for lighting. @qcode{"reverselit"}: The normals are always oriented towards the point of view. @qcode{"unlit"}: Faces with normals pointing away from the point of view are unlit.
+
+
+@anchor{XREFpatchbeingdeleted}
+@prindex patch beingdeleted
+@item @code{beingdeleted}: @{@qcode{"off"}@} | @qcode{"on"}
+
+
+
+@anchor{XREFpatchbusyaction}
+@prindex patch busyaction
+@item @code{busyaction}: @qcode{"cancel"} | @{@qcode{"queue"}@}
+Define how Octave handles the execution of this object's callback properties when it is unable to interrupt another object's executing callback.  This is only relevant when the currently executing callback object has its @code{interruptible} property set to @qcode{"off"}.  The @code{busyaction} property of the interrupting callback object indicates whether the interrupting callback is queued (@qcode{"queue"} (default)) or discarded (@qcode{"cancel"}).
+@xref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFpatchbuttondownfcn}
+@prindex patch buttondownfcn
+@item @code{buttondownfcn}: string | function handle, def. @code{[](0x0)}
+For information on how to write graphics listener functions see @ref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFpatchcdata}
+@prindex patch cdata
+@item @code{cdata}: scalar | matrix, def. @code{[](0x0)}
+Data defining the patch object color.
+Patch color can be defined for faces or for vertices.
+
+If @code{cdata} is a scalar index into the current colormap or a RGB triplet, it defines the color of all faces.
+
+If @code{cdata} is an N-by-1 vector of indices or an N-by-3 (RGB) matrix, it defines the color of each one of the N faces.
+
+If @code{cdata} is an N-by-M or an N-by-M-by-3 (RGB) matrix, it defines the color at each vertex.
+
+
+@anchor{XREFpatchcdatamapping}
+@prindex patch cdatamapping
+@item @code{cdatamapping}: @qcode{"direct"} | @{@qcode{"scaled"}@}
+
+
+
+@anchor{XREFpatchchildren}
+@prindex patch children
+@item @code{children} (read-only): vector of graphics handles, def. @code{[](0x1)}
+@code{children} is unused.
+
+
+@anchor{XREFpatchclipping}
+@prindex patch clipping
+@item @code{clipping}: @qcode{"off"} | @{@qcode{"on"}@}
+If @code{clipping} is @qcode{"on"}, the patch is clipped in its parent axes limits.
+
+
+@anchor{XREFpatchcreatefcn}
+@prindex patch createfcn
+@item @code{createfcn}: string | function handle, def. @code{[](0x0)}
+Callback function executed immediately after patch has been created.  Function is set by using default property on root object, e.g., @code{set (groot, "defaultpatchcreatefcn", 'disp ("patch created!")')}.
+
+For information on how to write graphics listener functions see @ref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFpatchdeletefcn}
+@prindex patch deletefcn
+@item @code{deletefcn}: string | function handle, def. @code{[](0x0)}
+Callback function executed immediately before patch is deleted.
+
+For information on how to write graphics listener functions see @ref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFpatchdiffusestrength}
+@prindex patch diffusestrength
+@item @code{diffusestrength}: scalar, def. @code{0.60000}
+Strength of the diffuse reflex. Value between 0.0 (no diffuse reflex) and 1.0 (full diffuse reflex).
+
+
+@anchor{XREFpatchdisplayname}
+@prindex patch displayname
+@item @code{displayname}: def. @qcode{""}
+Text of the legend entry corresponding to this patch.
+
+
+@anchor{XREFpatchedgealpha}
+@prindex patch edgealpha
+@item @code{edgealpha}: scalar | matrix, def. @code{1}
+Transparency is not yet implemented for patch objects.  @code{edgealpha} is unused.
+
+
+@anchor{XREFpatchedgecolor}
+@prindex patch edgecolor
+@item @code{edgecolor}: def. @code{[0   0   0]}
+
+
+
+@anchor{XREFpatchedgelighting}
+@prindex patch edgelighting
+@item @code{edgelighting}: @qcode{"flat"} | @qcode{"gouraud"} | @{@qcode{"none"}@} | @qcode{"phong"}
+When set to a value other than @qcode{"none"}, the edges of the object are drawn with light and shadow effects.  Supported values are @qcode{"none"} (no lighting effects), @qcode{"flat"} (facetted look) and @qcode{"gouraud"} (linear interpolation of the lighting effects between the vertices). @qcode{"phong"} is deprecated and has the same effect as @qcode{"gouraud"}.
+
+
+@anchor{XREFpatchfacealpha}
+@prindex patch facealpha
+@item @code{facealpha}: scalar | @qcode{"flat"} | @qcode{"interp"}, def. @code{1}
+Transparency level of the faces of the patch object.  Only double values are supported at present where a value of 0 means complete transparency and a value of 1 means solid faces without transparency.  Setting the property to @qcode{"flat"} or @qcode{"interp"} causes the faces to not being rendered.  Additionally, the faces are not sorted from back to front which might lead to unexpected results when rendering layered transparent faces.
+
+
+@anchor{XREFpatchfacecolor}
+@prindex patch facecolor
+@item @code{facecolor}: @{colorspec@} | @qcode{"none"} | @qcode{"flat"} | @qcode{"interp"}, def. @code{[0   0   0]}
+
+
+
+@anchor{XREFpatchfacelighting}
+@prindex patch facelighting
+@item @code{facelighting}: @{@qcode{"flat"}@} | @qcode{"gouraud"} | @qcode{"none"} | @qcode{"phong"}
+When set to a value other than @qcode{"none"}, the faces of the object are drawn with light and shadow effects. Supported values are @qcode{"none"} (no lighting effects), @qcode{"flat"} (facetted look) and @qcode{"gouraud"} (linear interpolation of the lighting effects between the vertices). @qcode{"phong"} is deprecated and has the same effect as @qcode{"gouraud"}.
+
+
+@anchor{XREFpatchfacenormals}
+@prindex patch facenormals
+@item @code{facenormals}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFpatchfacenormalsmode}
+@prindex patch facenormalsmode
+@item @code{facenormalsmode}: @{@qcode{"auto"}@} | @qcode{"manual"}
+
+
+
+@anchor{XREFpatchfaces}
+@prindex patch faces
+@item @code{faces}: def. @code{[1   2   3]}
+
+
+
+@anchor{XREFpatchfacevertexalphadata}
+@prindex patch facevertexalphadata
+@item @code{facevertexalphadata}: scalar | matrix, def. @code{[](0x0)}
+Transparency is not yet implemented for patch objects.  @code{facevertexalphadata} is unused.
+
+
+@anchor{XREFpatchfacevertexcdata}
+@prindex patch facevertexcdata
+@item @code{facevertexcdata}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFpatchhandlevisibility}
+@prindex patch handlevisibility
+@item @code{handlevisibility}: @qcode{"callback"} | @qcode{"off"} | @{@qcode{"on"}@}
+If @code{handlevisibility} is @qcode{"off"}, the patch's handle is not visible in its parent's "children" property.
+
+
+@anchor{XREFpatchhittest}
+@prindex patch hittest
+@item @code{hittest}: @qcode{"off"} | @{@qcode{"on"}@}
+Specify whether patch processes mouse events or passes them to ancestors of the object.  When enabled, the object may respond to mouse clicks by evaluating the @qcode{"buttondownfcn"}, showing the uicontextmenu, and eventually becoming the root @qcode{"currentobject"}.  This property is only relevant when the object can accept mouse clicks which is determined by the @qcode{"pickableparts"} property.  @xref{XREFpatchpickableparts, , @w{pickableparts property}}.
+
+
+@anchor{XREFpatchinterruptible}
+@prindex patch interruptible
+@item @code{interruptible}: @qcode{"off"} | @{@qcode{"on"}@}
+Specify whether this object's callback functions may be interrupted by other callbacks.  By default @code{interruptible} is @qcode{"on"} and callbacks that make use of @code{drawnow}, @code{figure}, @code{waitfor}, @code{getframe} or @code{pause} functions are eventually interrupted.
+@xref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFpatchlinestyle}
+@prindex patch linestyle
+@item @code{linestyle}: @{@qcode{"-"}@} | @qcode{"--"} | @qcode{"-."} | @qcode{":"} | @qcode{"none"}
+
+
+
+@anchor{XREFpatchlinewidth}
+@prindex patch linewidth
+@item @code{linewidth}: def. @code{0.50000}
+
+
+
+@anchor{XREFpatchmarker}
+@prindex patch marker
+@item @code{marker}: @qcode{"*"} | @qcode{"+"} | @qcode{"."} | @qcode{"<"} | @qcode{">"} | @qcode{"^"} | @qcode{"d"} | @qcode{"diamond"} | @qcode{"h"} | @qcode{"hexagram"} | @{@qcode{"none"}@} | @qcode{"o"} | @qcode{"p"} | @qcode{"pentagram"} | @qcode{"s"} | @qcode{"square"} | @qcode{"v"} | @qcode{"x"}
+@xref{XREFlinemarker, , @w{line marker property}}.
+
+
+@anchor{XREFpatchmarkeredgecolor}
+@prindex patch markeredgecolor
+@item @code{markeredgecolor}: @{@qcode{"auto"}@} | @qcode{"flat"} | @qcode{"none"}
+@xref{XREFlinemarkeredgecolor, , @w{line markeredgecolor property}}.
+
+
+@anchor{XREFpatchmarkerfacecolor}
+@prindex patch markerfacecolor
+@item @code{markerfacecolor}: @qcode{"auto"} | @qcode{"flat"} | @{@qcode{"none"}@}
+@xref{XREFlinemarkerfacecolor, , @w{line markerfacecolor property}}.
+
+
+@anchor{XREFpatchmarkersize}
+@prindex patch markersize
+@item @code{markersize}: scalar, def. @code{6}
+@xref{XREFlinemarkersize, , @w{line markersize property}}.
+
+
+@anchor{XREFpatchparent}
+@prindex patch parent
+@item @code{parent}: graphics handle
+Handle of the parent graphics object.
+
+
+@anchor{XREFpatchpickableparts}
+@prindex patch pickableparts
+@item @code{pickableparts}: @qcode{"all"} | @qcode{"none"} | @{@qcode{"visible"}@}
+Specify whether patch will accept mouse clicks.  By default, @code{pickableparts} is @qcode{"visible"} and only visible parts of the patch or its children may react to mouse clicks.  When @code{pickableparts} is @qcode{"all"} both visible and invisible parts (or children) may react to mouse clicks.  When @code{pickableparts} is @qcode{"none"} mouse clicks on the object are ignored and transmitted to any objects underneath this one.  When an object is configured to accept mouse clicks the @qcode{"hittest"} property will determine how they are processed.  @xref{XREFpatchhittest, , @w{hittest property}}.
+
+
+@anchor{XREFpatchselected}
+@prindex patch selected
+@item @code{selected}: @{@qcode{"off"}@} | @qcode{"on"}
+
+
+
+@anchor{XREFpatchselectionhighlight}
+@prindex patch selectionhighlight
+@item @code{selectionhighlight}: @qcode{"off"} | @{@qcode{"on"}@}
+
+
+
+@anchor{XREFpatchspecularcolorreflectance}
+@prindex patch specularcolorreflectance
+@item @code{specularcolorreflectance}: scalar, def. @code{1}
+Reflectance for specular color.  Value between 0.0 (color of underlying face) and 1.0 (color of light source).
+
+
+@anchor{XREFpatchspecularexponent}
+@prindex patch specularexponent
+@item @code{specularexponent}: scalar, def. @code{10}
+Exponent for the specular reflex.  The lower the value, the more the reflex is spread out.
+
+
+@anchor{XREFpatchspecularstrength}
+@prindex patch specularstrength
+@item @code{specularstrength}: scalar, def. @code{0.90000}
+Strength of the specular reflex.  Value between 0.0 (no specular reflex) and 1.0 (full specular reflex).
+
+
+@anchor{XREFpatchtag}
+@prindex patch tag
+@item @code{tag}: string, def. @qcode{""}
+A user-defined string to label the graphics object.
+
+
+@anchor{XREFpatchtype}
+@prindex patch type
+@item @code{type} (read-only): string
+Class name of the graphics object.  @code{type} is always @qcode{"patch"}
+
+
+@anchor{XREFpatchuicontextmenu}
+@prindex patch uicontextmenu
+@item @code{uicontextmenu}: graphics handle, def. @code{[](0x0)}
+Graphics handle of the uicontextmenu object that is currently associated to this patch object.
+
+
+@anchor{XREFpatchuserdata}
+@prindex patch userdata
+@item @code{userdata}: Any Octave data, def. @code{[](0x0)}
+User-defined data to associate with the graphics object.
+
+
+@anchor{XREFpatchvertexnormals}
+@prindex patch vertexnormals
+@item @code{vertexnormals}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFpatchvertexnormalsmode}
+@prindex patch vertexnormalsmode
+@item @code{vertexnormalsmode}: @{@qcode{"auto"}@} | @qcode{"manual"}
+
+
+
+@anchor{XREFpatchvertices}
+@prindex patch vertices
+@item @code{vertices}: vector | matrix, def. 3-by-2 double
+
+
+
+@anchor{XREFpatchvisible}
+@prindex patch visible
+@item @code{visible}: @qcode{"off"} | @{@qcode{"on"}@}
+If @code{visible} is @qcode{"off"}, the patch is not rendered on screen.
+
+
+@anchor{XREFpatchxdata}
+@prindex patch xdata
+@item @code{xdata}: vector | matrix, def. @code{[0;    1;    0]}
+
+
+
+@anchor{XREFpatchydata}
+@prindex patch ydata
+@item @code{ydata}: vector | matrix, def. @code{[1;    1;    0]}
+
+
+
+@anchor{XREFpatchzdata}
+@prindex patch zdata
+@item @code{zdata}: vector | matrix, def. @code{[](0x0)}
+
+
+@end table

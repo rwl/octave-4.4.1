@@ -1,0 +1,253 @@
+@c Copyright (C) 1996-2018 John W. Eaton
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@node Statistics
+@chapter Statistics
+
+Octave has support for various statistical methods.  The emphasis is on basic
+descriptive statistics, but the Octave Forge statistics package includes
+probability distributions, statistical tests, random number generation, and
+much more.
+
+The functions that analyze data all assume that multi-dimensional data is
+arranged in a matrix where each row is an observation, and each column is a
+variable.  Thus, the matrix defined by
+
+@example
+@group
+a = [ 0.9, 0.7;
+      0.1, 0.1;
+      0.5, 0.4 ];
+@end group
+@end example
+
+@noindent
+contains three observations from a two-dimensional distribution.  While this is
+the default data arrangement, most functions support different arrangements.
+
+It should be noted that the statistics functions don't test for data containing
+NaN, NA, or Inf.  These values need to be detected and dealt with explicitly.
+See @ref{XREFisnan,,isnan}, @ref{XREFisna,,isna}, @ref{XREFisinf,,isinf},
+@ref{XREFisfinite,,isfinite}.
+
+@menu
+* Descriptive Statistics::
+* Basic Statistical Functions::
+* Correlation and Regression Analysis::
+* Distributions::
+* Random Number Generation::
+@end menu
+
+@node Descriptive Statistics
+@section Descriptive Statistics
+
+One principal goal of descriptive statistics is to represent the essence of a
+large data set concisely.  Octave provides the mean, median, and mode functions
+which all summarize a data set with just a single number corresponding to
+the central tendency of the data.
+
+@DOCSTRING(mean)
+
+@DOCSTRING(median)
+
+@DOCSTRING(mode)
+
+Using just one number, such as the mean, to represent an entire data set may
+not give an accurate picture of the data.  One way to characterize the fit is
+to measure the dispersion of the data.  Octave provides several functions for
+measuring dispersion.
+
+@DOCSTRING(bounds)
+
+@DOCSTRING(range)
+
+@DOCSTRING(iqr)
+
+@DOCSTRING(mad)
+
+@DOCSTRING(meansq)
+
+@DOCSTRING(std)
+
+In addition to knowing the size of a dispersion it is useful to know the shape
+of the data set.  For example, are data points massed to the left or right
+of the mean?  Octave provides several common measures to describe the shape
+of the data set.  Octave can also calculate moments allowing arbitrary shape
+measures to be developed.
+
+@DOCSTRING(var)
+
+@DOCSTRING(skewness)
+
+@DOCSTRING(kurtosis)
+
+@DOCSTRING(moment)
+
+@DOCSTRING(quantile)
+
+@DOCSTRING(prctile)
+
+A summary view of a data set can be generated quickly with the
+@code{statistics} function.
+
+@DOCSTRING(statistics)
+
+@node Basic Statistical Functions
+@section Basic Statistical Functions
+
+Octave supports various helpful statistical functions.  Many are useful as
+initial steps to prepare a data set for further analysis.  Others provide
+different measures from those of the basic descriptive statistics.
+
+@DOCSTRING(center)
+
+@DOCSTRING(zscore)
+
+@DOCSTRING(histc)
+
+@noindent
+@code{unique} function documented at @ref{XREFunique,,unique} is often
+useful for statistics.
+
+@DOCSTRING(nchoosek)
+
+@DOCSTRING(perms)
+
+@DOCSTRING(ranks)
+
+@DOCSTRING(run_count)
+
+@DOCSTRING(runlength)
+
+@node Correlation and Regression Analysis
+@section Correlation and Regression Analysis
+
+@c FIXME: Need Intro Here
+
+@DOCSTRING(cov)
+
+@DOCSTRING(corr)
+
+@DOCSTRING(corrcoef)
+
+@DOCSTRING(spearman)
+
+@DOCSTRING(kendall)
+
+@node Distributions
+@section Distributions
+
+Octave has functions for computing the Probability Density Function (PDF), the
+Cumulative Distribution function (CDF), and the quantile (the inverse of the
+CDF) for arbitrary user-defined distributions (discrete) and for experimental
+data (empirical).
+
+The following table summarizes the supported distributions (in alphabetical
+order).
+
+@tex
+\vskip 6pt
+{\hbox to \hsize {\hfill\vbox{\offinterlineskip \tabskip=0pt
+\halign{
+\vrule height2.0ex depth1.ex width 0.6pt #\tabskip=0.3em &
+# \hfil & \vrule # & # \hfil & \vrule # & # \hfil & \vrule # & # \hfil &
+# \vrule width 0.6pt \tabskip=0pt\cr
+\noalign{\hrule height 0.6pt}
+& {\bf Distribution} && {\bf PDF}      && {\bf CDF}     && {\bf Quantile}&\cr
+\noalign{\hrule}
+&Univariate Discrete       && discrete\_pdf  && discrete\_cdf && discrete\_inv&\cr
+&Empirical    && empirical\_pdf  && empirical\_cdf && empirical\_inv&\cr
+\noalign{\hrule height 0.6pt}
+}}\hfill}}
+@end tex
+@ifnottex
+@multitable @columnfractions .31 .23 .23 .23
+@headitem Distribution
+  @tab PDF
+  @tab CDF
+  @tab Quantile
+@item Univariate Discrete Distribution
+  @tab @code{discrete_pdf}
+  @tab @code{discrete_cdf}
+  @tab @code{discrete_inv}
+@item Empirical Distribution
+  @tab @code{empirical_pdf}
+  @tab @code{empirical_cdf}
+  @tab @code{empirical_inv}
+@end multitable
+@end ifnottex
+
+@DOCSTRING(discrete_pdf)
+
+@DOCSTRING(discrete_cdf)
+
+@DOCSTRING(discrete_inv)
+
+@DOCSTRING(empirical_pdf)
+
+@DOCSTRING(empirical_cdf)
+
+@DOCSTRING(empirical_inv)
+
+@node Random Number Generation
+@section Random Number Generation
+
+Octave can generate random numbers from a large number of distributions.  The
+random number generators are based on the random number generators described in
+@ref{Special Utility Matrices}.
+
+The following table summarizes the available random number generators (in
+alphabetical order).
+
+@tex
+\vskip 6pt
+{\hbox to \hsize {\hfill\vbox{\offinterlineskip \tabskip=0pt
+\halign{
+\vrule height2.0ex depth1.ex width 0.6pt #\tabskip=0.3em &
+# \hfil & \vrule # & # \hfil & # \vrule width 0.6pt \tabskip=0pt\cr
+\noalign{\hrule height 0.6pt}
+& {\bf Distribution}                && {\bf Function} &\cr
+\noalign{\hrule}
+& Univariate Discrete Distribution  && discrete\_rnd &\cr
+& Empirical Distribution            && empirical\_rnd &\cr
+& Exponential Distribution          && rande &\cr
+& Gamma Distribution                && randg &\cr
+& Poisson Distribution              && randp &\cr
+& Standard Normal Distribution      && randn &\cr
+& Uniform Distribution              && rand &\cr
+& Uniform Distribution (integers)   && randi &\cr
+\noalign{\hrule height 0.6pt}
+}}\hfill}}
+@end tex
+@ifnottex
+@multitable @columnfractions .4 .3
+@headitem Distribution                  @tab Function
+@item Univariate Discrete Distribution  @tab @code{discrete_rnd}
+@item Empirical Distribution            @tab @code{empirical_rnd}
+@item Exponential Distribution          @tab @code{rande}
+@item Gamma Distribution                @tab @code{randg}
+@item Poisson Distribution              @tab @code{randp}
+@item Standard Normal Distribution      @tab @code{randn}
+@item Uniform Distribution              @tab @code{rand}
+@item Uniform Distribution (integers)   @tab @code{randi}
+@end multitable
+@end ifnottex
+
+@DOCSTRING(discrete_rnd)
+
+@DOCSTRING(empirical_rnd)

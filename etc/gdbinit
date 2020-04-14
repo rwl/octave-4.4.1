@@ -1,0 +1,116 @@
+## Copyright (C) 2010-2018 John W. Eaton
+##
+## This file is part of Octave.
+##
+## Octave is free software: you can redistribute it and/or modify it
+## under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## Octave is distributed in the hope that it will be useful, but
+## WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with Octave; see the file COPYING.  If not, see
+## <https://www.gnu.org/licenses/>.
+
+############################################################
+## Disable the next line if you really need to see the
+## thread create/exit messages.
+
+set print thread-events off
+
+## Helpful macros for debugging Octave.
+
+## Programming Note: Don't strip the trailing space from the lines that
+## end with '\ '.  GDB strips spaces from the ends of the lines, so
+## these are required to preserve the whitespace.
+
+############################################################
+## Display a dim-vector object.
+
+define display-dims
+  echo ndims: \ 
+  output $arg0.rep[-1]
+  echo \ndims: \ 
+  output *$arg0.rep@$arg0.rep[-1]
+  echo \n
+  dont-repeat
+end
+
+document display-dims
+Usage: display-dims DIM_VECTOR
+Display the contents of an Octave dimension vector.
+end
+
+############################################################
+## Display a dense array object.
+
+define display-dense-array
+  echo array object: \ 
+  output $arg0
+  echo \ndimensions:\n
+  display-dims $arg0.dimensions
+  echo \nrep = \ 
+  output *$arg0.rep
+  echo \nrep.data = \ 
+  output *$arg0.rep.data@$arg0.rep.len
+  echo \n
+  dont-repeat
+end
+
+document display-dense-array
+Usage: display-dense-array ARRAY
+Display the contents of an ordinary, i.e., dense Octave array.
+
+See also [display-sparse-array] for showing the contents
+of sparse Octave arrays.
+end
+
+############################################################
+## Display a sparse array object.
+
+define display-sparse-array
+  echo sparse object: \ 
+  output $arg0
+  echo \ndimensions.rep[0] = \ 
+  display-dims $arg0.dimensions
+  echo \ndimensions.rep[1] = \ 
+  output $arg0.dimensions.rep[1]
+  echo \nrep = \ 
+  output *$arg0.rep
+  echo \nrep.d = \ 
+  output *$arg0.rep.d@$arg0.rep.nzmx
+  echo \nrep.r = \ 
+  output *$arg0.rep.r@$arg0.rep.nzmx
+  echo \nrep.c = \ 
+  output *$arg0.rep.c@($arg0.rep.ncols+1)
+  echo \n
+  dont-repeat
+end
+
+document display-sparse-array
+Usage: display-sparse-array SPARSE_ARRAY
+Display the contents of a sparse Octave array.
+
+See also [display-dense-array] for showing the contents
+of ordinary Octave arrays.
+end
+
+############################################################
+
+## Display Octave debugging stack
+
+define show-octave-dbstack
+  call show_octave_dbstack ()
+end
+
+document show-octave-dbstack
+Usage: show-octave-dbstack
+Display the contents of the current Octave debugging stack.
+
+This is the function stack that the Octave interpreter is processing
+and will be different from the C++ stack being debugged with gdb.
+end

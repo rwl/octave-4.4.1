@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (C) 2013-2018 Carnë Draug
+
+  This file is part of Octave.
+
+  Octave is free software: you can redistribute it and/or modify it
+  under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  Octave is distributed in the hope that it will be useful, but
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Octave; see the file COPYING.  If not, see
+  <https://www.gnu.org/licenses/>.
+-->
+<component type="desktop-application">
+  <id>org.octave.Octave.desktop</id>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>GNU Octave</name>
+  <summary>Interactive programming environment for numerical computations</summary>
+  <summary xml:lang="ca">Entorn de programació interactiva per a càlculs numèrics</summary>
+  <summary xml:lang="de">Interaktive Programmierumgebung für numerische Berechnungen</summary>
+  <summary xml:lang="es">Entorno de programación interactiva para cálculos numéricos</summary>
+  <summary xml:lang="fr">Environnement de programmation interactif pour le calcul numérique</summary>
+  <summary xml:lang="it">Ambiente di programmazione interattivo per il calcolo numerico</summary>
+  <summary xml:lang="ja">数値計算のための対話的なプログラミング環境</summary>
+  <summary xml:lang="nl">Interactieve programmeeromgeving voor numerieke berekeningen</summary>
+  <summary xml:lang="pt">Ambiente de programação interativo para computação numérica</summary>
+  <summary xml:lang="zh">数值计算交互式编程环境</summary>
+  <description>
+    <p>
+      GNU Octave is a high-level interpreted language, primarily intended for
+      numerical computations. It provides capabilities for the numerical
+      solution of linear and nonlinear problems, and for performing other
+      numerical experiments. It also provides extensive graphics capabilities
+      for data visualization and manipulation. Octave is normally used through
+      its interactive command line interface, but it can also be used to write
+      non-interactive programs. The Octave language is quite similar to
+      Matlab so that most programs are easily portable.
+    </p>
+    <p>
+      Octave has extensive tools for solving common numerical linear algebra
+      problems, finding the roots of nonlinear equations, integrating ordinary
+      functions, manipulating polynomials, and integrating ordinary
+      differential and differential-algebraic equations. It is easily
+      extensible and customizable via user-defined functions written in
+      Octave's own language, or using dynamically loaded modules written in
+      C++, C, Fortran, or other languages.
+    </p>
+  </description>
+
+  <screenshots>
+    <!--
+      From: https://www.freedesktop.org/software/appstream/docs/
+      All screenshots should have a 16:9 aspect ratio, and should have
+      a width that is no smaller than 620px. Screenshots should be in PNG
+      or JPEG format. PNG is the preferred format.
+    -->
+    <screenshot type="default">
+      <image>https://www.gnu.org/software/octave/img/screenshot.png</image>
+    </screenshot>
+  </screenshots>
+
+  <launchable type="desktop-id">org.octave.Octave.desktop</launchable>
+  <provides>
+    <binary>octave</binary>
+  </provides>
+
+  <url type="homepage">https://www.octave.org/</url>
+  <url type="bugtracker">https://bugs.octave.org/</url>
+  <url type="donation">https://www.octave.org/donate.html</url>
+  <url type="faq">https://wiki.octave.org/FAQ</url>
+  <update_contact>maintainers@octave.org</update_contact>
+  <project_group>GNU</project_group>
+  <developer_name>John W. Eaton and others</developer_name>
+  <releases>
+    <release date="2018-04-30" version="4.4.1"/>
+    <release date="2018-04-30" version="4.4.0"/>
+    <release date="2018-03-13" version="4.2.2"/>
+  </releases>
+</component>

@@ -1,0 +1,256 @@
+@c DO NOT EDIT!  Generated automatically by genpropdoc.m.
+
+@c Copyright (C) 2014-2018 Pantxo Diribarne
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@table @asis
+
+@anchor{XREFuibuttongroupbackgroundcolor}
+@prindex uibuttongroup backgroundcolor
+@item @code{backgroundcolor}: def. @code{[1   1   1]}
+
+
+
+@anchor{XREFuibuttongroupbeingdeleted}
+@prindex uibuttongroup beingdeleted
+@item @code{beingdeleted}: @{@qcode{"off"}@} | @qcode{"on"}
+
+
+
+@anchor{XREFuibuttongroupbordertype}
+@prindex uibuttongroup bordertype
+@item @code{bordertype}: @qcode{"beveledin"} | @qcode{"beveledout"} | @{@qcode{"etchedin"}@} | @qcode{"etchedout"} | @qcode{"line"} | @qcode{"none"}
+
+
+
+@anchor{XREFuibuttongroupborderwidth}
+@prindex uibuttongroup borderwidth
+@item @code{borderwidth}: def. @code{1}
+
+
+
+@anchor{XREFuibuttongroupbusyaction}
+@prindex uibuttongroup busyaction
+@item @code{busyaction}: @qcode{"cancel"} | @{@qcode{"queue"}@}
+Define how Octave handles the execution of this object's callback properties when it is unable to interrupt another object's executing callback.  This is only relevant when the currently executing callback object has its @code{interruptible} property set to @qcode{"off"}.  The @code{busyaction} property of the interrupting callback object indicates whether the interrupting callback is queued (@qcode{"queue"} (default)) or discarded (@qcode{"cancel"}).
+@xref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFuibuttongroupbuttondownfcn}
+@prindex uibuttongroup buttondownfcn
+@item @code{buttondownfcn}: string | function handle, def. @code{[](0x0)}
+For information on how to write graphics listener functions see @ref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFuibuttongroupchildren}
+@prindex uibuttongroup children
+@item @code{children} (read-only): vector of graphics handles, def. @code{[](0x1)}
+Graphics handles of the uibuttongroup's children.
+
+
+@anchor{XREFuibuttongroupclipping}
+@prindex uibuttongroup clipping
+@item @code{clipping}: @qcode{"off"} | @{@qcode{"on"}@}
+If @code{clipping} is @qcode{"on"}, the uibuttongroup is clipped in its parent axes limits.
+
+
+@anchor{XREFuibuttongroupcreatefcn}
+@prindex uibuttongroup createfcn
+@item @code{createfcn}: string | function handle, def. @code{[](0x0)}
+Callback function executed immediately after uibuttongroup has been created.  Function is set by using default property on root object, e.g., @code{set (groot, "defaultuibuttongroupcreatefcn", 'disp ("uibuttongroup created!")')}.
+
+For information on how to write graphics listener functions see @ref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFuibuttongroupdeletefcn}
+@prindex uibuttongroup deletefcn
+@item @code{deletefcn}: string | function handle, def. @code{[](0x0)}
+Callback function executed immediately before uibuttongroup is deleted.
+
+For information on how to write graphics listener functions see @ref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFuibuttongroupfontangle}
+@prindex uibuttongroup fontangle
+@item @code{fontangle}: @qcode{"italic"} | @{@qcode{"normal"}@} | @qcode{"oblique"}
+Control whether the font is italic or normal.
+
+
+@anchor{XREFuibuttongroupfontname}
+@prindex uibuttongroup fontname
+@item @code{fontname}: string, def. @qcode{"*"}
+Name of font used for text rendering.  When setting this property, the text rendering engine will search for a matching font in your system.  If none is found then text is rendered using a default sans serif font (same as the default @qcode{"*"} value).
+
+
+@anchor{XREFuibuttongroupfontsize}
+@prindex uibuttongroup fontsize
+@item @code{fontsize}: scalar, def. @code{10}
+Size of the font used for text rendering.  @xref{XREFuibuttongroupfontunits, , fontunits property}.
+
+
+@anchor{XREFuibuttongroupfontunits}
+@prindex uibuttongroup fontunits
+@item @code{fontunits}: @qcode{"centimeters"} | @qcode{"inches"} | @qcode{"normalized"} | @qcode{"pixels"} | @{@qcode{"points"}@}
+Units used to interpret the @qcode{"fontsize"} property.
+
+
+@anchor{XREFuibuttongroupfontweight}
+@prindex uibuttongroup fontweight
+@item @code{fontweight}: @qcode{"bold"} | @qcode{"demi"} | @qcode{"light"} | @{@qcode{"normal"}@}
+Control the variant of the base font used for text rendering.
+
+
+@anchor{XREFuibuttongroupforegroundcolor}
+@prindex uibuttongroup foregroundcolor
+@item @code{foregroundcolor}: def. @code{[0   0   0]}
+
+
+
+@anchor{XREFuibuttongrouphandlevisibility}
+@prindex uibuttongroup handlevisibility
+@item @code{handlevisibility}: @qcode{"callback"} | @qcode{"off"} | @{@qcode{"on"}@}
+If @code{handlevisibility} is @qcode{"off"}, the uibuttongroup's handle is not visible in its parent's "children" property.
+
+
+@anchor{XREFuibuttongrouphighlightcolor}
+@prindex uibuttongroup highlightcolor
+@item @code{highlightcolor}: def. @code{[1   1   1]}
+
+
+
+@anchor{XREFuibuttongrouphittest}
+@prindex uibuttongroup hittest
+@item @code{hittest}: @qcode{"off"} | @{@qcode{"on"}@}
+Specify whether uibuttongroup processes mouse events or passes them to ancestors of the object.  When enabled, the object may respond to mouse clicks by evaluating the @qcode{"buttondownfcn"}, showing the uicontextmenu, and eventually becoming the root @qcode{"currentobject"}.  This property is only relevant when the object can accept mouse clicks which is determined by the @qcode{"pickableparts"} property.  @xref{XREFuibuttongrouppickableparts, , @w{pickableparts property}}.
+
+
+@anchor{XREFuibuttongroupinterruptible}
+@prindex uibuttongroup interruptible
+@item @code{interruptible}: @qcode{"off"} | @{@qcode{"on"}@}
+Specify whether this object's callback functions may be interrupted by other callbacks.  By default @code{interruptible} is @qcode{"on"} and callbacks that make use of @code{drawnow}, @code{figure}, @code{waitfor}, @code{getframe} or @code{pause} functions are eventually interrupted.
+@xref{Callbacks, , @w{Callbacks section}}.
+
+
+@anchor{XREFuibuttongroupparent}
+@prindex uibuttongroup parent
+@item @code{parent}: graphics handle
+Handle of the parent graphics object.
+
+
+@anchor{XREFuibuttongrouppickableparts}
+@prindex uibuttongroup pickableparts
+@item @code{pickableparts}: @qcode{"all"} | @qcode{"none"} | @{@qcode{"visible"}@}
+Specify whether uibuttongroup will accept mouse clicks.  By default, @code{pickableparts} is @qcode{"visible"} and only visible parts of the uibuttongroup or its children may react to mouse clicks.  When @code{pickableparts} is @qcode{"all"} both visible and invisible parts (or children) may react to mouse clicks.  When @code{pickableparts} is @qcode{"none"} mouse clicks on the object are ignored and transmitted to any objects underneath this one.  When an object is configured to accept mouse clicks the @qcode{"hittest"} property will determine how they are processed.  @xref{XREFuibuttongrouphittest, , @w{hittest property}}.
+
+
+@anchor{XREFuibuttongroupposition}
+@prindex uibuttongroup position
+@item @code{position}: def. @code{[0   0   1   1]}
+
+
+
+@anchor{XREFuibuttongroupresizefcn}
+@prindex uibuttongroup resizefcn
+@item @code{resizefcn}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFuibuttongroupselected}
+@prindex uibuttongroup selected
+@item @code{selected}: @{@qcode{"off"}@} | @qcode{"on"}
+
+
+
+@anchor{XREFuibuttongroupselectedobject}
+@prindex uibuttongroup selectedobject
+@item @code{selectedobject}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFuibuttongroupselectionchangedfcn}
+@prindex uibuttongroup selectionchangedfcn
+@item @code{selectionchangedfcn}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFuibuttongroupselectionhighlight}
+@prindex uibuttongroup selectionhighlight
+@item @code{selectionhighlight}: @qcode{"off"} | @{@qcode{"on"}@}
+
+
+
+@anchor{XREFuibuttongroupshadowcolor}
+@prindex uibuttongroup shadowcolor
+@item @code{shadowcolor}: def. @code{[0   0   0]}
+
+
+
+@anchor{XREFuibuttongroupsizechangedfcn}
+@prindex uibuttongroup sizechangedfcn
+@item @code{sizechangedfcn}: def. @code{[](0x0)}
+
+
+
+@anchor{XREFuibuttongrouptag}
+@prindex uibuttongroup tag
+@item @code{tag}: string, def. @qcode{""}
+A user-defined string to label the graphics object.
+
+
+@anchor{XREFuibuttongrouptitle}
+@prindex uibuttongroup title
+@item @code{title}: def. @qcode{""}
+
+
+
+@anchor{XREFuibuttongrouptitleposition}
+@prindex uibuttongroup titleposition
+@item @code{titleposition}: @qcode{"centerbottom"} | @qcode{"centertop"} | @qcode{"leftbottom"} | @{@qcode{"lefttop"}@} | @qcode{"rightbottom"} | @qcode{"righttop"}
+
+
+
+@anchor{XREFuibuttongrouptype}
+@prindex uibuttongroup type
+@item @code{type} (read-only): string
+Class name of the graphics object.  @code{type} is always @qcode{"uibuttongroup"}
+
+
+@anchor{XREFuibuttongroupuicontextmenu}
+@prindex uibuttongroup uicontextmenu
+@item @code{uicontextmenu}: graphics handle, def. @code{[](0x0)}
+Graphics handle of the uicontextmenu object that is currently associated to this uibuttongroup object.
+
+
+@anchor{XREFuibuttongroupunits}
+@prindex uibuttongroup units
+@item @code{units}: @qcode{"centimeters"} | @qcode{"characters"} | @qcode{"inches"} | @{@qcode{"normalized"}@} | @qcode{"pixels"} | @qcode{"points"}
+
+
+
+@anchor{XREFuibuttongroupuserdata}
+@prindex uibuttongroup userdata
+@item @code{userdata}: Any Octave data, def. @code{[](0x0)}
+User-defined data to associate with the graphics object.
+
+
+@anchor{XREFuibuttongroupvisible}
+@prindex uibuttongroup visible
+@item @code{visible}: @qcode{"off"} | @{@qcode{"on"}@}
+If @code{visible} is @qcode{"off"}, the uibuttongroup is not rendered on screen.
+
+@end table

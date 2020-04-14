@@ -1,0 +1,228 @@
+@c Copyright (C) 1996-2018 John W. Eaton
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@node Differential Equations
+@chapter Differential Equations
+
+Octave has built-in functions for solving ordinary differential equations,
+and differential-algebraic equations.
+All solvers are based on reliable ODE routines written in Fortran.
+
+@menu
+* Ordinary Differential Equations::
+* Differential-Algebraic Equations::
+@end menu
+
+@cindex differential equations
+@cindex ODE
+@cindex DAE
+
+@node Ordinary Differential Equations
+@section Ordinary Differential Equations
+
+The function @code{lsode} can be used to solve ODEs of the form
+@tex
+$$
+ {dx\over dt} = f (x, t)
+$$
+@end tex
+@ifnottex
+
+@example
+@group
+dx
+-- = f (x, t)
+dt
+@end group
+@end example
+
+@end ifnottex
+
+@noindent
+using @nospell{Hindmarsh's} ODE solver @sc{lsode}.
+
+@DOCSTRING(lsode)
+
+@DOCSTRING(lsode_options)
+
+Here is an example of solving a set of three differential equations using
+@code{lsode}.  Given the function
+
+@cindex oregonator
+
+@example
+@group
+## oregonator differential equation
+function xdot = f (x, t)
+
+  xdot = zeros (3,1);
+
+  xdot(1) = 77.27 * (x(2) - x(1)*x(2) + x(1) ...
+            - 8.375e-06*x(1)^2);
+  xdot(2) = (x(3) - x(1)*x(2) - x(2)) / 77.27;
+  xdot(3) = 0.161*(x(1) - x(3));
+
+endfunction
+@end group
+@end example
+
+@noindent
+and the initial condition @code{x0 = [ 4; 1.1; 4 ]}, the set of
+equations can be integrated using the command
+
+@example
+@group
+t = linspace (0, 500, 1000);
+
+y = lsode ("f", x0, t);
+@end group
+@end example
+
+If you try this, you will see that the value of the result changes
+dramatically between @var{t} = 0 and 5, and again around @var{t} = 305.
+A more efficient set of output points might be
+
+@example
+@group
+t = [0, logspace(-1, log10(303), 150), ...
+        logspace(log10(304), log10(500), 150)];
+@end group
+@end example
+
+See @nospell{Alan C. Hindmarsh},
+@cite{ODEPACK, A Systematized Collection of ODE Solvers},
+in Scientific Computing, @nospell{R. S. Stepleman}, editor, (1983)
+for more information about the inner workings of @code{lsode}.
+
+An m-file for the differential equation used above is included with the
+Octave distribution in the examples directory under the name
+@file{oregonator.m}.
+
+@menu
+* Matlab-compatible solvers::
+@end menu
+
+@node Matlab-compatible solvers
+@subsection Matlab-compatible solvers
+
+Octave also provides a set of solvers for initial value problems for Ordinary
+Differential Equations that have a @sc{matlab}-compatible interface.
+The options for this class of methods are set using the functions.
+
+@itemize
+  @item @code{odeset}
+
+  @item @code{odeget}
+@end itemize
+
+Currently implemented solvers are:
+
+@itemize
+  @item @nospell{Runge-Kutta} methods
+
+  @itemize
+    @item @code{ode23} integrates a system of non-stiff ordinary differential
+    equations (ODEs) or index-1 differential-algebraic equations (DAEs).  It
+    uses the third-order @nospell{Bogacki-Shampine} method and adapts the local
+    step size in order to satisfy a user-specified tolerance.  The solver
+    requires three function evaluations per integration step.
+
+    @item @code{ode45} integrates a system of non-stiff ODEs (or index-1 DAEs)
+    using the high-order, variable-step @nospell{Dormand-Prince} method.  It
+    requires six function evaluations per integration step, but may
+    take larger steps on smooth problems than @code{ode23}: potentially
+    offering improved efficiency at smaller tolerances.
+  @end itemize
+
+  @item Linear multistep methods
+
+  @itemize
+    @item @code{ode15s} integrates a system of stiff ODEs (or index-1 DAEs)
+    using a variable step, variable order method based on Backward Difference
+    Formulas (BDF).
+
+    @item @code{ode15i} integrates a system of fully-implicit ODEs (or index-1
+    DAEs) using the same variable step, variable order method as @code{ode15s}.
+    The function @code{decic} can be used to compute consistent initial
+    conditions.
+  @end itemize
+@end itemize
+
+@DOCSTRING(ode45)
+
+@DOCSTRING(ode23)
+
+@DOCSTRING(ode15s)
+
+@DOCSTRING(ode15i)
+
+@DOCSTRING(decic)
+
+@DOCSTRING(odeset)
+
+@DOCSTRING(odeget)
+
+@DOCSTRING(odeplot)
+
+@node Differential-Algebraic Equations
+@section Differential-Algebraic Equations
+
+The function @code{daspk} can be used to solve DAEs of the form
+@tex
+$$
+ 0 = f (\dot{x}, x, t), \qquad x(t=0) = x_0, \dot{x}(t=0) = \dot{x}_0
+$$
+@end tex
+@ifnottex
+
+@example
+0 = f (x-dot, x, t),    x(t=0) = x_0, x-dot(t=0) = x-dot_0
+@end example
+
+@end ifnottex
+
+@noindent
+where
+@tex
+$\dot{x} = {dx \over dt}$
+@end tex
+@ifnottex
+@math{x-dot}
+@end ifnottex
+is the derivative of @math{x}.  The equation is solved using
+@nospell{Petzold's} DAE solver @sc{daspk}.
+
+@DOCSTRING(daspk)
+
+@DOCSTRING(daspk_options)
+
+Octave also includes @sc{dassl}, an earlier version of @sc{daspk},
+and @sc{dasrt}, which can be used to solve DAEs with constraints
+(stopping conditions).
+
+@DOCSTRING(dassl)
+
+@DOCSTRING(dassl_options)
+
+@DOCSTRING(dasrt)
+
+@DOCSTRING(dasrt_options)
+
+See @nospell{K. E. Brenan}, et al., @cite{Numerical Solution of Initial-Value
+Problems in Differential-Algebraic Equations}, North-Holland (1989) for
+more information about the implementation of @sc{dassl}.

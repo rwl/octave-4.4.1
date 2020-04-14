@@ -1,0 +1,689 @@
+@c DO NOT EDIT!  Generated automatically by munge-texi.pl.
+
+@c Copyright (C) 1996-2018 John W. Eaton
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@node Data Types
+@chapter Data Types
+@cindex data types
+
+All versions of Octave include a number of built-in data types,
+including real and complex scalars and matrices, character strings,
+a data structure type, and an array that can contain all data types.
+
+It is also possible to define new specialized data types by writing a
+small amount of C++ code.  On some systems, new data types can be loaded
+dynamically while Octave is running, so it is not necessary to recompile
+all of Octave just to add a new type.  @xref{External Code Interface}, for
+more information about Octave's dynamic linking capabilities.
+@ref{User-defined Data Types} describes what you must do to define a
+new data type for Octave.
+
+@c typeinfo libinterp/octave-value/ov-typeinfo.cc
+@anchor{XREFtypeinfo}
+@deftypefn  {} {} typeinfo ()
+@deftypefnx {} {} typeinfo (@var{expr})
+
+Return the type of the expression @var{expr}, as a string.
+
+If @var{expr} is omitted, return a cell array of strings containing all the
+currently installed data types.
+@seealso{@ref{XREFclass,,class}, @ref{XREFisa,,isa}}
+@end deftypefn
+
+
+@menu
+* Built-in Data Types::
+* User-defined Data Types::
+* Object Sizes::
+@end menu
+
+@node Built-in Data Types
+@section Built-in Data Types
+@cindex data types, built-in
+@cindex built-in data types
+
+The standard built-in data types are real and complex scalars and
+matrices, ranges, character strings, a data structure type, and cell
+arrays.  Additional built-in data types may be added in future versions.
+If you need a specialized data type that is not currently provided as a
+built-in type, you are encouraged to write your own user-defined data
+type and contribute it for distribution in a future release of Octave.
+
+The data type of a variable can be determined and changed through the
+use of the following functions.
+
+@c class libinterp/octave-value/ov-class.cc
+@anchor{XREFclass}
+@deftypefn  {} {@var{classname} =} class (@var{obj})
+@deftypefnx {} {} class (@var{s}, @var{id})
+@deftypefnx {} {} class (@var{s}, @var{id}, @var{p}, @dots{})
+Return the class of the object @var{obj}, or create a class with
+fields from structure @var{s} and name (string) @var{id}.
+
+Additional arguments name a list of parent classes from which the new class
+is derived.
+@seealso{@ref{XREFtypeinfo,,typeinfo}, @ref{XREFisa,,isa}}
+@end deftypefn
+
+
+@c isa libinterp/octave-value/ov-class.cc
+@anchor{XREFisa}
+@deftypefn {} {} isa (@var{obj}, @var{classname})
+Return true if @var{obj} is an object from the class @var{classname}.
+
+@var{classname} may also be one of the following class categories:
+
+@table @asis
+@item @qcode{"float"}
+Floating point value comprising classes @qcode{"double"} and
+@qcode{"single"}.
+
+@item @qcode{"integer"}
+Integer value comprising classes (u)int8, (u)int16, (u)int32, (u)int64.
+
+@item @qcode{"numeric"}
+Numeric value comprising either a floating point or integer value.
+@end table
+
+If @var{classname} is a cell array of string, a logical array of the same
+size is returned, containing true for each class to which @var{obj}
+belongs to.
+
+@seealso{@ref{XREFclass,,class}, @ref{XREFtypeinfo,,typeinfo}}
+@end deftypefn
+
+
+@c cast scripts/miscellaneous/cast.m
+@anchor{XREFcast}
+@deftypefn {} {} cast (@var{val}, "@var{type}")
+Convert @var{val} to data type @var{type}.
+
+Both @var{val} and @var{type} are typically one of the following built-in
+classes:
+
+@example
+@group
+"double"
+"single"
+"logical"
+"char"
+"int8"
+"int16"
+"int32"
+"int64"
+"uint8"
+"uint16"
+"uint32"
+"uint64"
+@end group
+@end example
+
+The value @var{val} may be modified to fit within the range of the new type.
+
+Examples:
+
+@example
+@group
+cast (-5, "uint8")
+   @result{} 0
+cast (300, "int8")
+   @result{} 127
+@end group
+@end example
+
+Programming Note: This function relies on the object @var{val} having a
+conversion method named @var{type}.  User-defined classes may implement only
+a subset of the full list of types shown above.  In that case, it may be
+necessary to call cast twice in order to reach the desired type.
+For example, the conversion to double is nearly always implemented, but
+the conversion to uint8 might not be.  In that case, the following code will
+work
+
+@example
+cast (cast (@var{user_defined_val}, "double"), "uint8")
+@end example
+
+@seealso{@ref{XREFtypecast,,typecast}, @ref{XREFint8,,int8}, @ref{XREFuint8,,uint8}, @ref{XREFint16,,int16}, @ref{XREFuint16,,uint16}, @ref{XREFint32,,int32}, @ref{XREFuint32,,uint32}, @ref{XREFint64,,int64}, @ref{XREFuint64,,uint64}, @ref{XREFdouble,,double}, @ref{XREFsingle,,single}, @ref{XREFlogical,,logical}, @ref{XREFchar,,char}, @ref{XREFclass,,class}, @ref{XREFtypeinfo,,typeinfo}}
+@end deftypefn
+
+
+@c typecast libinterp/corefcn/typecast.cc
+@anchor{XREFtypecast}
+@deftypefn {} {@var{y} =} typecast (@var{x}, "@var{class}")
+Return a new array @var{y} resulting from interpreting the data of @var{x}
+in memory as data of the numeric class @var{class}.
+
+Both the class of @var{x} and @var{class} must be one of the built-in
+numeric classes:
+
+@example
+@group
+"logical"
+"char"
+"int8"
+"int16"
+"int32"
+"int64"
+"uint8"
+"uint16"
+"uint32"
+"uint64"
+"double"
+"single"
+"double complex"
+"single complex"
+@end group
+@end example
+
+@noindent
+the last two are only used with @var{class}; they indicate that a
+complex-valued result is requested.  Complex arrays are stored in memory as
+consecutive pairs of real numbers.  The sizes of integer types are given by
+their bit counts.  Both logical and char are typically one byte wide;
+however, this is not guaranteed by C++.  If your system is IEEE conformant,
+single and double will be 4 bytes and 8 bytes wide, respectively.
+@qcode{"logical"} is not allowed for @var{class}.
+
+If the input is a row vector, the return value is a row vector, otherwise it
+is a column vector.
+
+If the bit length of @var{x} is not divisible by that of @var{class}, an
+error occurs.
+
+An example of the use of typecast on a little-endian machine is
+
+@example
+@group
+@var{x} = uint16 ([1, 65535]);
+typecast (@var{x}, "uint8")
+@result{} [   1,   0, 255, 255]
+@end group
+@end example
+@seealso{@ref{XREFcast,,cast}, @ref{XREFbitpack,,bitpack}, @ref{XREFbitunpack,,bitunpack}, @ref{XREFswapbytes,,swapbytes}}
+@end deftypefn
+
+
+@c swapbytes scripts/miscellaneous/swapbytes.m
+@anchor{XREFswapbytes}
+@deftypefn {} {} swapbytes (@var{x})
+Swap the byte order on values, converting from little endian to big endian
+and vice versa.
+
+For example:
+
+@example
+@group
+swapbytes (uint16 (1:4))
+@result{} [   256   512   768  1024]
+@end group
+@end example
+
+@seealso{@ref{XREFtypecast,,typecast}, @ref{XREFcast,,cast}}
+@end deftypefn
+
+
+@c bitpack libinterp/corefcn/typecast.cc
+@anchor{XREFbitpack}
+@deftypefn {} {@var{y} =} bitpack (@var{x}, @var{class})
+Return a new array @var{y} resulting from interpreting the logical array
+@var{x} as raw bit patterns for data of the numeric class @var{class}.
+
+@var{class} must be one of the built-in numeric classes:
+
+@example
+@group
+"double"
+"single"
+"double complex"
+"single complex"
+"char"
+"int8"
+"int16"
+"int32"
+"int64"
+"uint8"
+"uint16"
+"uint32"
+"uint64"
+@end group
+@end example
+
+The number of elements of @var{x} should be divisible by the bit length of
+@var{class}.  If it is not, excess bits are discarded.  Bits come in
+increasing order of significance, i.e., @code{x(1)} is bit 0, @code{x(2)} is
+bit 1, etc.
+
+The result is a row vector if @var{x} is a row vector, otherwise it is a
+column vector.
+@seealso{@ref{XREFbitunpack,,bitunpack}, @ref{XREFtypecast,,typecast}}
+@end deftypefn
+
+
+@c bitunpack libinterp/corefcn/typecast.cc
+@anchor{XREFbitunpack}
+@deftypefn {} {@var{y} =} bitunpack (@var{x})
+Return a logical array @var{y} corresponding to the raw bit patterns of
+@var{x}.
+
+@var{x} must belong to one of the built-in numeric classes:
+
+@example
+@group
+"double"
+"single"
+"char"
+"int8"
+"int16"
+"int32"
+"int64"
+"uint8"
+"uint16"
+"uint32"
+"uint64"
+@end group
+@end example
+
+The result is a row vector if @var{x} is a row vector; otherwise, it is a
+column vector.
+@seealso{@ref{XREFbitpack,,bitpack}, @ref{XREFtypecast,,typecast}}
+@end deftypefn
+
+
+@menu
+* Numeric Objects::
+* Missing Data::
+* String Objects::
+* Data Structure Objects::
+* Cell Array Objects::
+@end menu
+
+@node Numeric Objects
+@subsection Numeric Objects
+@cindex numeric constant
+@cindex numeric value
+
+Octave's built-in numeric objects include real, complex, and integer
+scalars and matrices.  All built-in floating point numeric data is
+currently stored as double precision numbers.  On systems that use the
+IEEE floating point format, values in the range of approximately
+@tex
+ $2.2251\times10^{-308}$ to $1.7977\times10^{308}$
+@end tex
+@ifnottex
+ 2.2251e-308 to 1.7977e+308
+@end ifnottex
+ can be stored, and the relative precision is approximately
+@tex
+ $2.2204\times10^{-16}$.
+@end tex
+@ifnottex
+ 2.2204e-16.
+@end ifnottex
+The exact values are given by the variables @code{realmin},
+@code{realmax}, and @code{eps}, respectively.
+
+Matrix objects can be of any size, and can be dynamically reshaped and
+resized.  It is easy to extract individual rows, columns, or submatrices
+using a variety of powerful indexing features.  @xref{Index Expressions}.
+
+@xref{Numeric Data Types}, for more information.
+
+@node Missing Data
+@subsection Missing Data
+@cindex missing data
+
+It is possible to represent missing data explicitly in Octave using
+@code{NA} (short for ``Not Available'').  Missing data can only be
+represented when data is represented as floating point numbers.  In this
+case missing data is represented as a special case of the representation
+of @code{NaN}.
+
+@c NA libinterp/corefcn/data.cc
+@anchor{XREFNA}
+@deftypefn  {} {} NA
+@deftypefnx {} {} NA (@var{n})
+@deftypefnx {} {} NA (@var{n}, @var{m})
+@deftypefnx {} {} NA (@var{n}, @var{m}, @var{k}, @dots{})
+@deftypefnx {} {} NA (@dots{}, @var{class})
+Return a scalar, matrix, or N-dimensional array whose elements are all equal
+to the special constant used to designate missing values.
+
+Note that NA always compares not equal to NA (NA != NA).
+To find NA values, use the @code{isna} function.
+
+When called with no arguments, return a scalar with the value @samp{NA}.
+
+When called with a single argument, return a square matrix with the
+dimension specified.
+
+When called with more than one scalar argument the first two arguments are
+taken as the number of rows and columns and any further arguments specify
+additional matrix dimensions.
+
+The optional argument @var{class} specifies the return type and may be
+either @qcode{"double"} or @qcode{"single"}.
+@seealso{@ref{XREFisna,,isna}}
+@end deftypefn
+
+
+@c isna libinterp/corefcn/mappers.cc
+@anchor{XREFisna}
+@deftypefn {} {} isna (@var{x})
+Return a logical array which is true where the elements of @var{x} are
+NA (missing) values and false where they are not.
+
+For example:
+
+@example
+@group
+isna ([13, Inf, NA, NaN])
+     @result{} [ 0, 0, 1, 0 ]
+@end group
+@end example
+@seealso{@ref{XREFisnan,,isnan}, @ref{XREFisinf,,isinf}, @ref{XREFisfinite,,isfinite}}
+@end deftypefn
+
+
+@node String Objects
+@subsection String Objects
+@cindex strings
+@cindex character strings
+@opindex "
+@opindex @code{'}
+
+A character string in Octave consists of a sequence of characters
+enclosed in either double-quote or single-quote marks.  Internally,
+Octave currently stores strings as matrices of characters.  All the
+indexing operations that work for matrix objects also work for strings.
+
+@xref{Strings}, for more information.
+
+@node Data Structure Objects
+@subsection Data Structure Objects
+@cindex structures
+@cindex data structures
+
+Octave's data structure type can help you to organize related objects of
+different types.  The current implementation uses an associative array
+with indices limited to strings, but the syntax is more like C-style
+structures.
+
+@xref{Structures}, for more information.
+
+@node Cell Array Objects
+@subsection Cell Array Objects
+@cindex cell arrays
+
+A Cell Array in Octave is general array that can hold any number of
+different data types.
+
+@xref{Cell Arrays}, for more information.
+
+@node User-defined Data Types
+@section User-defined Data Types
+@cindex user-defined data types
+@cindex data types, user-defined
+
+Someday I hope to expand this to include a complete description of
+Octave's mechanism for managing user-defined data types.  Until this
+feature is documented here, you will have to make do by reading the code
+in the @file{ov.h}, @file{ops.h}, and related files from Octave's
+@file{src} directory.
+
+@node Object Sizes
+@section Object Sizes
+
+The following functions allow you to determine the size of a variable or
+expression.  These functions are defined for all objects.  They return
+@minus{}1 when the operation doesn't make sense.  For example, Octave's
+data structure type doesn't have rows or columns, so the @code{rows} and
+@code{columns} functions return @minus{}1 for structure arguments.
+
+@c ndims libinterp/corefcn/data.cc
+@anchor{XREFndims}
+@deftypefn {} {} ndims (@var{a})
+Return the number of dimensions of @var{a}.
+
+For any array, the result will always be greater than or equal to 2.
+Trailing singleton dimensions are not counted.
+
+@example
+@group
+ndims (ones (4, 1, 2, 1))
+    @result{} 3
+@end group
+@end example
+@seealso{@ref{XREFsize,,size}}
+@end deftypefn
+
+
+@c columns libinterp/corefcn/data.cc
+@anchor{XREFcolumns}
+@deftypefn {} {} columns (@var{a})
+Return the number of columns of @var{a}.
+@seealso{@ref{XREFrows,,rows}, @ref{XREFsize,,size}, @ref{XREFlength,,length}, @ref{XREFnumel,,numel}, @ref{XREFisscalar,,isscalar}, @ref{XREFisvector,,isvector}, @ref{XREFismatrix,,ismatrix}}
+@end deftypefn
+
+
+@c rows libinterp/corefcn/data.cc
+@anchor{XREFrows}
+@deftypefn {} {} rows (@var{a})
+Return the number of rows of @var{a}.
+@seealso{@ref{XREFcolumns,,columns}, @ref{XREFsize,,size}, @ref{XREFlength,,length}, @ref{XREFnumel,,numel}, @ref{XREFisscalar,,isscalar}, @ref{XREFisvector,,isvector}, @ref{XREFismatrix,,ismatrix}}
+@end deftypefn
+
+
+@c numel libinterp/corefcn/data.cc
+@anchor{XREFnumel}
+@deftypefn  {} {} numel (@var{a})
+@deftypefnx {} {} numel (@var{a}, @var{idx1}, @var{idx2}, @dots{})
+Return the number of elements in the object @var{a}.
+
+Optionally, if indices @var{idx1}, @var{idx2}, @dots{} are supplied,
+return the number of elements that would result from the indexing
+
+@example
+@var{a}(@var{idx1}, @var{idx2}, @dots{})
+@end example
+
+Note that the indices do not have to be scalar numbers.  For example,
+
+@example
+@group
+@var{a} = 1;
+@var{b} = ones (2, 3);
+numel (@var{a}, @var{b})
+@end group
+@end example
+
+@noindent
+will return 6, as this is the number of ways to index with @var{b}.
+Or the index could be the string @qcode{":"} which represents the colon
+operator.  For example,
+
+@example
+@group
+@var{a} = ones (5, 3);
+numel (@var{a}, 2, ":")
+@end group
+@end example
+
+@noindent
+will return 3 as the second row has three column entries.
+
+This method is also called when an object appears as lvalue with cs-list
+indexing, i.e., @code{object@{@dots{}@}} or @code{object(@dots{}).field}.
+@seealso{@ref{XREFsize,,size}, @ref{XREFlength,,length}, @ref{XREFndims,,ndims}}
+@end deftypefn
+
+
+@c length libinterp/corefcn/data.cc
+@anchor{XREFlength}
+@deftypefn {} {} length (@var{a})
+Return the length of the object @var{a}.
+
+The length is 0 for empty objects, 1 for scalars, and the number of elements
+for vectors.  For matrix or N-dimensional objects, the length is the number
+of elements along the largest dimension
+(equivalent to @w{@code{max (size (@var{a}))}}).
+@seealso{@ref{XREFnumel,,numel}, @ref{XREFsize,,size}}
+@end deftypefn
+
+
+@c size libinterp/corefcn/data.cc
+@anchor{XREFsize}
+@deftypefn  {} {@var{sz} =} size (@var{a})
+@deftypefnx {} {@var{dim_sz} =} size (@var{a}, @var{dim})
+@deftypefnx {} {[@var{rows}, @var{cols}, @dots{}, @var{dim_N_sz}] =} size (@dots{})
+Return a row vector with the size (number of elements) of each dimension for
+the object @var{a}.
+
+When given a second argument, @var{dim}, return the size of the corresponding
+dimension.
+
+With a single output argument, @code{size} returns a row vector.  When called
+with multiple output arguments, @code{size} returns the size of dimension N
+in the Nth argument.  The number of rows, dimension 1, is returned in the
+first argument, the number of columns, dimension 2, is returned in the
+second argument, etc.  If there are more dimensions in @var{a} than there are
+output arguments, @code{size} returns the total number of elements in the
+remaining dimensions in the final output argument.
+
+Example 1: single row vector output
+
+@example
+@group
+size ([1, 2; 3, 4; 5, 6])
+   @result{} [ 3, 2 ]
+@end group
+@end example
+
+Example 2: number of elements in 2nd dimension (columns)
+
+@example
+@group
+size ([1, 2; 3, 4; 5, 6], 2)
+    @result{} 2
+@end group
+@end example
+
+Example 3: number of output arguments == number of dimensions
+
+@example
+@group
+[nr, nc] = size ([1, 2; 3, 4; 5, 6])
+    @result{} nr = 3
+    @result{} nc = 2
+@end group
+@end example
+
+Example 4: number of output arguments < number of dimensions
+
+@example
+@group
+[nr, remainder] = size (ones (2, 3, 4, 5))
+    @result{} nr = 2
+    @result{} remainder = 60
+@end group
+@end example
+
+@seealso{@ref{XREFnumel,,numel}, @ref{XREFndims,,ndims}, @ref{XREFlength,,length}, @ref{XREFrows,,rows}, @ref{XREFcolumns,,columns}, @ref{XREFsize_equal,,size_equal}, @ref{XREFcommon_size,,common_size}}
+@end deftypefn
+
+
+@c isempty libinterp/corefcn/data.cc
+@anchor{XREFisempty}
+@deftypefn {} {} isempty (@var{a})
+Return true if @var{a} is an empty matrix (any one of its dimensions is
+zero).
+@seealso{@ref{XREFisnull,,isnull}, @ref{XREFisa,,isa}}
+@end deftypefn
+
+
+@c isnull libinterp/octave-value/ov-null-mat.cc
+@anchor{XREFisnull}
+@deftypefn {} {} isnull (@var{x})
+Return true if @var{x} is a special null matrix, string, or single quoted
+string.
+
+Indexed assignment with such a null value on the right-hand side should delete
+array elements.  This function is used in place of @code{isempty} when
+overloading the indexed assignment method (@code{subsasgn}) for user-defined
+classes.  @code{isnull} is used to distinguish between these two cases:
+
+@code{@var{A}(@var{I}) = []}
+
+and
+
+@code{@var{X} = []; @var{A}(@var{I}) = @var{X}}
+
+In the first assignment, the right-hand side is @code{[]} which is a special
+null value.  As long as the index @var{I} is not empty, this code should
+delete elements from @var{A} rather than perform assignment.
+
+In the second assignment, the right-hand side is empty (because @var{X} is
+@code{[]}), but it is @strong{not} null.  This code should assign the empty
+value to elements in @var{A}.
+
+An example from Octave's built-in char class demonstrates the interpreter
+behavior when @code{isnull} is used correctly.
+
+@example
+@group
+str = "Hello World";
+nm = "Wally";
+str(7:end) = nm                # indexed assignment
+  @result{} str = Hello Wally
+str(7:end) = ""                # indexed deletion
+  @result{} str = Hello
+@end group
+@end example
+@seealso{@ref{XREFisempty,,isempty}, @ref{XREFisindex,,isindex}}
+@end deftypefn
+
+
+@c sizeof libinterp/octave-value/ov.cc
+@anchor{XREFsizeof}
+@deftypefn {} {} sizeof (@var{val})
+Return the size of @var{val} in bytes.
+@seealso{@ref{XREFwhos,,whos}}
+@end deftypefn
+
+
+@c size_equal libinterp/corefcn/data.cc
+@anchor{XREFsize_equal}
+@deftypefn {} {} size_equal (@var{a}, @var{b}, @dots{})
+Return true if the dimensions of all arguments agree.
+
+Trailing singleton dimensions are ignored.  When called with a single argument,
+or no argument, @code{size_equal} returns true.
+@seealso{@ref{XREFsize,,size}, @ref{XREFnumel,,numel}, @ref{XREFndims,,ndims}, @ref{XREFcommon_size,,common_size}}
+@end deftypefn
+
+
+@c squeeze libinterp/corefcn/data.cc
+@anchor{XREFsqueeze}
+@deftypefn {} {} squeeze (@var{x})
+Remove singleton dimensions from @var{x} and return the result.
+
+Note that for compatibility with @sc{matlab}, all objects have
+a minimum of two dimensions and row vectors are left unchanged.
+@seealso{@ref{XREFreshape,,reshape}}
+@end deftypefn
+

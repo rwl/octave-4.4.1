@@ -1,0 +1,1313 @@
+@c DO NOT EDIT!  Generated automatically by munge-texi.pl.
+
+@c Copyright (C) 2012-2018 Rik Wehbring
+@c
+@c This file is part of Octave.
+@c
+@c Octave is free software: you can redistribute it and/or modify it
+@c under the terms of the GNU General Public License as published by
+@c the Free Software Foundation, either version 3 of the License, or
+@c (at your option) any later version.
+@c
+@c Octave is distributed in the hope that it will be useful, but
+@c WITHOUT ANY WARRANTY; without even the implied warranty of
+@c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+@c GNU General Public License for more details.
+@c
+@c You should have received a copy of the GNU General Public License
+@c along with Octave; see the file COPYING.  If not, see
+@c <https://www.gnu.org/licenses/>.
+
+@node GUI Development
+@chapter GUI Development
+
+Octave is principally a batch or command-line language.  However, it does
+offer some features for constructing graphical interfaces that interact with
+users.
+
+The GUI elements available are I/O dialogs, a progress bar, and UI elements
+for plot windows.  For example, rather than hardcoding a filename for output
+results a script can open a dialog box and allow the user to choose a file.
+Similarly, if a calculation is expected to take a long time a script can
+display a progress bar.  The various UI elements can be used to fully customize
+the plot window with menubars, context menus,
+
+Several utility functions make it possible to store private data for use with
+a GUI which will not pollute the user's variable space.
+
+Finally, a program written in Octave might want to have long term storage of
+preferences or state variables.  This can be done with user-defined
+preferences.
+
+@menu
+* I/O Dialogs::
+* Progress Bar::
+* UI Elements::
+* GUI Utility Functions::
+* User-Defined Preferences::
+@end menu
+
+@node I/O Dialogs
+@section I/O Dialogs
+
+Simple dialog menus are available for choosing directories or files.  They
+return a string variable which can then be used with any command requiring
+a filename.
+
+@cindex dialog, displaying a dialog for selecting directories
+@c uigetdir scripts/gui/uigetdir.m
+@anchor{XREFuigetdir}
+@deftypefn  {} {@var{dirname} =} uigetdir ()
+@deftypefnx {} {@var{dirname} =} uigetdir (@var{init_path})
+@deftypefnx {} {@var{dirname} =} uigetdir (@var{init_path}, @var{dialog_name})
+Open a GUI dialog for selecting a directory.
+
+If @var{init_path} is not given the current working directory is used.
+
+@var{dialog_name} may be used to customize the dialog title.
+@seealso{@ref{XREFuigetfile,,uigetfile}, @ref{XREFuiputfile,,uiputfile}}
+@end deftypefn
+
+
+@cindex dialog, displaying a dialog for selecting files
+@c uigetfile scripts/gui/uigetfile.m
+@anchor{XREFuigetfile}
+@deftypefn  {} {[@var{fname}, @var{fpath}, @var{fltidx}] =} uigetfile ()
+@deftypefnx {} {[@dots{}] =} uigetfile (@var{flt})
+@deftypefnx {} {[@dots{}] =} uigetfile (@var{flt}, @var{dialog_name})
+@deftypefnx {} {[@dots{}] =} uigetfile (@var{flt}, @var{dialog_name}, @var{default_file})
+@deftypefnx {} {[@dots{}] =} uigetfile (@dots{}, "Position", [@var{px} @var{py}])
+@deftypefnx {} {[@dots{}] =} uigetfile (@dots{}, "MultiSelect", @var{mode})
+
+Open a GUI dialog for selecting a file and return the filename @var{fname},
+the path to this file @var{fpath}, and the filter index @var{fltidx}.
+
+@var{flt} contains a (list of) file filter string(s) in one of the following
+formats:
+
+@table @asis
+@item @qcode{"/path/to/filename.ext"}
+If a filename is given then the file extension is extracted and used as
+filter.  In addition, the path is selected as current path and the filename
+is selected as default file.  Example: @code{uigetfile ("myfun.m")}
+
+@item A single file extension @qcode{"*.ext"}
+Example: @code{uigetfile ("*.ext")}
+
+@item A 2-column cell array
+containing a file extension in the first column and a brief description in
+the second column.
+Example: @code{uigetfile (@{"*.ext", "My Description";"*.xyz",
+"XYZ-Format"@})}
+
+The filter string can also contain a semicolon separated list of filter
+extensions.
+Example: @code{uigetfile (@{"*.gif;*.png;*.jpg", "Supported Picture
+Formats"@})}
+
+@item A directory name or path name
+If the folder name of path name contains a trailing file separator, the
+contents of that folder will be displayed.  If no trailing file separator
+is present the parent directory is listed.  The substring to the right of
+the rightmost file separator (if any) will be interpreted as a file or
+directory name and if that file or directory exists it will be highlighted.
+If the path name or directory name is wholly or partly nonexistent, the
+current working directory will be displayed.
+No filter will be active.
+@end table
+
+@var{dialog_name} can be used to customize the dialog title.
+
+If @var{default_file} is given then it will be selected in the GUI dialog.
+If, in addition, a path is given it is also used as current path.
+
+The screen position of the GUI dialog can be set using the
+@qcode{"Position"} key and a 2-element vector containing the pixel
+coordinates.  Two or more files can be selected when setting the
+@qcode{"MultiSelect"} key to @qcode{"on"}.  In that case @var{fname} is a
+cell array containing the files.
+@seealso{@ref{XREFuiputfile,,uiputfile}, @ref{XREFuigetdir,,uigetdir}}
+@end deftypefn
+
+
+@cindex dialog, displaying a dialog for storing files
+@c uiputfile scripts/gui/uiputfile.m
+@anchor{XREFuiputfile}
+@deftypefn  {} {[@var{fname}, @var{fpath}, @var{fltidx}] =} uiputfile ()
+@deftypefnx {} {[@var{fname}, @var{fpath}, @var{fltidx}] =} uiputfile (@var{flt})
+@deftypefnx {} {[@var{fname}, @var{fpath}, @var{fltidx}] =} uiputfile (@var{flt}, @var{dialog_name})
+@deftypefnx {} {[@var{fname}, @var{fpath}, @var{fltidx}] =} uiputfile (@var{flt}, @var{dialog_name}, @var{default_file})
+Open a GUI dialog for selecting a file.
+
+@var{flt} contains a (list of) file filter string(s) in one of the following
+formats:
+
+@table @asis
+@item @qcode{"/path/to/filename.ext"}
+If a filename is given the file extension is extracted and used as filter.
+In addition the path is selected as current path and the filename is
+selected as default file.  Example: @code{uiputfile ("myfun.m")}
+
+@item @qcode{"*.ext"}
+A single file extension.
+Example: @code{uiputfile ("*.ext")}
+
+@item @code{@{"*.ext", "My Description"@}}
+A 2-column cell array containing the file extension in the 1st column and
+a brief description in the 2nd column.
+Example: @code{uiputfile (@{"*.ext","My Description";"*.xyz",
+"XYZ-Format"@})}
+@end table
+
+The filter string can also contain a semicolon separated list of filter
+extensions.
+Example: @code{uiputfile (@{"*.gif;*.png;*.jpg",
+"Supported Picture Formats"@})}
+
+@var{dialog_name} can be used to customize the dialog title.
+If @var{default_file} is given it is preselected in the GUI dialog.
+If, in addition, a path is given it is also used as current path.
+@seealso{@ref{XREFuigetfile,,uigetfile}, @ref{XREFuigetdir,,uigetdir}}
+@end deftypefn
+
+
+Additionally, there are dialog boxes for printing further help, warnings or
+errors and to get textual input from the user.
+
+@cindex dialog, displaying an error dialog
+@c errordlg scripts/gui/errordlg.m
+@anchor{XREFerrordlg}
+@deftypefn  {} {@var{h} =} errordlg ()
+@deftypefnx {} {@var{h} =} errordlg (@var{msg})
+@deftypefnx {} {@var{h} =} errordlg (@var{msg}, @var{title})
+@deftypefnx {} {@var{h} =} errordlg (@var{msg}, @var{title}, @var{createmode})
+Display an error dialog box with error message @var{msg} and caption
+@var{title}.
+
+The default error message is @qcode{"This is the default error string."} and
+the default caption is @qcode{"Error Dialog"}.
+
+The error message may have multiple lines separated by newline characters
+("\n"), or it may be a cellstr array with one element for each line.
+
+The return value @var{h} is always 1.
+
+Compatibility Note: The optional argument @var{createmode} is accepted for
+@sc{matlab} compatibility, but is not implemented.  See @code{msgbox} for
+details.
+
+Examples:
+
+@example
+@group
+errordlg ("Some fancy error occurred.");
+errordlg ("Some fancy error\nwith two lines.");
+errordlg (@{"Some fancy error", "with two lines."@});
+errordlg ("Some fancy error occurred.", "Fancy caption");
+@end group
+@end example
+
+@seealso{@ref{XREFhelpdlg,,helpdlg}, @ref{XREFinputdlg,,inputdlg}, @ref{XREFlistdlg,,listdlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFquestdlg,,questdlg}, @ref{XREFwarndlg,,warndlg}}
+@end deftypefn
+
+
+@cindex dialog, displaying a help dialog
+@c helpdlg scripts/gui/helpdlg.m
+@anchor{XREFhelpdlg}
+@deftypefn  {} {@var{h} =} helpdlg ()
+@deftypefnx {} {@var{h} =} helpdlg (@var{msg})
+@deftypefnx {} {@var{h} =} helpdlg (@var{msg}, @var{title})
+Display a help dialog box with help message @var{msg} and caption
+@var{title}.
+
+The default help message is @qcode{"This is the default help string."} and
+the default caption is @qcode{"Help Dialog"}.
+
+The help message may have multiple lines separated by newline characters
+("\n"), or it may be a cellstr array with one element for each line.
+
+The return value @var{h} is always 1.
+
+Examples:
+
+@example
+@group
+helpdlg ("Some helpful text for the user.");
+helpdlg ("Some helpful text\nwith two lines.");
+helpdlg (@{"Some helpful text", "with two lines."@});
+helpdlg ("Some helpful text for the user.", "Fancy caption");
+@end group
+@end example
+
+@seealso{@ref{XREFerrordlg,,errordlg}, @ref{XREFinputdlg,,inputdlg}, @ref{XREFlistdlg,,listdlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFquestdlg,,questdlg}, @ref{XREFwarndlg,,warndlg}}
+@end deftypefn
+
+
+@cindex dialog, displaying an input dialog
+@c inputdlg scripts/gui/inputdlg.m
+@anchor{XREFinputdlg}
+@deftypefn  {} {@var{cstr} =} inputdlg (@var{prompt})
+@deftypefnx {} {@var{cstr} =} inputdlg (@var{prompt}, @var{title})
+@deftypefnx {} {@var{cstr} =} inputdlg (@var{prompt}, @var{title}, @var{rowscols})
+@deftypefnx {} {@var{cstr} =} inputdlg (@var{prompt}, @var{title}, @var{rowscols}, @var{defaults})
+@deftypefnx {} {@var{cstr} =} inputdlg (@var{prompt}, @var{title}, @var{rowscols}, @var{defaults}, @var{options})
+Return user input from a multi-textfield dialog box in a cell array of
+strings, or an empty cell array if the dialog is closed by the Cancel
+button.
+
+Inputs:
+
+@table @var
+@item prompt
+A cell array with strings labeling each text field.  This input is required.
+
+@item title
+String to use for the caption of the dialog.  The default is
+@qcode{"Input Dialog"}.
+
+@item rowscols
+Specifies the size of the text fields and can take three forms:
+
+@enumerate
+@item a scalar value which defines the number of rows used for each text field.
+
+@item a vector which defines the individual number of rows used for each text field.
+
+@item a matrix which defines the individual number of rows and columns used for each text field.  In the matrix each row describes a single text field.  The first column specifies the number of input rows to use and the second column specifies the text field width.
+@end enumerate
+
+@item defaults
+A list of default values to place in each text fields.  It must be a cell
+array of strings with the same size as @var{prompt}.
+
+@item options
+Not supported, only for @sc{matlab} compatibility.
+@end table
+
+Example:
+
+@example
+@group
+prompt = @{"Width", "Height", "Depth"@};
+defaults = @{"1.10", "2.20", "3.30"@};
+rowscols = [1,10; 2,20; 3,30];
+dims = inputdlg (prompt, "Enter Box Dimensions", rowscols, defaults);
+@end group
+@end example
+
+@seealso{@ref{XREFerrordlg,,errordlg}, @ref{XREFhelpdlg,,helpdlg}, @ref{XREFlistdlg,,listdlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFquestdlg,,questdlg}, @ref{XREFwarndlg,,warndlg}}
+@end deftypefn
+
+
+@cindex dialog, displaying a list dialog
+@c listdlg scripts/gui/listdlg.m
+@anchor{XREFlistdlg}
+@deftypefn {} {[@var{sel}, @var{ok}] =} listdlg (@var{key}, @var{value}, @dots{})
+Return user inputs from a list dialog box in a vector of selection indices
+(@var{sel}) and a flag indicating how the user closed the dialog box
+(@var{ok}).
+
+The indices in @var{sel} are 1-based.
+
+The value of @var{ok} is 1 if the user closed the box with the OK button,
+otherwise it is 0 and @var{sel} is empty.
+
+Input arguments are specified in form of @var{key}, @var{value} pairs.
+The @qcode{"ListString"} argument pair must be specified.
+
+Valid @var{key} and @var{value} pairs are:
+
+@table @asis
+@item @qcode{"ListString"}
+a cell array of strings with the contents of the list.
+
+@item @qcode{"SelectionMode"}
+can be either @qcode{"Single"} or @qcode{"Multiple"} (default).
+
+@item @qcode{"ListSize"}
+a vector with two elements @var{width} and @var{height} defining the size
+of the list field in pixels.  Default is [160 300].
+
+@item @qcode{"InitialValue"}
+a vector containing 1-based indices of preselected elements.
+Default is 1 (first item).
+
+@item @qcode{"Name"}
+a string to be used as the dialog caption.  Default is "".
+
+@item @qcode{"PromptString"}
+a cell array of strings to be displayed above the list field.
+Default is @{@}.
+
+@item @qcode{"OKString"}
+a string used to label the OK button.  Default is @qcode{"OK"}.
+
+@item @qcode{"CancelString"}
+a string used to label the Cancel button.  Default is @qcode{"Cancel"}.
+@end table
+
+Example:
+
+@example
+@group
+my_options = @{"An item", "another", "yet another"@};
+[sel, ok] = listdlg ("ListString", my_options,
+                     "SelectionMode", "Multiple");
+if (ok == 1)
+  disp ("You selected:");
+  for i = 1:numel (sel)
+    disp (sprintf ("\t%s", my_options@{sel(i)@}));
+  endfor
+else
+  disp ("You cancelled.");
+endif
+@end group
+@end example
+
+@seealso{@ref{XREFmenu,,menu}, @ref{XREFerrordlg,,errordlg}, @ref{XREFhelpdlg,,helpdlg}, @ref{XREFinputdlg,,inputdlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFquestdlg,,questdlg}, @ref{XREFwarndlg,,warndlg}}
+@end deftypefn
+
+
+@cindex dialog, displaying a message dialog
+@c msgbox scripts/gui/msgbox.m
+@anchor{XREFmsgbox}
+@deftypefn  {} {@var{h} =} msgbox (@var{msg})
+@deftypefnx {} {@var{h} =} msgbox (@var{msg}, @var{title})
+@deftypefnx {} {@var{h} =} msgbox (@var{msg}, @var{title}, @var{icon})
+@deftypefnx {} {@var{h} =} msgbox (@dots{}, @var{createmode})
+Display @var{msg} using a message dialog box.
+
+The message may have multiple lines separated by newline characters ("\n"),
+or it may be a cellstr array with one element for each line.
+
+The optional input @var{title} (character string) can be used to decorate
+the dialog caption.
+
+The optional argument @var{icon} selects a dialog icon.
+It can be one of @qcode{"none"} (default), @qcode{"error"}, @qcode{"help"},
+or @qcode{"warn"}.
+
+The return value is always 1.
+
+Compatibility Note: The optional argument @var{createmode} is accepted for
+@sc{matlab} compatibility, but is not implemented.  A valid @var{createmode}
+is either one of the character strings @qcode{"nonmodal"}, @qcode{"modal"},
+or @qcode{"replace"}, or a structure containing a field
+@qcode{"WindowStyle"} with one of the three character strings.
+
+Examples:
+
+@example
+@group
+msgbox ("Some message for the user.");
+msgbox ("Some message\nwith two lines.");
+msgbox (@{"Some message", "with two lines."@});
+msgbox ("Some message for the user.", "Fancy caption");
+
+% A message dialog box with error icon
+msgbox ("Some message for the user.", "Fancy caption", "error");
+@end group
+@end example
+
+@seealso{@ref{XREFerrordlg,,errordlg}, @ref{XREFhelpdlg,,helpdlg}, @ref{XREFinputdlg,,inputdlg}, @ref{XREFlistdlg,,listdlg}, @ref{XREFquestdlg,,questdlg}, @ref{XREFwarndlg,,warndlg}}
+@end deftypefn
+
+
+@cindex dialog, displaying a question dialog
+@c questdlg scripts/gui/questdlg.m
+@anchor{XREFquestdlg}
+@deftypefn  {} {@var{btn} =} questdlg (@var{msg})
+@deftypefnx {} {@var{btn} =} questdlg (@var{msg}, @var{title})
+@deftypefnx {} {@var{btn} =} questdlg (@var{msg}, @var{title}, @var{default})
+@deftypefnx {} {@var{btn} =} questdlg (@var{msg}, @var{title}, @var{btn1}, @var{btn2}, @var{default})
+@deftypefnx {} {@var{btn} =} questdlg (@var{msg}, @var{title}, @var{btn1}, @var{btn2}, @var{btn3}, @var{default})
+Display @var{msg} using a question dialog box and return the caption of
+the activated button.
+
+The message may have multiple lines separated by newline characters ("\n"),
+or it may be a cellstr array with one element for each line.
+
+The optional @var{title} (character string) can be used to specify the
+dialog caption.  It defaults to @qcode{"Question Dialog"}.
+
+The dialog may contain two or three buttons which will all close the dialog.
+
+The string @var{default} identifies the default button, which is activated
+by pressing the @key{ENTER} key.  It must match one of the strings given
+in @var{btn1}, @var{btn2}, or @var{btn3}.
+
+If only @var{msg} and @var{title} are specified, three buttons with the
+default captions @qcode{"Yes"}, @qcode{"No"}, and @qcode{"Cancel"} are used.
+
+If only two button captions, @var{btn1} and @var{btn2}, are specified the
+dialog will have only these two buttons.
+
+Examples:
+
+@example
+@group
+btn = questdlg ("Close Octave?", "Some fancy title", "Yes", "No", "No");
+if (strcmp (btn, "Yes"))
+  exit ();
+endif
+@end group
+@end example
+
+@seealso{@ref{XREFerrordlg,,errordlg}, @ref{XREFhelpdlg,,helpdlg}, @ref{XREFinputdlg,,inputdlg}, @ref{XREFlistdlg,,listdlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFwarndlg,,warndlg}}
+@end deftypefn
+
+
+@cindex dialog, displaying a warning dialog
+@c warndlg scripts/gui/warndlg.m
+@anchor{XREFwarndlg}
+@deftypefn  {} {@var{h} =} warndlg ()
+@deftypefnx {} {@var{h} =} warndlg (@var{msg})
+@deftypefnx {} {@var{h} =} warndlg (@var{msg}, @var{title})
+@deftypefnx {} {@var{h} =} warndlg (@var{msg}, @var{title}, @var{createmode})
+Display a warning dialog box with warning message @var{msg} and caption
+@var{title}.
+
+The default warning message is @qcode{"This is the default warning string."}
+and the default caption is @qcode{"Warning Dialog"}.
+
+The warning message may have multiple lines separated by newline characters
+("\n"), or it may be a cellstr array with one element for each line.
+
+The return value @var{h} is always 1.
+
+Compatibility Note: The optional argument @var{createmode} is accepted for
+@sc{matlab} compatibility, but is not implemented.  See @code{msgbox} for
+details.
+
+Examples:
+
+@example
+@group
+warndlg ("Some warning text for the user.");
+warndlg ("Some warning text\nwith two lines.");
+warndlg (@{"Some warning text", "with two lines."@});
+warndlg ("Some warning text for the user.", "Fancy caption");
+@end group
+@end example
+
+@seealso{@ref{XREFerrordlg,,errordlg}, @ref{XREFhelpdlg,,helpdlg}, @ref{XREFinputdlg,,inputdlg}, @ref{XREFlistdlg,,listdlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFquestdlg,,questdlg}}
+@end deftypefn
+
+
+For creating new dialog types, there is a dialog function.
+
+@cindex dialog, displaying a modal dialog
+@c dialog scripts/gui/dialog.m
+@anchor{XREFdialog}
+@deftypefn  {} {@var{h} =} dialog ()
+@deftypefnx {} {@var{h} =} dialog ("@var{property}", @var{value}, @dots{})
+
+Create an empty modal dialog window to which other uicontrols can be added.
+
+The dialog box is a figure object with properties as recommended for a
+dialog box.
+
+The default properties differing from a figure are:
+
+@table @asis
+@item buttondownfcn
+@code{if isempty (allchild(gcbf)), close (gcbf), endif}
+
+@item colormap
+[]
+
+@item color
+defaultuicontrolbackgroundcolor
+
+@item dockcontrols
+off
+
+@item handlevisibility
+callback
+
+@item integerhandle
+off
+
+@item inverthardcopy
+off
+
+@item menubar
+none
+
+@item numbertitle
+off
+
+@item paperpositionmode
+auto
+
+@item resize
+off
+
+@item windowstyle
+modal
+
+@end table
+
+
+Multiple property-value pairs may be specified for the dialog object, but
+they must appear in pairs.
+
+The return value @var{h} is a graphics handle to the created figure.
+
+Example:
+
+@example
+@group
+## create an empty dialog window titled "Dialog Example"
+h = dialog ("name", "Dialog Example");
+
+## create a button (default style)
+b = uicontrol (h, "string", "OK",
+                  "position", [10 10 150 40],
+                  "callback", "delete (gcf)");
+
+## wait for dialog to resume or close
+uiwait (h);
+@end group
+@end example
+
+@seealso{@ref{XREFerrordlg,,errordlg}, @ref{XREFmsgbox,,msgbox}, @ref{XREFquestdlg,,questdlg}, @ref{XREFwarndlg,,warndlg}, @ref{XREFfigure,,figure}, @ref{XREFuiwait,,uiwait}}
+@end deftypefn
+
+
+@node Progress Bar
+@section Progress Bar
+@cindex Progress Bar
+
+@c waitbar scripts/gui/waitbar.m
+@anchor{XREFwaitbar}
+@deftypefn  {} {@var{h} =} waitbar (@var{frac})
+@deftypefnx {} {@var{h} =} waitbar (@var{frac}, @var{msg})
+@deftypefnx {} {@var{h} =} waitbar (@dots{}, "createcancelbtn", @var{fcn}, @dots{})
+@deftypefnx {} {@var{h} =} waitbar (@dots{}, @var{prop}, @var{val}, @dots{})
+@deftypefnx {} {} waitbar (@var{frac})
+@deftypefnx {} {} waitbar (@var{frac}, @var{h})
+@deftypefnx {} {} waitbar (@var{frac}, @var{h}, @var{msg})
+Return a handle @var{h} to a new progress indicator ("waitbar") object.
+
+The waitbar is filled to fraction @var{frac} which must be in the range
+[0, 1].
+
+The optional message @var{msg} is centered and displayed above the waitbar.
+
+A cancel button can be added to the bottom of the waitbar using the
+@qcode{"createcancelbtn"} property of waitbar figures.  The action to be
+executed when the user presses the button is specified using a string or
+function handle @var{fcn}.
+
+The appearance of the waitbar figure window can be configured by passing
+@var{prop}/@var{val} pairs to the function.
+
+When called with a single input the current waitbar, if it exists, is
+updated to the new value @var{frac}.  If there are multiple outstanding
+waitbars they can be updated individually by passing the handle @var{h}
+of the specific waitbar to modify.
+
+@seealso{@ref{XREFdelete,,delete}}
+@end deftypefn
+
+
+@node UI Elements
+@section UI Elements
+
+The @nospell{ui*} series of functions work best with the @code{qt} graphics
+toolkit, although some functionality is available with the @code{fltk} toolkit.
+There is no support for the @code{gnuplot} toolkit.
+
+@c uimenu scripts/gui/uimenu.m
+@anchor{XREFuimenu}
+@deftypefn  {} {@var{hui} =} uimenu (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uimenu (@var{h}, @var{property}, @var{value}, @dots{})
+Create a uimenu object and return a handle to it.
+
+If @var{h} is omitted then a top-level menu for the current figure is
+created.  If @var{h} is given then a submenu relative to @var{h} is created.
+
+uimenu objects have the following specific properties:
+
+@table @asis
+@item @qcode{"accelerator"}
+A string containing the key combination together with CTRL to execute this
+menu entry (e.g., @qcode{"x"} for CTRL+x).
+
+@item @qcode{"callback"}
+Is the function called when this menu entry is executed.  It can be either a
+function string (e.g., @qcode{"myfun"}), a function handle (e.g., @@myfun)
+or a cell array containing the function handle and arguments for the
+callback function (e.g., @{@@myfun, arg1, arg2@}).
+
+@item @qcode{"checked"}
+Can be set @qcode{"on"} or @qcode{"off"}.  Sets a mark at this menu entry.
+
+@item @qcode{"enable"}
+Can be set @qcode{"on"} or @qcode{"off"}.  If disabled the menu entry
+cannot be selected and it is grayed out.
+
+@item @qcode{"foregroundcolor"}
+A color value setting the text color for this menu entry.
+
+@item @qcode{"label"}
+A string containing the label for this menu entry.  A @qcode{"&"}-symbol
+can be used to mark the @qcode{"accelerator"} character (e.g.,
+@nospell{@qcode{"E&xit"}})
+
+@item @qcode{"position"}
+An scalar value containing the relative menu position.  The entry with the
+lowest value is at the first position starting from left or top.
+
+@item @qcode{"separator"}
+Can be set @qcode{"on"} or @qcode{"off"}.  If enabled it draws a separator
+line above the current position.  It is ignored for top level entries.
+
+@end table
+
+The full list of properties is documented at
+@ref{Uimenu Properties,,Uimenu Properties}.
+
+Examples:
+
+@example
+@group
+f = uimenu ("label", "&File", "accelerator", "f");
+e = uimenu ("label", "&Edit", "accelerator", "e");
+uimenu (f, "label", "Close", "accelerator", "q", ...
+           "callback", "close (gcf)");
+uimenu (e, "label", "Toggle &Grid", "accelerator", "g", ...
+           "callback", "grid (gca)");
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}}
+@end deftypefn
+
+
+@c uibuttongroup scripts/gui/uibuttongroup.m
+@anchor{XREFuibuttongroup}
+@deftypefn  {} {@var{hui} =} uibuttongroup (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uibuttongroup (@var{parent}, @var{property}, @var{value}, @dots{})
+@deftypefnx {} {} uibuttongroup (@var{h})
+
+Create a uibuttongroup object and return a handle to it.
+
+uibuttongroups are used to create group uicontrols.
+
+If @var{parent} is omitted then a uibuttongroup for the current figure is
+created.  If no figure is available, a new figure is created first.
+
+If @var{parent} is given then a uibuttongroup relative to @var{parent} is
+created.
+
+Any provided property value pairs will override the default values of the
+created uibuttongroup object.
+
+Uibuttongroup properties are documented at @ref{Uibuttongroup Properties}.
+
+Examples:
+
+@example
+@group
+% create figure and panel on it
+f = figure;
+% create a button group
+gp = uibuttongroup (f, "Position", [ 0 0.5 1 1])
+% create a buttons in the group
+b1 = uicontrol (gp, "style", "radiobutton", ...
+                "string", "Choice 1", ...
+                "Position", [ 10 150 100 50 ]);
+b2 = uicontrol (gp, "style", "radiobutton", ...
+                "string", "Choice 2", ...
+                "Position", [ 10 50 100 30 ]);
+% create a button not in the group
+b3 = uicontrol (f, "style", "radiobutton", ...
+                "string", "Not in the group", ...
+                "Position", [ 10 50 100 50 ]);
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuipanel,,uipanel}}
+@end deftypefn
+
+
+@c uicontextmenu scripts/gui/uicontextmenu.m
+@anchor{XREFuicontextmenu}
+@deftypefn  {} {@var{hui} =} uicontextmenu (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uicontextmenu (@var{h}, @var{property}, @var{value}, @dots{})
+
+Create a uicontextmenu object and return a handle to it.
+
+If @var{h} is omitted then a uicontextmenu for the current figure is
+created.  If no figure is available, a new figure is created first.
+
+If @var{h} is given then a uicontextmenu relative to @var{h} is created.
+
+Any provided property value pairs will override the default values of the
+created uicontextmenu object.
+
+Uicontextmenu properties are documented at @ref{Uicontextmenu Properties}.
+
+Examples:
+
+@example
+@group
+% create figure and uicontextmenu
+f = figure;
+c = uicontextmenu (f);
+
+% create menus in the context menu
+m1 = uimenu ("parent",c,"label","Menu item 1","callback","disp('menu item 1')");
+m2 = uimenu ("parent",c,"label","Menu item 2","callback","disp('menu item 2')");
+
+% set the context menu for the figure
+set (f, "uicontextmenu", c);
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuimenu,,uimenu}}
+@end deftypefn
+
+
+@c uicontrol scripts/gui/uicontrol.m
+@anchor{XREFuicontrol}
+@deftypefn  {} {@var{hui} =} uicontrol (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uicontrol (@var{parent}, @var{property}, @var{value}, @dots{})
+@deftypefnx {} {} uicontrol (@var{h})
+
+Create a uicontrol object and return a handle to it.
+
+uicontrols are used to create simple interactive controls such as push
+buttons, checkboxes, edit and list controls.
+
+If @var{parent} is omitted then a uicontrol for the current figure is
+created.  If no figure is available, a new figure is created first.
+
+If @var{parent} is given then a uicontrol relative to @var{parent} is
+created.
+
+Any provided property value pairs will override the default values of the
+created uicontrol object.
+
+Uicontrol properties are documented at @ref{Uicontrol Properties}.
+
+Control of the type of uicontrol created is through the use of the
+@var{style} property.  If no style property is provided, a push button will
+be created.
+
+Valid styles for uicontrol are:
+
+@table @asis
+@item @qcode{"checkbox"}
+Create a checkbox control that allows user on/off selection.
+
+@item @qcode{"edit"}
+Create an edit control that allows user input of single or multiple lines
+of text.
+
+@item @qcode{"listbox"}
+Create a listbox control that displays a list of items and allows user
+selection of single or multiple items.
+
+@item @qcode{"popupmenu"}
+Create a popupmenu control that displays a list of options that can be
+selected when the user clicks on the control.
+
+@item @qcode{"pushbutton"}
+Create a push button control that allows user to press to cause an action.
+
+@item @qcode{"radiobutton"}
+Create a radio button control intended to be used for mutually exclusive
+input in a group of radiobutton controls.
+
+@item @qcode{"slider"}
+Create a slider control that allows user selection from a range of values
+by sliding knob on the control.
+
+@item @qcode{"text"}
+Create a static text control to display single or multiple lines of text.
+
+@item @qcode{"togglebutton"}
+Create a toggle button control that appears like a push button but allows
+the user to select between two states.
+
+@end table
+
+Examples:
+
+@example
+@group
+% create figure and panel on it
+f = figure;
+% create a button (default style)
+b1 = uicontrol (f, "string", "A Button", "position",[10 10 150 40]);
+% create an edit control
+e1 = uicontrol (f, "style", "edit", "string", "editable text", "position",[10 60 300 40]);
+% create a checkbox
+c1 = uicontrol (f, "style", "checkbox", "string", "a checkbox", "position",[10 120 150 40]);
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuipanel,,uipanel}}
+@end deftypefn
+
+
+@c uipanel scripts/gui/uipanel.m
+@anchor{XREFuipanel}
+@deftypefn  {} {} uipanel (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {} uipanel (@var{parent}, "@var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uipanel (@dots{})
+
+Create a uipanel object.
+
+uipanels are used as containers to group other uicontrol objects.
+
+If @var{parent} is omitted then a uipanel for the current figure is
+created.  If no figure is available, a new figure is created first.
+
+If @var{parent} is given then a uipanel relative to @var{parent} is created.
+
+Any provided property value pairs will override the default values of the
+created uipanel object.
+
+Uipanel properties are documented at @ref{Uipanel Properties}.
+
+The optional return value @var{hui} is a graphics handle to the created
+uipanel object.
+
+Examples:
+
+@example
+@group
+% create figure and panel on it
+f = figure;
+p = uipanel ("title", "Panel Title", "position", [.25 .25 .5 .5]);
+
+% add two buttons to the panel
+b1 = uicontrol ("parent", p, "string", "A Button", "position",[18 10 150 36]);
+b2 = uicontrol ("parent", p, "string", "Another Button", "position",[18 60 150 36]);
+
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuicontrol,,uicontrol}}
+@end deftypefn
+
+
+@c uipushtool scripts/gui/uipushtool.m
+@anchor{XREFuipushtool}
+@deftypefn  {} {} uipushtool (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {} uipushtool (@var{parent}, @var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uipushtool (@dots{})
+
+Create a uipushtool object.
+
+uipushtools are buttons that appear on a figure toolbar.  The button is
+created with a border that is shown when the user hovers over the button.
+An image can be set using the cdata property.
+
+If @var{parent} is omitted then a uipushtool for the current figure is
+created.  If no figure is available, a new figure is created first.  If a
+figure is available, but does not contain a uitoolbar, a uitoolbar will be
+created.
+
+If @var{parent} is given then a uipushtool is created on the @var{parent}
+uitoolbar.
+
+Any provided property value pairs will override the default values of the
+created uipushtool object.
+
+Uipushtool properties are documented at @ref{Uipushtool Properties}.
+
+The optional return value @var{hui} is a graphics handle to the created
+uipushtool object.
+
+Examples:
+
+@example
+@group
+% create figure without a default toolbar
+f = figure ("toolbar", "none");
+% create empty toolbar
+t = uitoolbar (f);
+% create a 19x19x3 black square
+img=zeros(19,19,3);
+% add pushtool button to toolbar
+b = uipushtool (t, "cdata", img);
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuitoolbar,,uitoolbar}, @ref{XREFuitoggletool,,uitoggletool}}
+@end deftypefn
+
+
+@c uitoggletool scripts/gui/uitoggletool.m
+@anchor{XREFuitoggletool}
+@deftypefn  {} {} uitoggletool (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {} uitoggletool (@var{parent}, @var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uitoggletool (@dots{})
+
+Create a uitoggletool object.
+
+uitoggletool are togglebuttons that appear on a figure toolbar.  The
+button is created with a border that is shown when the user hovers over
+the button.  An image can be set using the cdata property.
+
+If @var{parent} is omitted then a uitoggletool for the current figure is
+created.  If no figure is available, a new figure is created first.  If a
+figure is available, but does not contain a uitoolbar, a uitoolbar will be
+created.
+
+If @var{parent} is given then a uitoggletool is created on the
+@var{parent} uitoolbar.
+
+Any provided property value pairs will override the default values of the
+created uitoggletool object.
+
+Uitoggletool properties are documented at @ref{Uitoggletool Properties}.
+
+The optional return value @var{hui} is a graphics handle to the created
+uitoggletool object.
+
+Examples:
+
+@example
+@group
+% create figure without a default toolbar
+f = figure ("toolbar", "none");
+% create empty toolbar
+t = uitoolbar (f);
+% create a 19x19x3 black square
+img=zeros(19,19,3);
+% add uitoggletool button to toolbar
+b = uitoggletool (t, "cdata", img);
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuitoolbar,,uitoolbar}, @ref{XREFuipushtool,,uipushtool}}
+@end deftypefn
+
+
+@c uitoolbar scripts/gui/uitoolbar.m
+@anchor{XREFuitoolbar}
+@deftypefn  {} {} uitoolbar (@var{property}, @var{value}, @dots{})
+@deftypefnx {} {} uitoolbar (@var{parent}, @var{property}, @var{value}, @dots{})
+@deftypefnx {} {@var{hui} =} uitoolbar (@dots{})
+
+Create a uitoolbar object.  A uitoolbar displays uitoggletool and uipushtool
+buttons.
+
+If @var{parent} is omitted then a uitoolbar for the current figure is
+created.  If no figure is available, a new figure is created first.
+
+If @var{parent} is given then a uitoolbar relative to @var{parent} is
+created.
+
+Any provided property value pairs will override the default values of the
+created uitoolbar object.
+
+Uitoolbar properties are documented at @ref{Uitoolbar Properties}.
+
+The optional return value @var{hui} is a graphics handle to the created
+uitoolbar object.
+
+Examples:
+
+@example
+@group
+% create figure without a default toolbar
+f = figure ("toolbar", "none");
+% create empty toolbar
+t = uitoolbar (f);
+@end group
+@end example
+@seealso{@ref{XREFfigure,,figure}, @ref{XREFuitoggletool,,uitoggletool}, @ref{XREFuipushtool,,uipushtool}}
+@end deftypefn
+
+
+@node GUI Utility Functions
+@section GUI Utility Functions
+
+These functions do not implement a GUI element but are useful when developing
+programs that do.  The functions @code{uiwait}, @code{uiresume}, and
+@code{waitfor} are only available with the @code{qt} or @code{fltk} toolkits.
+
+@c guidata scripts/gui/guidata.m
+@anchor{XREFguidata}
+@deftypefn  {} {@var{data} =} guidata (@var{h})
+@deftypefnx {} {} guidata (@var{h}, @var{data})
+Query or set user-custom GUI data.
+
+The GUI data is stored in the figure handle @var{h}.  If @var{h} is not a
+figure handle then it's parent figure will be used for storage.
+
+@var{data} must be a single object which means it is usually preferable
+for it to be a data container such as a cell array or struct so that
+additional data items can be added easily.
+
+@seealso{@ref{XREFgetappdata,,getappdata}, @ref{XREFsetappdata,,setappdata}, @ref{XREFget,,get}, @ref{XREFset,,set}, @ref{XREFgetpref,,getpref}, @ref{XREFsetpref,,setpref}}
+@end deftypefn
+
+
+@c guihandles scripts/gui/guihandles.m
+@anchor{XREFguihandles}
+@deftypefn  {} {@var{hdata} =} guihandles (@var{h})
+@deftypefnx {} {@var{hdata} =} guihandles
+Return a structure of object handles for the figure associated with
+handle @var{h}.
+
+If no handle is specified the current figure returned by @code{gcf} is used.
+
+The fieldname for each entry of @var{hdata} is taken from the @qcode{"tag"}
+property of the graphic object.  If the tag is empty then the handle is not
+returned.  If there are multiple graphic objects with the same tag then
+the entry in @var{hdata} will be a vector of handles.  @code{guihandles}
+includes all possible handles, including those for
+which @qcode{"HandleVisibility"} is @qcode{"off"}.
+@seealso{@ref{XREFguidata,,guidata}, @ref{XREFfindobj,,findobj}, @ref{XREFfindall,,findall}, @ref{XREFallchild,,allchild}}
+@end deftypefn
+
+
+@c have_window_system libinterp/corefcn/display.cc
+@anchor{XREFhave_window_system}
+@deftypefn {} {} have_window_system ()
+Return true if a window system is available (X11, Windows, or Apple OS X)
+and false otherwise.
+@seealso{@ref{XREFisguirunning,,isguirunning}}
+@end deftypefn
+
+
+@c isguirunning libinterp/octave.cc
+@anchor{XREFisguirunning}
+@deftypefn {} {} isguirunning ()
+Return true if Octave is running in GUI mode and false otherwise.
+@seealso{@ref{XREFhave_window_system,,have_window_system}}
+@end deftypefn
+
+
+@c Not sure where this should go...
+@c openvar libinterp/corefcn/octave-link.cc
+@anchor{XREFopenvar}
+@deftypefn {} {} openvar (@var{name})
+Open the variable @var{name} in the graphical Variable Editor.
+@end deftypefn
+
+
+@c uiwait scripts/gui/uiwait.m
+@anchor{XREFuiwait}
+@deftypefn  {} {} uiwait
+@deftypefnx {} {} uiwait (@var{h})
+@deftypefnx {} {} uiwait (@var{h}, @var{timeout})
+Suspend program execution until the figure with handle @var{h} is deleted
+or @code{uiresume} is called.
+
+When no figure handle is specified this function uses the current figure.
+If the figure handle is invalid or there is no current figure, this
+functions returns immediately.
+
+When specified, @var{timeout} defines the number of seconds to wait
+for the figure deletion or the @code{uiresume} call.  The timeout value
+must be at least 1.  If a smaller value is specified, a warning is issued
+and a timeout value of 1 is used instead.  If a non-integer value is
+specified, it is truncated towards 0.  If @var{timeout} is not specified,
+the program execution is suspended indefinitely.
+@seealso{@ref{XREFuiresume,,uiresume}, @ref{XREFwaitfor,,waitfor}}
+@end deftypefn
+
+
+@c uiresume scripts/gui/uiresume.m
+@anchor{XREFuiresume}
+@deftypefn {} {} uiresume (@var{h})
+Resume program execution suspended with @code{uiwait}.
+
+The handle @var{h} must be the same as the on specified in @code{uiwait}.
+If the handle is invalid or there is no @code{uiwait} call pending for the
+figure with handle @var{h}, this function does nothing.
+@seealso{@ref{XREFuiwait,,uiwait}}
+@end deftypefn
+
+
+@c waitfor libinterp/corefcn/graphics.cc
+@anchor{XREFwaitfor}
+@deftypefn  {} {} waitfor (@var{h})
+@deftypefnx {} {} waitfor (@var{h}, @var{prop})
+@deftypefnx {} {} waitfor (@var{h}, @var{prop}, @var{value})
+@deftypefnx {} {} waitfor (@dots{}, "timeout", @var{timeout})
+Suspend the execution of the current program until a condition is
+satisfied on the graphics handle @var{h}.
+
+While the program is suspended graphics events are still processed normally,
+allowing callbacks to modify the state of graphics objects.  This function
+is reentrant and can be called from a callback, while another @code{waitfor}
+call is pending at the top-level.
+
+In the first form, program execution is suspended until the graphics object
+@var{h} is destroyed.  If the graphics handle is invalid, the function
+returns immediately.
+
+In the second form, execution is suspended until the graphics object is
+destroyed or the property named @var{prop} is modified.  If the graphics
+handle is invalid or the property does not exist, the function returns
+immediately.
+
+In the third form, execution is suspended until the graphics object is
+destroyed or the property named @var{prop} is set to @var{value}.  The
+function @code{isequal} is used to compare property values.  If the graphics
+handle is invalid, the property does not exist or the property is already
+set to @var{value}, the function returns immediately.
+
+An optional timeout can be specified using the property @qcode{"timeout"}.
+This timeout value is the number of seconds to wait for the condition to be
+true.  @var{timeout} must be at least 1.  If a smaller value is specified, a
+warning is issued and a value of 1 is used instead.  If the timeout value is
+not an integer, it is truncated towards 0.
+
+To define a condition on a property named @qcode{"timeout"}, use the string
+@qcode{'\timeout'} instead.
+
+In all cases, typing CTRL-C stops program execution immediately.
+@seealso{@ref{XREFwaitforbuttonpress,,waitforbuttonpress}, @ref{XREFisequal,,isequal}}
+@end deftypefn
+
+
+@node User-Defined Preferences
+@section User-Defined Preferences
+
+@c getpref scripts/prefs/getpref.m
+@anchor{XREFgetpref}
+@deftypefn  {} {@var{val} =} getpref ("@var{group}", "@var{pref}")
+@deftypefnx {} {@var{val} =} getpref ("@var{group}", "@var{pref}", @var{default})
+@deftypefnx {} {@{@var{val1}, @var{val2}, @dots{}@} =} getpref ("@var{group}", @{"@var{pref1}", "@var{pref2"}, @dots{}@})
+@deftypefnx {} {@var{prefstruct} =} getpref ("@var{group}")
+@deftypefnx {} {@var{prefstruct} =} getpref ()
+Return the preference value corresponding to the named preference @var{pref}
+in the preference group @var{group}.
+
+The named preference group must be a string.
+
+If @var{pref} does not exist in @var{group} and @var{default} is specified,
+create the preference with value @var{default} and return @var{default}.
+
+The preference @var{pref} may be a string or cell array of strings.  If it
+is a cell array of strings then a cell array of preferences is returned.
+
+The corresponding default value @var{default} may be any Octave value,
+.e.g., double, struct, cell array, object, etc.  Or, if @var{pref} is a cell
+array of strings then @var{default} must be a cell array of values with the
+same size as @var{pref}.
+
+If neither @var{pref} nor @var{default} are specified, return a structure
+of preferences for the preference group @var{group}.
+
+If no arguments are specified, return a structure containing all groups of
+preferences and their values.
+@seealso{@ref{XREFaddpref,,addpref}, @ref{XREFsetpref,,setpref}, @ref{XREFispref,,ispref}, @ref{XREFrmpref,,rmpref}}
+@end deftypefn
+
+
+@c setpref scripts/prefs/setpref.m
+@anchor{XREFsetpref}
+@deftypefn  {} {} setpref ("@var{group}", "@var{pref}", @var{val})
+@deftypefnx {} {} setpref ("@var{group}", @{"@var{pref1}", "@var{pref2}", @dots{}@}, @{@var{val1}, @var{val2}, @dots{}@})
+Set the preference @var{pref} to the given @var{val} in the named preference
+group @var{group}.
+
+The named preference group must be a string.
+
+The preference @var{pref} may be a string or a cell array of strings.
+
+The corresponding value @var{val} may be any Octave value, .e.g., double,
+struct, cell array, object, etc.  Or, if @var{pref} is a cell array of
+strings then @var{val} must be a cell array of values with the same size as
+@var{pref}.
+
+If the named preference or group does not exist, it is added.
+@seealso{@ref{XREFaddpref,,addpref}, @ref{XREFgetpref,,getpref}, @ref{XREFispref,,ispref}, @ref{XREFrmpref,,rmpref}}
+@end deftypefn
+
+
+@c addpref scripts/prefs/addpref.m
+@anchor{XREFaddpref}
+@deftypefn  {} {} addpref ("@var{group}", "@var{pref}", @var{val})
+@deftypefnx {} {} addpref ("@var{group}", @{"@var{pref1}", "@var{pref2}", @dots{}@}, @{@var{val1}, @var{val2}, @dots{}@})
+Add the preference @var{pref} and associated value @var{val} to the named
+preference group @var{group}.
+
+The named preference group must be a string.
+
+The preference @var{pref} may be a string or a cell array of strings.  An
+error will be issued if the preference already exists.
+
+The corresponding value @var{val} may be any Octave value, .e.g., double,
+struct, cell array, object, etc.  Or, if @var{pref} is a cell array of
+strings then @var{val} must be a cell array of values with the same size as
+@var{pref}.
+@seealso{@ref{XREFsetpref,,setpref}, @ref{XREFgetpref,,getpref}, @ref{XREFispref,,ispref}, @ref{XREFrmpref,,rmpref}}
+@end deftypefn
+
+
+@c rmpref scripts/prefs/rmpref.m
+@anchor{XREFrmpref}
+@deftypefn  {} {} rmpref ("@var{group}", "@var{pref}")
+@deftypefnx {} {} rmpref ("@var{group}", @{"@var{pref1}", "@var{pref2}", @dots{}@})
+@deftypefnx {} {} rmpref ("@var{group}")
+Remove the named preference @var{pref} from the preference group
+@var{group}.
+
+The named preference group must be a string.
+
+The preference @var{pref} may be a string or cell array of strings.
+
+If @var{pref} is not specified, remove the preference group @var{group}.
+
+It is an error to remove a nonexistent preference or group.
+@seealso{@ref{XREFaddpref,,addpref}, @ref{XREFispref,,ispref}, @ref{XREFsetpref,,setpref}, @ref{XREFgetpref,,getpref}}
+@end deftypefn
+
+
+@c ispref scripts/prefs/ispref.m
+@anchor{XREFispref}
+@deftypefn  {} {} ispref ("@var{group}", "@var{pref}")
+@deftypefnx {} {} ispref ("@var{group}", @{"@var{pref1}", "@var{pref2"}, @dots{}@})
+@deftypefnx {} {} ispref ("@var{group}")
+Return true if the named preference @var{pref} exists in the preference
+group @var{group}.
+
+The named preference group must be a string.
+
+The preference @var{pref} may be a string or a cell array of strings.
+
+If @var{pref} is not specified, return true if the preference group
+@var{group} exists.
+@seealso{@ref{XREFgetpref,,getpref}, @ref{XREFaddpref,,addpref}, @ref{XREFsetpref,,setpref}, @ref{XREFrmpref,,rmpref}}
+@end deftypefn
+
+
+@c prefdir scripts/prefs/prefdir.m
+@anchor{XREFprefdir}
+@deftypefn  {} {} prefdir
+@deftypefnx {} {} prefdir (1)
+@deftypefnx {} {@var{dir} =} prefdir
+Return the directory that holds the preferences for Octave.
+
+Examples:
+
+Display the preferences directory
+
+@example
+prefdir
+@end example
+
+Change to the preferences folder
+
+@example
+cd (prefdir)
+@end example
+
+If called with an argument, the preferences directory is created if it
+doesn't already exist.
+@seealso{@ref{XREFgetpref,,getpref}, @ref{XREFsetpref,,setpref}, @ref{XREFaddpref,,addpref}, @ref{XREFrmpref,,rmpref}, @ref{XREFispref,,ispref}}
+@end deftypefn
+
+
+@c preferences scripts/prefs/preferences.m
+@anchor{XREFpreferences}
+@deftypefn {} {} preferences
+Display the GUI preferences dialog window for Octave.
+@end deftypefn
+

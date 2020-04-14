@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Color Conversion (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Color Conversion (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Color Conversion (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Image-Processing.html#Image-Processing" rel="up" title="Image Processing">
+<link href="Audio-Processing.html#Audio-Processing" rel="next" title="Audio Processing">
+<link href="Plotting-on-top-of-Images.html#Plotting-on-top-of-Images" rel="prev" title="Plotting on top of Images">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Color-Conversion"></a>
+<div class="header">
+<p>
+Previous: <a href="Plotting-on-top-of-Images.html#Plotting-on-top-of-Images" accesskey="p" rel="prev">Plotting on top of Images</a>, Up: <a href="Image-Processing.html#Image-Processing" accesskey="u" rel="up">Image Processing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Color-Conversion-1"></a>
+<h3 class="section">32.5 Color Conversion</h3>
+
+<p>Octave supports conversion from the RGB color system to the HSV color system
+and vice versa.  It is also possible to convert from a color RGB image to a
+grayscale image.
+</p>
+<a name="XREFrgb2hsv"></a><dl>
+<dt><a name="index-rgb2hsv"></a><em><var>hsv_map</var> =</em> <strong>rgb2hsv</strong> <em>(<var>rgb_map</var>)</em></dt>
+<dt><a name="index-rgb2hsv-1"></a><em><var>hsv_img</var> =</em> <strong>rgb2hsv</strong> <em>(<var>rgb_img</var>)</em></dt>
+<dd><p>Transform a colormap or image from RGB to HSV color space.
+</p>
+<p>A color in the RGB space consists of red, green, and blue intensities.
+</p>
+<p>A color in HSV space is represented by hue, saturation and value
+(brightness) levels in a cylindrical coordinate system.  Hue is the
+azimuth and describes the dominant color.  Saturation is the radial
+distance and gives the amount of hue mixed into the color.  Value is
+the height and is the amount of light in the color.
+</p>
+<p>Output class and size will be the same as input.
+</p>
+
+<p><strong>See also:</strong> <a href="#XREFhsv2rgb">hsv2rgb</a>, <a href="Representing-Images.html#XREFrgb2ind">rgb2ind</a>, <a href="#XREFrgb2gray">rgb2gray</a>.
+</p></dd></dl>
+
+
+<a name="XREFhsv2rgb"></a><dl>
+<dt><a name="index-hsv2rgb"></a><em><var>rgb_map</var> =</em> <strong>hsv2rgb</strong> <em>(<var>hsv_map</var>)</em></dt>
+<dt><a name="index-hsv2rgb-1"></a><em><var>rgb_img</var> =</em> <strong>hsv2rgb</strong> <em>(<var>hsv_img</var>)</em></dt>
+<dd><p>Transform a colormap or image from HSV to RGB color space.
+</p>
+<p>A color in HSV space is represented by hue, saturation and value
+(brightness) levels in a cylindrical coordinate system.  Hue is the
+azimuth and describes the dominant color.  Saturation is the radial
+distance and gives the amount of hue mixed into the color.  Value is
+the height and is the amount of light in the color.
+</p>
+<p>The input can be both a colormap or RGB image.  In the case of floating
+point input, values are expected to be on the [0 1] range.  In the case
+of hue (azimuth), since the value corresponds to an angle,
+<code>mod (h, 1)</code> is used.
+</p>
+<div class="example">
+<pre class="example">&gt;&gt; hsv2rgb ([0.5 1 1])
+&rArr; ans = 0 1 1
+
+&gt;&gt; hsv2rgb ([2.5 1 1])
+&rArr; ans = 0 1 1
+
+&gt;&gt; hsv2rgb ([3.5 1 1])
+&rArr; ans = 0 1 1
+</pre></div>
+
+<p>Output class and size will be the same as input.
+</p>
+
+<p><strong>See also:</strong> <a href="#XREFrgb2hsv">rgb2hsv</a>, <a href="Representing-Images.html#XREFind2rgb">ind2rgb</a>.
+</p></dd></dl>
+
+
+<a name="XREFrgb2gray"></a><dl>
+<dt><a name="index-rgb2gray"></a><em><var>I</var> =</em> <strong>rgb2gray</strong> <em>(<var>rgb_img</var>)</em></dt>
+<dt><a name="index-rgb2gray-1"></a><em><var>gray_map</var> =</em> <strong>rgb2gray</strong> <em>(<var>rgb_map</var>)</em></dt>
+<dd><p>Transform an image or colormap from red-green-blue (RGB) color space to
+a grayscale intensity image.
+</p>
+<p>The input may be of class uint8, int8, uint16, int16, single, or double.
+The output is of the same class as the input.
+</p>
+<p>Implementation Note:
+The grayscale intensity is calculated as
+</p>
+<div class="example">
+<pre class="example"><var>I</var> = 0.298936*<var>R</var> + 0.587043*<var>G</var> + 0.114021*<var>B</var>
+</pre></div>
+
+<p>which corresponds to the luminance channel when RGB is translated to
+YIQ as documented in <a href="https://en.wikipedia.org/wiki/YIQ">https://en.wikipedia.org/wiki/YIQ</a>.
+</p>
+<p><strong>See also:</strong> <a href="#XREFrgb2hsv">rgb2hsv</a>, <a href="Representing-Images.html#XREFrgb2ind">rgb2ind</a>.
+</p></dd></dl>
+
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Plotting-on-top-of-Images.html#Plotting-on-top-of-Images" accesskey="p" rel="prev">Plotting on top of Images</a>, Up: <a href="Image-Processing.html#Image-Processing" accesskey="u" rel="up">Image Processing</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

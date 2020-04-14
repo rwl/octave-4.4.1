@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Correlation and Regression Analysis (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Correlation and Regression Analysis (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Correlation and Regression Analysis (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Statistics.html#Statistics" rel="up" title="Statistics">
+<link href="Distributions.html#Distributions" rel="next" title="Distributions">
+<link href="Basic-Statistical-Functions.html#Basic-Statistical-Functions" rel="prev" title="Basic Statistical Functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Correlation-and-Regression-Analysis"></a>
+<div class="header">
+<p>
+Next: <a href="Distributions.html#Distributions" accesskey="n" rel="next">Distributions</a>, Previous: <a href="Basic-Statistical-Functions.html#Basic-Statistical-Functions" accesskey="p" rel="prev">Basic Statistical Functions</a>, Up: <a href="Statistics.html#Statistics" accesskey="u" rel="up">Statistics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Correlation-and-Regression-Analysis-1"></a>
+<h3 class="section">26.3 Correlation and Regression Analysis</h3>
+
+
+<a name="XREFcov"></a><dl>
+<dt><a name="index-cov"></a><em></em> <strong>cov</strong> <em>(<var>x</var>)</em></dt>
+<dt><a name="index-cov-1"></a><em></em> <strong>cov</strong> <em>(<var>x</var>, <var>opt</var>)</em></dt>
+<dt><a name="index-cov-2"></a><em></em> <strong>cov</strong> <em>(<var>x</var>, <var>y</var>)</em></dt>
+<dt><a name="index-cov-3"></a><em></em> <strong>cov</strong> <em>(<var>x</var>, <var>y</var>, <var>opt</var>)</em></dt>
+<dd><p>Compute the covariance matrix.
+</p>
+<p>If each row of <var>x</var> and <var>y</var> is an observation, and each column is
+a variable, then the (<var>i</var>,&nbsp;<var>j</var><span class="nolinebreak">)-th</span><!-- /@w --> entry of
+<code>cov (<var>x</var>, <var>y</var>)</code> is the covariance between the <var>i</var>-th
+variable in <var>x</var> and the <var>j</var>-th variable in <var>y</var>.
+</p>
+<div class="example">
+<pre class="example">cov (<var>x</var>) = 1/(N-1) * SUM_i (<var>x</var>(i) - mean(<var>x</var>)) * (<var>y</var>(i) - mean(<var>y</var>))
+</pre></div>
+
+<p>where <em>N</em> is the length of the <var>x</var> and <var>y</var> vectors.
+</p>
+
+<p>If called with one argument, compute <code>cov (<var>x</var>, <var>x</var>)</code>, the
+covariance between the columns of <var>x</var>.
+</p>
+<p>The argument <var>opt</var> determines the type of normalization to use.
+Valid values are
+</p>
+<dl compact="compact">
+<dt>0:</dt>
+<dd><p>normalize with <em>N-1</em>, provides the best unbiased estimator of the
+covariance [default]
+</p>
+</dd>
+<dt>1:</dt>
+<dd><p>normalize with <em>N</em>, this provides the second moment around the mean
+</p></dd>
+</dl>
+
+<p>Compatibility Note:: Octave always treats rows of <var>x</var> and <var>y</var>
+as multivariate random variables.
+For two inputs, however, <small>MATLAB</small> treats <var>x</var> and <var>y</var> as two
+univariate distributions regardless of their shapes, and will calculate
+<code>cov ([<var>x</var>(:), <var>y</var>(:)])</code> whenever the number of elements in
+<var>x</var> and <var>y</var> are equal.  This will result in a 2x2 matrix.
+Code relying on <small>MATLAB</small>&rsquo;s definition will need to be changed when
+running in Octave.
+</p>
+<p><strong>See also:</strong> <a href="#XREFcorr">corr</a>.
+</p></dd></dl>
+
+
+<a name="XREFcorr"></a><dl>
+<dt><a name="index-corr"></a><em></em> <strong>corr</strong> <em>(<var>x</var>)</em></dt>
+<dt><a name="index-corr-1"></a><em></em> <strong>corr</strong> <em>(<var>x</var>, <var>y</var>)</em></dt>
+<dd><p>Compute matrix of correlation coefficients.
+</p>
+<p>If each row of <var>x</var> and <var>y</var> is an observation and each column is
+a variable, then the (<var>i</var>,&nbsp;<var>j</var><span class="nolinebreak">)-th</span><!-- /@w --> entry of
+<code>corr (<var>x</var>, <var>y</var>)</code> is the correlation between the
+<var>i</var>-th variable in <var>x</var> and the <var>j</var>-th variable in <var>y</var>.
+</p>
+<div class="example">
+<pre class="example">corr (<var>x</var>,<var>y</var>) = cov (<var>x</var>,<var>y</var>) / (std (<var>x</var>) * std (<var>y</var>))
+</pre></div>
+
+<p>If called with one argument, compute <code>corr (<var>x</var>, <var>x</var>)</code>,
+the correlation between the columns of <var>x</var>.
+</p>
+<p><strong>See also:</strong> <a href="#XREFcov">cov</a>.
+</p></dd></dl>
+
+
+<a name="XREFcorrcoef"></a><dl>
+<dt><a name="index-corrcoef"></a><em><var>r</var> =</em> <strong>corrcoef</strong> <em>(<var>x</var>)</em></dt>
+<dt><a name="index-corrcoef-1"></a><em><var>r</var> =</em> <strong>corrcoef</strong> <em>(<var>x</var>, <var>y</var>)</em></dt>
+<dt><a name="index-corrcoef-2"></a><em>[<var>r</var>, <var>p</var>] =</em> <strong>corrcoef</strong> <em>(&hellip;)</em></dt>
+<dt><a name="index-corrcoef-3"></a><em>[<var>r</var>, <var>p</var>, <var>lci</var>, <var>hci</var>] =</em> <strong>corrcoef</strong> <em>(&hellip;)</em></dt>
+<dt><a name="index-corrcoef-4"></a><em>[&hellip;] =</em> <strong>corrcoef</strong> <em>(&hellip;, <var>param</var>, <var>value</var>, &hellip;)</em></dt>
+<dd><p>Compute a matrix of correlation coefficients.
+</p>
+<p><var>x</var> is an array where each column contains a variable and each row is
+an observation.
+</p>
+<p>If a second input <var>y</var> (of the same size as <var>x</var>) is given then
+calculate the correlation coefficients between <var>x</var> and <var>y</var>.
+</p>
+<p><var>r</var> is a matrix of Pearson&rsquo;s product moment correlation coefficients for
+each pair of variables.
+</p>
+<p><var>p</var> is a matrix of pair-wise p-values testing for the null hypothesis of
+a correlation coefficient of zero.
+</p>
+<p><var>lci</var> and <var>hci</var> are matrices containing, respectively, the lower and
+higher bounds of the 95% confidence interval of each correlation
+coefficient.
+</p>
+<p><var>param</var>, <var>value</var> are pairs of optional parameters and values.
+Valid options are:
+</p>
+<dl compact="compact">
+<dt><code>&quot;alpha&quot;</code></dt>
+<dd><p>Confidence level used for the definition of the bounds of the confidence
+interval, <var>lci</var> and <var>hci</var>.  Default is 0.05, i.e., 95% confidence
+interval.
+</p>
+</dd>
+<dt><code>&quot;rows&quot;</code></dt>
+<dd><p>Determine processing of NaN values.  Acceptable values are <code>&quot;all&quot;</code>,
+<code>&quot;complete&quot;</code>, and <code>&quot;pairwise&quot;</code>.  Default is <code>&quot;all&quot;</code>.
+With <code>&quot;complete&quot;</code>, only the rows without NaN values are considered.
+With <code>&quot;pairwise&quot;</code>, the selection of NaN-free rows is made for each
+pair of variables.
+</p>
+</dd>
+</dl>
+
+
+<p><strong>See also:</strong> <a href="#XREFcorr">corr</a>, <a href="#XREFcov">cov</a>.
+</p></dd></dl>
+
+
+<a name="XREFspearman"></a><dl>
+<dt><a name="index-spearman"></a><em></em> <strong>spearman</strong> <em>(<var>x</var>)</em></dt>
+<dt><a name="index-spearman-1"></a><em></em> <strong>spearman</strong> <em>(<var>x</var>, <var>y</var>)</em></dt>
+<dd><a name="index-Spearman_0027s-Rho"></a>
+<p>Compute Spearman&rsquo;s rank correlation coefficient
+<var>rho</var>.
+</p>
+<p>For two data vectors <var>x</var> and <var>y</var>, Spearman&rsquo;s
+<var>rho</var>
+is the correlation coefficient of the ranks of <var>x</var> and <var>y</var>.
+</p>
+<p>If <var>x</var> and <var>y</var> are drawn from independent distributions,
+<var>rho</var>
+has zero mean and variance
+<code>1 / (N - 1)</code>,
+where <em>N</em> is the length of the <var>x</var> and <var>y</var> vectors, and is
+asymptotically normally distributed.
+</p>
+<p><code>spearman (<var>x</var>)</code> is equivalent to
+<code>spearman (<var>x</var>, <var>x</var>)</code>.
+</p>
+<p><strong>See also:</strong> <a href="Basic-Statistical-Functions.html#XREFranks">ranks</a>, <a href="#XREFkendall">kendall</a>.
+</p></dd></dl>
+
+
+<a name="XREFkendall"></a><dl>
+<dt><a name="index-kendall"></a><em></em> <strong>kendall</strong> <em>(<var>x</var>)</em></dt>
+<dt><a name="index-kendall-1"></a><em></em> <strong>kendall</strong> <em>(<var>x</var>, <var>y</var>)</em></dt>
+<dd><a name="index-Kendall_0027s-Tau"></a>
+<p>Compute Kendall&rsquo;s
+<var>tau</var>.
+</p>
+<p>For two data vectors <var>x</var>, <var>y</var> of common length <em>N</em>, Kendall&rsquo;s
+<var>tau</var>
+is the correlation of the signs of all rank differences of
+<var>x</var> and <var>y</var>; i.e., if both <var>x</var> and <var>y</var> have distinct
+entries, then
+</p>
+
+<div class="example">
+<pre class="example">         1
+<var>tau</var> = -------   SUM sign (<var>q</var>(i) - <var>q</var>(j)) * sign (<var>r</var>(i) - <var>r</var>(j))
+      N (N-1)   i,j
+</pre></div>
+
+<p>in which the
+<var>q</var>(i) and <var>r</var>(i)
+are the ranks of <var>x</var> and <var>y</var>, respectively.
+</p>
+<p>If <var>x</var> and <var>y</var> are drawn from independent distributions,
+Kendall&rsquo;s
+<var>tau</var>
+is asymptotically normal with mean 0 and variance
+<code>(2 * (2N+5)) / (9 * N * (N-1))</code>.
+</p>
+<p><code>kendall (<var>x</var>)</code> is equivalent to <code>kendall (<var>x</var>,
+<var>x</var>)</code>.
+</p>
+<p><strong>See also:</strong> <a href="Basic-Statistical-Functions.html#XREFranks">ranks</a>, <a href="#XREFspearman">spearman</a>.
+</p></dd></dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Distributions.html#Distributions" accesskey="n" rel="next">Distributions</a>, Previous: <a href="Basic-Statistical-Functions.html#Basic-Statistical-Functions" accesskey="p" rel="prev">Basic Statistical Functions</a>, Up: <a href="Statistics.html#Statistics" accesskey="u" rel="up">Statistics</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

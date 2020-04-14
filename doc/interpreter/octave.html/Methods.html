@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Methods (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Methods (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Methods (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="classdef-Classes.html#classdef-Classes" rel="up" title="classdef Classes">
+<link href="Inheritance.html#Inheritance" rel="next" title="Inheritance">
+<link href="Properties.html#Properties" rel="prev" title="Properties">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Methods"></a>
+<div class="header">
+<p>
+Next: <a href="Inheritance.html#Inheritance" accesskey="n" rel="next">Inheritance</a>, Previous: <a href="Properties.html#Properties" accesskey="p" rel="prev">Properties</a>, Up: <a href="classdef-Classes.html#classdef-Classes" accesskey="u" rel="up">classdef Classes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Methods-1"></a>
+<h4 class="subsection">34.6.3 Methods</h4>
+
+<p>All class methods must be defined within <code>methods</code> blocks.  An exception
+to this rule is described at the end of this subsection.  Those <code>methods</code>
+blocks can have additional attributes specifying the access rights or whether
+the methods are static, i.e., methods that can be called without creating an
+object of that class.
+</p>
+<div class="example">
+<pre class="example">classdef some_class
+  methods
+    function obj = some_class ()
+      disp (&quot;New instance created.&quot;);
+    endfunction
+
+    function disp (obj)
+      disp (&quot;Here is some_class.&quot;);
+    endfunction
+  endmethods
+
+  methods (Access = <var>mode</var>)
+    function r = func (obj, r)
+      r = 2 * r;
+    endfunction
+  endmethods
+
+  methods (Static = true)
+    function c = circumference (radius)
+      c = 2 * pi () .* radius;
+    endfunction
+  endmethods
+endclassdef
+</pre></div>
+
+<p>The constructor of the class is declared in the <code>methods</code> block and must
+have the same name as the class and exactly one output argument which is an
+object of its class.
+</p>
+<p>It is also possible to overload built-in or inherited methods, like the
+<code>disp</code> function in the example above to tell Octave how objects of
+<code>some_class</code> should be displayed (see <a href="Class-Methods.html#Class-Methods">Class Methods</a>).
+</p>
+<p>In general, the first argument in a method definition is always the object that
+it is called from.  Class methods can either be called by passing the object as
+the first argument to that method or by calling the object followed by a dot
+(&quot;<code>.</code>&quot;) and the method&rsquo;s name with subsequent arguments:
+</p>
+<div class="example">
+<pre class="example">&gt;&gt; obj = some_class ();
+New instance created.
+&gt;&gt; disp (obj);   # both are
+&gt;&gt; obj.disp ();  # equal
+</pre></div>
+
+<p>In <code>some_class</code>, the method <code>func</code> is defined within a <code>methods</code>
+block setting the <code>Access</code> attribute to <var>mode</var>, which is one of:
+</p>
+<dl compact="compact">
+<dt><code>public</code></dt>
+<dd><p>The methods can be accessed from everywhere.
+</p>
+</dd>
+<dt><code>private</code></dt>
+<dd><p>The methods can only be accessed from other class methods.  Subclasses of that
+class cannot access them.
+</p>
+</dd>
+<dt><code>protected</code></dt>
+<dd><p>The methods can only be accessed from other class methods and from subclasses
+of that class.
+</p></dd>
+</dl>
+
+<p>The default access for methods is <code>public</code>.
+</p>
+<p>Finally, the method <code>circumference</code> is defined in a static <code>methods</code>
+block and can be used without creating an object of <code>some_class</code>.  This is
+useful for methods, that do not depend on any class properties.  The class name
+and the name of the static method, separated by a dot (&quot;<code>.</code>&quot;), call this
+static method.  In contrast to non-static methods, the object is not passed as
+first argument even if called using an object of <code>some_class</code>.
+</p>
+<div class="example">
+<pre class="example">&gt;&gt; some_class.circumference (3)
+&rArr; ans =  18.850
+&gt;&gt; obj = some_class ();
+New instance created.
+&gt;&gt; obj.circumference (3)
+&rArr; ans =  18.850
+</pre></div>
+
+<p>Additionally, class methods can be defined as functions in a folder of the same
+name as the class prepended with the &lsquo;<samp>@</samp>&rsquo; symbol
+(see <a href="Creating-a-Class.html#Creating-a-Class">Creating a Class</a>).  The main <code>classdef</code> file has to be stored in
+this class folder as well.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Inheritance.html#Inheritance" accesskey="n" rel="next">Inheritance</a>, Previous: <a href="Properties.html#Properties" accesskey="p" rel="prev">Properties</a>, Up: <a href="classdef-Classes.html#classdef-Classes" accesskey="u" rel="up">classdef Classes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>

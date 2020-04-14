@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Creating a classdef Class (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Creating a classdef Class (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Creating a classdef Class (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="classdef-Classes.html#classdef-Classes" rel="up" title="classdef Classes">
+<link href="Properties.html#Properties" rel="next" title="Properties">
+<link href="classdef-Classes.html#classdef-Classes" rel="prev" title="classdef Classes">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Creating-a-classdef-Class"></a>
+<div class="header">
+<p>
+Next: <a href="Properties.html#Properties" accesskey="n" rel="next">Properties</a>, Up: <a href="classdef-Classes.html#classdef-Classes" accesskey="u" rel="up">classdef Classes</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Creating-a-classdef-Class-1"></a>
+<h4 class="subsection">34.6.1 Creating a <code>classdef</code> Class</h4>
+
+<p>A very basic <code>classdef</code> value class
+(see <a href="Value-Classes-vs_002e-Handle-Classes.html#Value-Classes-vs_002e-Handle-Classes">Value Classes vs. Handle Classes</a>) is defined by:
+</p>
+<div class="example">
+<pre class="example">classdef some_class
+  properties
+  endproperties
+
+  methods
+  endmethods
+endclassdef
+</pre></div>
+
+
+
+<p>In contrast to old style classes, the <code>properties</code>-<code>endproperties</code>
+block as well as the <code>methods</code>-<code>endmethods</code> block can be used to
+define properties and methods of the class.  Because both blocks are empty,
+they can be omitted in this particular case.
+</p>
+<p>For simplicity, a more advanced implementation of a <code>classdef</code> class is
+shown using the <code>polynomial</code> example again (see <a href="Creating-a-Class.html#Creating-a-Class">Creating a Class</a>):
+</p>
+<div class="example">
+<pre class="verbatim">classdef polynomial2
+  properties
+    poly = 0;
+  endproperties
+
+  methods
+    function p = polynomial2 (a)
+      if (nargin &gt; 1)
+        print_usage ();
+      endif
+
+      if (nargin == 1)
+        if (isa (a, &quot;polynomial2&quot;))
+          p.poly = a.poly;
+        elseif (isreal (a) &amp;&amp; isvector (a))
+          p.poly = a(:).';  # force row vector
+        else
+          error (&quot;polynomial2: A must be a real vector&quot;);
+        endif
+      endif
+    endfunction
+
+    function disp (p)
+      a = p.poly;
+      first = true;
+      for i = 1 : length (a);
+        if (a(i) != 0)
+          if (first)
+            first = false;
+          elseif (a(i) &gt; 0 || isnan (a(i)))
+            printf (&quot; +&quot;);
+          endif
+          if (a(i) &lt; 0)
+            printf (&quot; -&quot;);
+          endif
+          if (i == 1)
+            printf (&quot; %.5g&quot;, abs (a(i)));
+          elseif (abs (a(i)) != 1)
+            printf (&quot; %.5g *&quot;, abs (a(i)));
+          endif
+          if (i &gt; 1)
+            printf (&quot; X&quot;);
+          endif
+          if (i &gt; 2)
+            printf (&quot; ^ %d&quot;, i - 1);
+          endif
+        endif
+      endfor
+
+      if (first)
+        printf (&quot; 0&quot;);
+      endif
+      printf (&quot;\n&quot;);
+    endfunction
+  endmethods
+endclassdef
+</pre></div>
+
+<p>An object of class <code>polynomial2</code> is created by calling the class
+constructor:
+</p>
+<div class="example">
+<pre class="example">&gt;&gt; p = polynomial2 ([1, 0, 1])
+&rArr; p =
+
+ 1 + X ^ 2
+</pre></div>
+
+
+
+
+</body>
+</html>

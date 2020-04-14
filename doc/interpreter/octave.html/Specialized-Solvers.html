@@ -1,0 +1,1054 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Specialized Solvers (GNU Octave (version 4.4.1))</title>
+
+<meta name="description" content="Specialized Solvers (GNU Octave (version 4.4.1))">
+<meta name="keywords" content="Specialized Solvers (GNU Octave (version 4.4.1))">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Concept-Index.html#Concept-Index" rel="index" title="Concept Index">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Linear-Algebra.html#Linear-Algebra" rel="up" title="Linear Algebra">
+<link href="Vectorization-and-Faster-Code-Execution.html#Vectorization-and-Faster-Code-Execution" rel="next" title="Vectorization and Faster Code Execution">
+<link href="Functions-of-a-Matrix.html#Functions-of-a-Matrix" rel="prev" title="Functions of a Matrix">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+<link rel="stylesheet" type="text/css" href="octave.css">
+
+
+</head>
+
+<body lang="en">
+<a name="Specialized-Solvers"></a>
+<div class="header">
+<p>
+Previous: <a href="Functions-of-a-Matrix.html#Functions-of-a-Matrix" accesskey="p" rel="prev">Functions of a Matrix</a>, Up: <a href="Linear-Algebra.html#Linear-Algebra" accesskey="u" rel="up">Linear Algebra</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Specialized-Solvers-1"></a>
+<h3 class="section">18.5 Specialized Solvers</h3>
+<a name="index-matrix_002c-specialized-solvers"></a>
+
+<a name="XREFbicg"></a><dl>
+<dt><a name="index-bicg"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>)</em></dt>
+<dt><a name="index-bicg-1"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>)</em></dt>
+<dt><a name="index-bicg-2"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>)</em></dt>
+<dt><a name="index-bicg-3"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>)</em></dt>
+<dt><a name="index-bicg-4"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>)</em></dt>
+<dt><a name="index-bicg-5"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>, [], <var>x0</var>)</em></dt>
+<dt><a name="index-bicg-6"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>)</em></dt>
+<dt><a name="index-bicg-7"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>, [], <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-bicg-8"></a><em><var>x</var> =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-bicg-9"></a><em>[<var>x</var>, <var>flag</var>, <var>relres</var>, <var>iter</var>, <var>resvec</var>] =</em> <strong>bicg</strong> <em>(<var>A</var>, <var>b</var>, &hellip;)</em></dt>
+<dd><p>Solve the linear system of equations <code><var>A</var>&nbsp;*&nbsp;<var>x</var>&nbsp;=&nbsp;<var>b</var></code><!-- /@w -->
+by means of the Bi-Conjugate Gradient iterative method.
+</p>
+<p>The input arguments are:
+</p>
+<ul>
+<li> <var>A</var> is the matrix of the linear system and it must be square.
+<var>A</var> can be passed as a matrix, function handle, or inline function
+<code>Afun</code> such that <code>Afun&nbsp;(x,&nbsp;&quot;notransp&quot;)&nbsp;=&nbsp;A&nbsp;*&nbsp;x</code><!-- /@w --> and
+<code>Afun&nbsp;(x,&nbsp;&quot;transp&quot;)&nbsp;=&nbsp;A'&nbsp;*&nbsp;x</code><!-- /@w -->.  Additional parameters to
+<code>Afun</code> may be passed after <var>x0</var>.
+
+</li><li> <var>b</var> is the right-hand side vector.  It must be a column vector
+with the same number of rows as <var>A</var>.
+
+</li><li> <var>tol</var> is the required relative tolerance for the residual error,
+<code><var>b</var>&nbsp;<span class="nolinebreak">-</span>&nbsp;<var>A</var>&nbsp;*&nbsp;<var>x</var></code><!-- /@w -->.  The iteration stops if
+<code>norm&nbsp;(<var>b</var>&nbsp;<span class="nolinebreak">-</span>&nbsp;<var>A</var>&nbsp;*&nbsp;<var>x</var>)</code>&nbsp;&le;&nbsp;<code><var>tol</var>&nbsp;*&nbsp;norm&nbsp;(<var>b</var>)</code><!-- /@w --><!-- /@w -->.
+If <var>tol</var> is omitted or empty, then a tolerance of 1e-6 is used.
+
+</li><li> <var>maxit</var> is the maximum allowed number of iterations; if <var>maxit</var>
+is omitted or empty then a value of 20 is used.
+
+</li><li> <var>M1</var>, <var>M2</var> are the preconditioners.  The preconditioner <var>M</var> is
+given as <code><var>M</var> = <var>M1</var> * <var>M2</var></code>.  Both <var>M1</var> and <var>M2</var>
+can be passed as a matrix or as a function handle or inline function
+<code>g</code> such that <code>g&nbsp;(<var>x</var>,&nbsp;&quot;notransp&quot;)&nbsp;=&nbsp;<var>M1</var>&nbsp;\&nbsp;<var>x</var></code><!-- /@w -->
+or <code>g&nbsp;(<var>x</var>,&nbsp;&quot;notransp&quot;)&nbsp;=&nbsp;<var>M2</var>&nbsp;\&nbsp;<var>x</var></code><!-- /@w --> and
+<code>g&nbsp;(<var>x</var>,&nbsp;&quot;transp&quot;)&nbsp;=&nbsp;<var>M1</var>'&nbsp;\&nbsp;<var>x</var></code><!-- /@w --> or
+<code>g&nbsp;(<var>x</var>,&nbsp;&quot;transp&quot;)&nbsp;=&nbsp;<var>M2</var>'&nbsp;\&nbsp;<var>x</var></code><!-- /@w -->.
+If <var>M1</var> is omitted or empty, then preconditioning is not applied.
+The preconditioned system is theoretically equivalent to applying the
+<code>bicg</code> method to the linear system
+<code>inv (<var>M1</var>) * A * inv (<var>M2</var>) * <var>y</var> = inv
+(<var>M1</var>) * <var>b</var></code> and
+<code>inv (<var>M2'</var>) * A' * inv (<var>M1'</var>) * <var>z</var> =
+inv (<var>M2'</var>) * <var>b</var></code> and then setting
+<code><var>x</var> = inv (<var>M2</var>) * <var>y</var></code>.
+
+</li><li> <var>x0</var> is the initial guess.  If <var>x0</var> is omitted or empty then the
+function sets <var>x0</var> to a zero vector by default.
+</li></ul>
+
+<p>Any arguments which follow <var>x0</var> are treated as parameters, and passed in
+an appropriate manner to any of the functions (<var>Afun</var> or <var>Mfun</var>) or
+that have been given to <code>bicg</code>.
+</p>
+<p>The output parameters are:
+</p>
+<ul>
+<li> <var>x</var> is the computed approximation to the solution of
+<code><var>A</var>&nbsp;*&nbsp;<var>x</var>&nbsp;=&nbsp;<var>b</var></code><!-- /@w -->.  If the algorithm did not converge,
+then <var>x</var> is the iteration which has the minimum residual.
+
+</li><li> <var>flag</var> indicates the exit status:
+
+<ul>
+<li> 0: The algorithm converged to within the prescribed tolerance.
+
+</li><li> 1: The algorithm did not converge and it reached the maximum number of
+iterations.
+
+</li><li> 2: The preconditioner matrix is singular.
+
+</li><li> 3: The algorithm stagnated, i.e., the absolute value of the
+difference between the current iteration <var>x</var> and the previous is less
+than <code>eps * norm (<var>x</var>,2)</code>.
+
+</li><li> 4: The algorithm could not continue because intermediate values
+became too small or too large for reliable computation.
+</li></ul>
+
+</li><li> <var>relres</var> is the ratio of the final residual to its initial value,
+measured in the Euclidean norm.
+
+</li><li> <var>iter</var> is the iteration which <var>x</var> is computed.
+
+</li><li> <var>resvec</var> is a vector containing the residual at each iteration.
+The total number of iterations performed is given by
+<code>length (<var>resvec</var>) - 1</code>.
+</li></ul>
+
+<p>Consider a trivial problem with a tridiagonal matrix
+</p>
+<div class="example">
+<pre class="example">n = 20;
+A = toeplitz (sparse ([1, 1], [1, 2], [2, 1] * n ^ 2, 1, n)) + ...
+    toeplitz (sparse (1, 2, -1, 1, n) * n / 2, ...
+              sparse (1, 2, 1, 1, n) * n / 2);
+b = A * ones (n, 1);
+restart = 5;
+[M1, M2] = ilu (A);  # in this tridiag case, it corresponds to lu (A)
+M = M1 * M2;
+Afun = @(x, string) strcmp (string, &quot;notransp&quot;) * (A * x) + ...
+                     strcmp (string, &quot;transp&quot;) * (A' * x);
+Mfun = @(x, string) strcmp (string, &quot;notransp&quot;) * (M \ x) + ...
+                     strcmp (string, &quot;transp&quot;) * (M' \ x);
+M1fun = @(x, string) strcmp (string, &quot;notransp&quot;) * (M1 \ x) + ...
+                     strcmp (string, &quot;transp&quot;) * (M1' \ x);
+M2fun = @(x, string) strcmp (string, &quot;notransp&quot;) * (M2 \ x) + ...
+                     strcmp (string, &quot;transp&quot;) * (M2' \ x);
+</pre></div>
+
+<p><small>EXAMPLE 1:</small> simplest usage of <code>bicg</code>
+</p>
+<div class="example">
+<pre class="example">x = bicg (A, b)
+</pre></div>
+
+<p><small>EXAMPLE 2:</small> <code>bicg</code> with a function that computes
+<code><var>A</var>*<var>x</var></code> and <code><var>A'</var>*<var>x</var></code>
+</p>
+<div class="example">
+<pre class="example">x = bicg (Afun, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 3:</small> <code>bicg</code> with a preconditioner matrix <var>M</var>
+</p>
+<div class="example">
+<pre class="example">x = bicg (A, b, 1e-6, n, M)
+</pre></div>
+
+<p><small>EXAMPLE 4:</small> <code>bicg</code> with a function as preconditioner
+</p>
+<div class="example">
+<pre class="example">x = bicg (Afun, b, 1e-6, n, Mfun)
+</pre></div>
+
+<p><small>EXAMPLE 5:</small> <code>bicg</code> with preconditioner matrices <var>M1</var>
+and <var>M2</var>
+</p>
+<div class="example">
+<pre class="example">x = bicg (A, b, 1e-6, n, M1, M2)
+</pre></div>
+
+<p><small>EXAMPLE 6:</small> <code>bicg</code> with functions as preconditioners
+</p>
+<div class="example">
+<pre class="example">x = bicg (Afun, b, 1e-6, n, M1fun, M2fun)
+</pre></div>
+
+<p><small>EXAMPLE 7:</small> <code>bicg</code> with as input a function requiring an argument
+</p>
+<div class="example">
+<pre class="example">function y = Ap (A, x, string, z)
+  ## compute A^z * x or (A^z)' * x
+  y = x;
+  if (strcmp (string, &quot;notransp&quot;))
+    for i = 1:z
+      y = A * y;
+    endfor
+  elseif (strcmp (string, &quot;transp&quot;))
+    for i = 1:z
+      y = A' * y;
+    endfor
+  endif
+endfunction
+
+Apfun = @(x, string, p) Ap (A, x, string, p);
+x = bicg (Apfun, b, [], [], [], [], [], 2);
+</pre></div>
+
+<p>References:
+</p>
+<ol>
+<li> Y. Saad, <cite>Iterative Methods for Sparse Linear Systems</cite>,
+Second edition, 2003, SIAM.
+
+</li></ol>
+
+
+<p><strong>See also:</strong> <a href="#XREFbicgstab">bicgstab</a>, <a href="#XREFcgs">cgs</a>, <a href="#XREFgmres">gmres</a>, <a href="Iterative-Techniques.html#XREFpcg">pcg</a>, <a href="#XREFqmr">qmr</a>, <a href="#XREFtfqmr">tfqmr</a>.
+</p></dd></dl>
+
+
+<a name="XREFbicgstab"></a><dl>
+<dt><a name="index-bicgstab"></a><em><var>x</var> =</em> <strong>bicgstab</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-bicgstab-1"></a><em><var>x</var> =</em> <strong>bicgstab</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>, [], <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-bicgstab-2"></a><em>[<var>x</var>, <var>flag</var>, <var>relres</var>, <var>iter</var>, <var>resvec</var>] =</em> <strong>bicgstab</strong> <em>(<var>A</var>, <var>b</var>, &hellip;)</em></dt>
+<dd><p>Solve <code>A x = b</code> using the stabilizied Bi-conjugate gradient iterative
+method.
+</p>
+<p>The input parameters are:
+</p>
+<ul class="no-bullet">
+<li>- <var>A</var> is the matrix of the linear system and it must be square.
+<var>A</var> can be passed as a matrix, function handle, or inline
+function <code>Afun</code> such that <code>Afun(x) = A * x</code>.  Additional
+parameters to <code>Afun</code> are passed after <var>x0</var>.
+
+</li><li>- <var>b</var> is the right hand side vector.  It must be a column vector
+with the same number of rows as <var>A</var>.
+
+</li><li>- <var>tol</var> is the required relative tolerance for the residual error,
+<code><var>b</var>&nbsp;<span class="nolinebreak">-</span>&nbsp;<var>A</var>&nbsp;*&nbsp;<var>x</var></code><!-- /@w -->.  The iteration stops if
+<code>norm&nbsp;(<var>b</var>&nbsp;<span class="nolinebreak">-</span>&nbsp;<var>A</var>&nbsp;*&nbsp;<var>x</var>)</code>&nbsp;&le;&nbsp;<code><var>tol</var>&nbsp;*&nbsp;norm&nbsp;(<var>b</var>)</code><!-- /@w --><!-- /@w -->.
+If <var>tol</var> is omitted or empty, then a tolerance of 1e-6 is used.
+
+</li><li>- <var>maxit</var> the maximum number of outer iterations, if not given or
+set to [] the default value <code>min (20, numel (b))</code> is used.
+
+</li><li>- <var>M1</var>, <var>M2</var> are the preconditioners.  The preconditioner
+<var>M</var> is given as <code><var>M</var> = <var>M1</var> * <var>M2</var></code>.
+Both <var>M1</var> and <var>M2</var> can be passed as a matrix or as a function
+handle or inline function <code>g</code> such that
+<code>g(<var>x</var>) = <var>M1</var> \ <var>x</var></code> or
+<code>g(<var>x</var>) = <var>M2</var> \ <var>x</var></code>.
+The technique used is the right preconditioning, i.e., it is
+solved <code><var>A</var> * inv (<var>M</var>) * <var>y</var> = <var>b</var></code> and then
+<code><var>x</var> = inv (<var>M</var>) * <var>y</var></code>.
+
+</li><li>- <var>x0</var> the initial guess, if not given or set to [] the default
+value <code>zeros (size (<var>b</var>))</code> is used.
+
+</li></ul>
+
+<p>The arguments which follow <var>x0</var> are treated as parameters, and passed in
+a proper way to any of the functions (<var>A</var> or <var>M</var>) which are passed
+to <code>bicstab</code>.
+</p>
+<p>The output parameters are:
+</p>
+<ul class="no-bullet">
+<li>- <var>x</var> is the approximation computed.  If the method doesn&rsquo;t
+converge then it is the iterated with the minimum residual.
+
+</li><li>- <var>flag</var> indicates the exit status:
+
+<ul class="no-bullet">
+<li>- 0: iteration converged to the within the chosen tolerance
+
+</li><li>- 1: the maximum number of iterations was reached before convergence
+
+</li><li>- 2: the preconditioner matrix is singular
+
+</li><li>- 3: the algorithm reached stagnation
+
+</li><li>- 4: the algorithm can&rsquo;t continue due to a division by zero
+</li></ul>
+
+</li><li>- <var>relres</var> is the relative residual obtained with as
+<code>(<var>A</var>*<var>x</var>-<var>b</var>) / <code>norm(<var>b</var>)</code></code>.
+
+</li><li>- <var>iter</var> is the (possibily half) iteration which <var>x</var> is
+computed.  If it is an half iteration then it is <code><var>iter</var> + 0.5</code>
+
+</li><li>- <var>resvec</var> is a vector containing the residual of each half and
+total iteration (There are also the half iterations since <var>x</var> is
+computed in two steps at each iteration).
+Doing <code>(length(<var>resvec</var>) - 1) / 2</code> is possible to see the
+total number of (total) iterations performed.
+
+</li></ul>
+
+<p>Let us consider a trivial problem with a tridiagonal matrix
+</p>
+<div class="example">
+<pre class="example">n = 20;
+A = toeplitz (sparse ([1, 1], [1, 2], [2, 1] * n ^ 2, 1, n))  + ...
+    toeplitz (sparse (1, 2, -1, 1, n) * n / 2, ...
+    sparse (1, 2, 1, 1, n) * n / 2);
+b = A * ones (n, 1);
+restart = 5;
+[M1, M2] = ilu (A); # in this tridiag case, it corresponds to lu (A)
+M = M1 * M2;
+Afun = @(x) A * x;
+Mfun = @(x) M \ x;
+M1fun = @(x) M1 \ x;
+M2fun = @(x) M2 \ x;
+</pre></div>
+
+<p><small>EXAMPLE 1:</small> simplest usage of <code>bicgstab</code>
+</p>
+<div class="example">
+<pre class="example">x = bicgstab (A, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 2:</small> <code>bicgstab</code> with a function which computes
+<code><var>A</var> * <var>x</var></code>
+</p>
+<div class="example">
+<pre class="example">x = bicgstab (Afun, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 3:</small> <code>bicgstab</code> with a preconditioner matrix <var>M</var>
+</p>
+<div class="example">
+<pre class="example">x = bicgstab (A, b, [], 1e-06, n, M)
+</pre></div>
+
+<p><small>EXAMPLE 4:</small> <code>bicgstab</code> with a function as preconditioner
+</p>
+<div class="example">
+<pre class="example">x = bicgstab (Afun, b, 1e-6, n, Mfun)
+</pre></div>
+
+<p><small>EXAMPLE 5:</small> <code>bicgstab</code> with preconditioner matrices <var>M1</var>
+and <var>M2</var>
+</p>
+<div class="example">
+<pre class="example">x = bicgstab (A, b, [], 1e-6, n, M1, M2)
+</pre></div>
+
+<p><small>EXAMPLE 6:</small> <code>bicgstab</code> with functions as preconditioners
+</p>
+<div class="example">
+<pre class="example">x = bicgstab (Afun, b, 1e-6, n, M1fun, M2fun)
+</pre></div>
+
+<p><small>EXAMPLE 7:</small> <code>bicgstab</code> with as input a function requiring
+an argument
+</p>
+<div class="example">
+<pre class="example">function y = Ap (A, x, z) # compute A^z * x
+   y = x;
+   for i = 1:z
+     y = A * y;
+   endfor
+ endfunction
+Apfun = @(x, string, p) Ap (A, x, string, p);
+x = bicgstab (Apfun, b, [], [], [], [], [], 2);
+</pre></div>
+
+<p><small>EXAMPLE 8:</small> explicit example to show that <code>bicgstab</code> uses a
+right preconditioner
+</p>
+<div class="example">
+<pre class="example">[M1, M2] = ilu (A + 0.1 * eye (n)); # factorization of A perturbed
+M = M1 * M2;
+
+## reference solution computed by bicgstab after one iteration
+[x_ref, fl] = bicgstab (A, b, [], 1, M)
+
+## right preconditioning
+[y, fl] = bicgstab (A / M, b, [], 1)
+x = M \ y # compare x and x_ref
+
+</pre></div>
+
+<p>References:
+</p>
+<ol>
+<li> Y. Saad, <cite>Iterative Methods for Sparse Linear
+Systems</cite>, Second edition, 2003, SIAM
+
+</li></ol>
+
+
+<p><strong>See also:</strong> <a href="#XREFbicg">bicg</a>, <a href="#XREFcgs">cgs</a>, <a href="#XREFgmres">gmres</a>, <a href="Iterative-Techniques.html#XREFpcg">pcg</a>, <a href="#XREFqmr">qmr</a>, <a href="#XREFtfqmr">tfqmr</a>.
+</p>
+</dd></dl>
+
+
+<a name="XREFcgs"></a><dl>
+<dt><a name="index-cgs"></a><em><var>x</var> =</em> <strong>cgs</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-cgs-1"></a><em><var>x</var> =</em> <strong>cgs</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>, [], <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-cgs-2"></a><em>[<var>x</var>, <var>flag</var>, <var>relres</var>, <var>iter</var>, <var>resvec</var>] =</em> <strong>cgs</strong> <em>(<var>A</var>, <var>b</var>, &hellip;)</em></dt>
+<dd><p>Solve <code>A x = b</code>, where <var>A</var> is a square matrix, using the
+Conjugate Gradients Squared method.
+</p>
+<p>The input arguments are:
+</p>
+<ul class="no-bullet">
+<li>- <var>A</var> is the matrix of the linear system and it must be square.
+<var>A</var> can be passed as a matrix, function handle, or inline
+function <code>Afun</code> such that <code>Afun(x) = A * x</code>.  Additional
+parameters to <code>Afun</code> are passed after <var>x0</var>.
+
+</li><li>- <var>b</var> is the right hand side vector.  It must be a column vector
+with same number of rows of <var>A</var>.
+
+</li><li>- <var>tol</var> is the relative tolerance, if not given or set to [] the
+default value 1e-6 is used.
+
+</li><li>- <var>maxit</var> the maximum number of outer iterations, if not given or
+set to [] the default value <code>min (20, numel (b))</code> is used.
+
+</li><li>- <var>M1</var>, <var>M2</var> are the preconditioners.  The preconditioner
+matrix is given as <code>M = M1 * M2</code>.  Both <var>M1</var>
+and <var>M2</var> can be passed as a matrix or as a function handle or inline
+function <code>g</code> such that <code>g(x) = M1 \ x</code> or <code>g(x) = M2 \ x</code>.
+If M1 is empty or not passed then no preconditioners are applied.
+The technique used is the right preconditioning, i.e., it is solved
+<code><var>A</var>*inv(<var>M</var>)*y = b</code> and then <code><var>x</var> = inv(<var>M</var>)*y</code>.
+
+</li><li>- <var>x0</var> the initial guess, if not given or set to [] the default
+value <code>zeros (size (b))</code> is used.
+</li></ul>
+
+<p>The arguments which follow <var>x0</var> are treated as parameters, and passed in
+a proper way to any of the functions (<var>A</var> or <var>P</var>) which are passed
+to <code>cgs</code>.
+</p>
+<p>The output parameters are:
+</p>
+<ul class="no-bullet">
+<li>- <var>x</var> is the approximation computed.  If the method doesn&rsquo;t
+converge then it is the iterated with the minimum residual.
+
+</li><li>- <var>flag</var> indicates the exit status:
+
+<ul class="no-bullet">
+<li>- 0: iteration converged to the within the chosen tolerance
+
+</li><li>- 1: the maximum number of iterations was reached before convergence
+
+</li><li>- 2: the preconditioner matrix is singular
+
+</li><li>- 3: the algorithm reached stagnation
+
+</li><li>- 4: the algorithm can&rsquo;t continue due to a division by zero
+</li></ul>
+
+</li><li>- <var>relres</var> is the relative residual obtained with as
+<code>(<var>A</var>*<var>x</var>-<var>b</var>) / <code>norm(<var>b</var>)</code></code>.
+
+</li><li>- <var>iter</var> is the iteration which <var>x</var> is computed.
+
+</li><li>- <var>resvec</var> is a vector containing the residual at each iteration.
+Doing <code>length(<var>resvec</var>) - 1</code> is possible to see the total number
+of iterations performed.
+</li></ul>
+
+<p>Let us consider a trivial problem with a tridiagonal matrix
+</p>
+<div class="example">
+<pre class="example">n = 20;
+A = toeplitz (sparse ([1, 1], [1, 2], [2, 1] * n ^ 2, 1, n))  + ...
+    toeplitz (sparse (1, 2, -1, 1, n) * n / 2, ...
+    sparse (1, 2, 1, 1, n) * n / 2);
+b = A * ones (n, 1);
+restart = 5;
+[M1, M2] = ilu (A); # in this tridiag case it corresponds to chol (A)'
+M = M1 * M2;
+Afun = @(x) A * x;
+Mfun = @(x) M \ x;
+M1fun = @(x) M1 \ x;
+M2fun = @(x) M2 \ x;
+</pre></div>
+
+<p><small>EXAMPLE 1:</small> simplest usage of <code>cgs</code>
+</p>
+<div class="example">
+<pre class="example">x = cgs (A, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 2:</small> <code>cgs</code> with a function which computes
+<code><var>A</var> * <var>x</var></code>
+</p>
+<div class="example">
+<pre class="example">x = cgs (Afun, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 3:</small> <code>cgs</code> with a preconditioner matrix <var>M</var>
+</p>
+<div class="example">
+<pre class="example">x = cgs (A, b, [], 1e-06, n, M)
+</pre></div>
+
+<p><small>EXAMPLE 4:</small> <code>cgs</code> with a function as preconditioner
+</p>
+<div class="example">
+<pre class="example">x = cgs (Afun, b, 1e-6, n, Mfun)
+</pre></div>
+
+<p><small>EXAMPLE 5:</small> <code>cgs</code> with preconditioner matrices <var>M1</var>
+and <var>M2</var>
+</p>
+<div class="example">
+<pre class="example">x = cgs (A, b, [], 1e-6, n, M1, M2)
+</pre></div>
+
+<p><small>EXAMPLE 6:</small> <code>cgs</code> with functions as preconditioners
+</p>
+<div class="example">
+<pre class="example">x = cgs (Afun, b, 1e-6, n, M1fun, M2fun)
+</pre></div>
+
+<p><small>EXAMPLE 7:</small> <code>cgs</code> with as input a function requiring an argument
+</p>
+<div class="example">
+<pre class="example">function y = Ap (A, x, z) # compute A^z * x
+   y = x;
+   for i = 1:z
+     y = A * y;
+   endfor
+ endfunction
+Apfun = @(x, string, p) Ap (A, x, string, p);
+x = cgs (Apfun, b, [], [], [], [], [], 2);
+</pre></div>
+
+<p><small>EXAMPLE 8:</small> explicit example to show that <code>cgs</code> uses a
+right preconditioner
+</p>
+<div class="example">
+<pre class="example">[M1, M2] = ilu (A + 0.3 * eye (n)); # factorization of A perturbed
+M = M1 * M2;
+
+## reference solution computed by cgs after one iteration
+[x_ref, fl] = cgs (A, b, [], 1, M)
+
+## right preconditioning
+[y, fl] = cgs (A / M, b, [], 1)
+x = M \ y # compare x and x_ref
+
+</pre></div>
+
+<p>References:
+</p>
+<ol>
+<li> Y. Saad, <cite>Iterative Methods for Sparse Linear Systems</cite>,
+Second edition, 2003, SIAM
+
+</li></ol>
+
+
+<p><strong>See also:</strong> <a href="Iterative-Techniques.html#XREFpcg">pcg</a>, <a href="#XREFbicgstab">bicgstab</a>, <a href="#XREFbicg">bicg</a>, <a href="#XREFgmres">gmres</a>, <a href="#XREFqmr">qmr</a>, <a href="#XREFtfqmr">tfqmr</a>.
+</p></dd></dl>
+
+
+<a name="XREFgmres"></a><dl>
+<dt><a name="index-gmres"></a><em><var>x</var> =</em> <strong>gmres</strong> <em>(<var>A</var>, <var>b</var>, <var>restart</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-gmres-1"></a><em><var>x</var> =</em> <strong>gmres</strong> <em>(<var>A</var>, <var>b</var>, <var>restart</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>, [], <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-gmres-2"></a><em>[<var>x</var>, <var>flag</var>, <var>relres</var>, <var>iter</var>, <var>resvec</var>] =</em> <strong>gmres</strong> <em>(<var>A</var>, <var>b</var>, &hellip;)</em></dt>
+<dd><p>Solve <code>A x = b</code> using the Preconditioned GMRES iterative method with
+restart, a.k.a. PGMRES(restart).
+</p>
+<p>The input arguments are:
+</p>
+<ul class="no-bullet">
+<li>- <var>A</var> is the matrix of the linear system and it must be square.
+<var>A</var> can be passed as a matrix, function handle, or inline
+function <code>Afun</code> such that <code>Afun(x) = A * x</code>.  Additional
+parameters to <code>Afun</code> are passed after <var>x0</var>.
+
+</li><li>- <var>b</var> is the right hand side vector.  It must be a column vector
+with the same numbers of rows as <var>A</var>.
+
+</li><li>- <var>restart</var> is the number of iterations before that the
+method restarts.  If it is [] or N = numel (b), then the restart
+is not applied.
+
+</li><li>- <var>tol</var> is the required relative tolerance for the
+preconditioned residual error,
+<code>inv (<var>M</var>) * (<var>b</var> - <var>a</var> * <var>x</var>)</code>.  The iteration
+stops if <code>norm (inv (<var>M</var>) * (<var>b</var> - <var>a</var> * <var>x</var>))
+&le; <var>tol</var> * norm (inv (<var>M</var>) * <var>B</var>)</code>.  If <var>tol</var> is
+omitted or empty, then a tolerance of 1e-6 is used.
+
+</li><li>- <var>maxit</var> is the maximum number of outer iterations, if not given or
+set to [], then the default value <code>min (10, <var>N</var> / <var>restart</var>)</code>
+is used.
+Note that, if <var>restart</var> is empty, then <var>maxit</var> is the maximum number
+of iterations.  If <var>restart</var> and <var>maxit</var> are not empty, then
+the maximum number of iterations is <code><var>restart</var> * <var>maxit</var></code>.
+If both <var>restart</var> and <var>maxit</var> are empty, then the maximum
+number of iterations is set to <code>min (10, <var>N</var>)</code>.
+
+</li><li>- <var>M1</var>, <var>M2</var> are the preconditioners.  The preconditioner
+<var>M</var> is given as <code>M = M1 * M2</code>.  Both <var>M1</var> and <var>M2</var> can
+be passed as a matrix, function handle, or inline function <code>g</code> such
+that <code>g(x) = M1 \ x</code> or <code>g(x) = M2 \ x</code>.  If <var>M1</var> is [] or not
+given, then the preconditioner is not applied.
+The technique used is the left-preconditioning, i.e., it is solved
+<code>inv(<var>M</var>) * <var>A</var> * <var>x</var> = inv(<var>M</var>) * <var>b</var></code> instead of
+<code><var>A</var> * <var>x</var> = <var>b</var></code>.
+
+</li><li>- <var>x0</var> is the initial guess,
+if not given or set to [], then the default value
+<code>zeros (size (<var>b</var>))</code> is used.
+
+</li></ul>
+
+<p>The arguments which follow <var>x0</var> are treated as parameters, and passed in
+a proper way to any of the functions (<var>A</var> or <var>M</var> or
+<var>M1</var> or <var>M2</var>) which are passed to <code>gmres</code>.
+</p>
+<p>The outputs are:
+</p>
+<ul class="no-bullet">
+<li>- <var>x</var> the computed approximation.  If the method does not
+converge, then it is the iterated with minimum residual.
+
+</li><li>- <var>flag</var> indicates the exit status:
+
+<dl compact="compact">
+<dt>0 : iteration converged to within the specified tolerance</dt>
+<dt>1 : maximum number of iterations exceeded</dt>
+<dt>2 : the preconditioner matrix is singular</dt>
+<dt>3 : algorithm reached stagnation (the relative difference between two</dt>
+<dd><p>consecutive iterations is less than eps)
+</p></dd>
+</dl>
+
+</li><li>- <var>relres</var> is the value of the relative preconditioned
+residual of the approximation <var>x</var>.
+
+</li><li>- <var>iter</var> is a vector containing the number of outer iterations and
+inner iterations performed to compute <var>x</var>.  That is:
+
+<ul>
+<li> <var>iter(1)</var>: number of outer iterations, i.e., how many
+times the method restarted.  (if <var>restart</var> is empty or <var>N</var>,
+then it is 1, if not 1 &le; <var>iter(1)</var> &le; <var>maxit</var>).
+
+</li><li> <var>iter(2)</var>: the number of iterations performed before the
+restart, i.e., the method restarts when
+<code><var>iter(2)</var> = <var>restart</var></code>.  If <var>restart</var> is empty or
+<var>N</var>, then 1 &le; <var>iter(2)</var> &le; <var>maxit</var>.
+</li></ul>
+
+<p>To be more clear, the approximation <var>x</var> is computed at the iteration
+<code>(<var>iter(1)</var> - 1) * <var>restart</var> + <var>iter(2)</var></code>.
+Since the output <var>x</var> corresponds to the minimal preconditioned
+residual solution, the total number of iterations that
+the method performed is given by <code>length (resvec) - 1</code>.
+</p>
+</li><li>- <var>resvec</var> is a vector containing the preconditioned
+relative residual at each iteration, including the 0-th iteration
+<code>norm (<var>A</var> * <var>x0</var> - <var>b</var>)</code>.
+</li></ul>
+
+<p>Let us consider a trivial problem with a tridiagonal matrix
+</p>
+<div class="example">
+<pre class="example">n = 20;
+A = toeplitz (sparse ([1, 1], [1, 2], [2, 1] * n ^ 2, 1, n))  + ...
+    toeplitz (sparse (1, 2, -1, 1, n) * n / 2, ...
+    sparse (1, 2, 1, 1, n) * n / 2);
+b = A * ones (n, 1);
+restart = 5;
+[M1, M2] = ilu (A); # in this tridiag case, it corresponds to lu (A)
+M = M1 * M2;
+Afun = @(x) A * x;
+Mfun = @(x) M \ x;
+M1fun = @(x) M1 \ x;
+M2fun = @(x) M2 \ x;
+</pre></div>
+
+<p><small>EXAMPLE 1:</small> simplest usage of <code>gmres</code>
+</p>
+<div class="example">
+<pre class="example">x = gmres (A, b, [], [], n)
+</pre></div>
+
+<p><small>EXAMPLE 2:</small> <code>gmres</code> with a function which computes
+<code><var>A</var> * <var>x</var></code>
+</p>
+<div class="example">
+<pre class="example">x = gmres (Afun, b, [], [], n)
+</pre></div>
+
+<p><small>EXAMPLE 3:</small> usage of <code>gmres</code> with the restart
+</p>
+<div class="example">
+<pre class="example">x = gmres (A, b, restart);
+</pre></div>
+
+<p><small>EXAMPLE 4:</small> <code>gmres</code> with a preconditioner matrix <var>M</var>
+with and without restart
+</p>
+<div class="example">
+<pre class="example">x = gmres (A, b, [], 1e-06, n, M)
+x = gmres (A, b, restart, 1e-06, n, M)
+</pre></div>
+
+<p><small>EXAMPLE 5:</small> <code>gmres</code> with a function as preconditioner
+</p>
+<div class="example">
+<pre class="example">x = gmres (Afun, b, [], 1e-6, n, Mfun)
+</pre></div>
+
+<p><small>EXAMPLE 6:</small> <code>gmres</code> with preconditioner matrices <var>M1</var>
+and <var>M2</var>
+</p>
+<div class="example">
+<pre class="example">x = gmres (A, b, [], 1e-6, n, M1, M2)
+</pre></div>
+
+<p><small>EXAMPLE 7:</small> <code>gmres</code> with functions as preconditioners
+</p>
+<div class="example">
+<pre class="example">x = gmres (Afun, b, 1e-6, n, M1fun, M2fun)
+</pre></div>
+
+<p><small>EXAMPLE 8:</small> <code>gmres</code> with as input a function requiring an argument
+</p>
+<div class="example">
+<pre class="example">  function y = Ap (A, x, p) # compute A^p * x
+     y = x;
+     for i = 1:p
+       y = A * y;
+     endfor
+  endfunction
+Apfun = @(x, p) Ap (A, x, p);
+x = gmres (Apfun, b, [], [], [], [], [], [], 2);
+</pre></div>
+
+<p><small>EXAMPLE 9:</small> explicit example to show that <code>gmres</code> uses a
+left preconditioner
+</p>
+<div class="example">
+<pre class="example">[M1, M2] = ilu (A + 0.1 * eye (n)); # factorization of A perturbed
+M = M1 * M2;
+
+## reference solution computed by gmres after two iterations
+[x_ref, fl] = gmres (A, b, [], [], 1, M)
+
+## left preconditioning
+[x, fl] = gmres (M \ A, M \ b, [], [], 1)
+x # compare x and x_ref
+
+</pre></div>
+
+<p>References:
+</p>
+<ol>
+<li> Y. Saad, <cite>Iterative Methods for Sparse Linear
+Systems</cite>, Second edition, 2003, SIAM
+
+</li></ol>
+
+<p><strong>See also:</strong> <a href="#XREFbicg">bicg</a>, <a href="#XREFbicgstab">bicgstab</a>, <a href="#XREFcgs">cgs</a>, <a href="Iterative-Techniques.html#XREFpcg">pcg</a>, <a href="Iterative-Techniques.html#XREFpcr">pcr</a>, <a href="#XREFqmr">qmr</a>, <a href="#XREFtfqmr">tfqmr</a>.
+</p></dd></dl>
+
+
+<a name="XREFqmr"></a><dl>
+<dt><a name="index-qmr"></a><em><var>x</var> =</em> <strong>qmr</strong> <em>(<var>A</var>, <var>b</var>, <var>rtol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>)</em></dt>
+<dt><a name="index-qmr-1"></a><em><var>x</var> =</em> <strong>qmr</strong> <em>(<var>A</var>, <var>b</var>, <var>rtol</var>, <var>maxit</var>, <var>P</var>)</em></dt>
+<dt><a name="index-qmr-2"></a><em>[<var>x</var>, <var>flag</var>, <var>relres</var>, <var>iter</var>, <var>resvec</var>] =</em> <strong>qmr</strong> <em>(<var>A</var>, <var>b</var>, &hellip;)</em></dt>
+<dd><p>Solve <code>A x = b</code> using the Quasi-Minimal Residual iterative method
+(without look-ahead).
+</p>
+<ul class="no-bullet">
+<li>- <var>rtol</var> is the relative tolerance, if not given or set to [] the
+default value 1e-6 is used.
+
+</li><li>- <var>maxit</var> the maximum number of outer iterations, if not given or
+set to [] the default value <code>min (20, numel (b))</code> is used.
+
+</li><li>- <var>x0</var> the initial guess, if not given or set to [] the default
+value <code>zeros (size (b))</code> is used.
+</li></ul>
+
+<p><var>A</var> can be passed as a matrix or as a function handle or inline
+function <code>f</code> such that <code>f(x, &quot;notransp&quot;) = A*x</code> and
+<code>f(x, &quot;transp&quot;) = A'*x</code>.
+</p>
+<p>The preconditioner <var>P</var> is given as <code>P = M1 * M2</code>.  Both <var>M1</var>
+and <var>M2</var> can be passed as a matrix or as a function handle or inline
+function <code>g</code> such that <code>g(x, &quot;notransp&quot;) = M1 \ x</code> or
+<code>g(x, &quot;notransp&quot;) = M2 \ x</code> and <code>g(x, &quot;transp&quot;) = M1' \ x</code> or
+<code>g(x, &quot;transp&quot;) = M2' \ x</code>.
+</p>
+<p>If called with more than one output parameter
+</p>
+<ul class="no-bullet">
+<li>- <var>flag</var> indicates the exit status:
+
+<ul class="no-bullet">
+<li>- 0: iteration converged to the within the chosen tolerance
+
+</li><li>- 1: the maximum number of iterations was reached before convergence
+
+</li><li>- 3: the algorithm reached stagnation
+</li></ul>
+
+<p>(the value 2 is unused but skipped for compatibility).
+</p>
+</li><li>- <var>relres</var> is the final value of the relative residual.
+
+</li><li>- <var>iter</var> is the number of iterations performed.
+
+</li><li>- <var>resvec</var> is a vector containing the residual norms at each
+      iteration.
+</li></ul>
+
+<p>References:
+</p>
+<ol>
+<li> R. Freund and N. Nachtigal, <cite>QMR: a quasi-minimal residual
+method for non-Hermitian linear systems</cite>, Numerische Mathematik,
+1991, 60, pp. 315-339.
+
+</li><li> R. Barrett, M. Berry, T. Chan, J. Demmel, J. Donato, J. Dongarra,
+V. Eijkhour, R. Pozo, C. Romine, and H. van der Vorst,
+<cite>Templates for the solution of linear systems: Building blocks
+for iterative methods</cite>, SIAM, 2nd ed., 1994.
+</li></ol>
+
+
+<p><strong>See also:</strong> <a href="#XREFbicg">bicg</a>, <a href="#XREFbicgstab">bicgstab</a>, <a href="#XREFcgs">cgs</a>, <a href="#XREFgmres">gmres</a>, <a href="Iterative-Techniques.html#XREFpcg">pcg</a>.
+</p></dd></dl>
+
+
+<a name="XREFtfqmr"></a><dl>
+<dt><a name="index-tfqmr"></a><em><var>x</var> =</em> <strong>tfqmr</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M1</var>, <var>M2</var>, <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-tfqmr-1"></a><em><var>x</var> =</em> <strong>tfqmr</strong> <em>(<var>A</var>, <var>b</var>, <var>tol</var>, <var>maxit</var>, <var>M</var>, [], <var>x0</var>, &hellip;)</em></dt>
+<dt><a name="index-tfqmr-2"></a><em>[<var>x</var>, <var>flag</var>, <var>relres</var>, <var>iter</var>, <var>resvec</var>] =</em> <strong>tfqmr</strong> <em>(<var>A</var>, <var>b</var>, &hellip;)</em></dt>
+<dd><p>Solve <code>A x = b</code> using the Transpose-Tree qmr method, based on the cgs.
+</p>
+<p>The input parameters are:
+</p>
+<ul class="no-bullet">
+<li>- <var>A</var> is the matrix of the linear system and it must be square.
+<var>A</var> can be passed as a matrix, function handle, or inline
+function <code>Afun</code> such that <code>Afun(x) = A * x</code>.  Additional
+parameters to <code>Afun</code> are passed after <var>x0</var>.
+
+</li><li>- <var>b</var> is the right hand side vector.  It must be a column vector
+with the same number of rows as <var>A</var>.
+
+</li><li>- <var>tol</var> is the relative tolerance, if not given or set to [] the
+default value 1e-6 is used.
+
+</li><li>- <var>maxit</var> the maximum number of outer iterations, if not given or
+set to [] the default value <code>min (20, numel (b))</code> is used.  To be
+compatible, since the method as different behaviors in the iteration
+number is odd or even, is considered as iteration in <code>tfqmr</code> the
+entire odd-even cycle.  That is, to make an entire iteration, the algorithm
+performs two sub-iterations: the odd one and the even one.
+
+</li><li>- <var>M1</var>, <var>M2</var> are the preconditioners.  The preconditioner
+<var>M</var> is given as <code>M = M1 * M2</code>.
+Both <var>M1</var> and <var>M2</var> can be passed as a matrix or as a function
+handle or inline function <code>g</code> such that <code>g(x) = M1 \ x</code> or
+<code>g(x) = M2 \ x</code>.
+The technique used is the right-preconditioning, i.e., it is solved
+<code>A*inv(M)*y = b</code> and then <code>x = inv(M)*y</code>, instead of
+<code>A x = b</code>.
+
+</li><li>- <var>x0</var> the initial guess, if not given or set to [] the default
+value <code>zeros (size (b))</code> is used.
+
+</li></ul>
+
+<p>The arguments which follow <var>x0</var> are treated as parameters, and passed in
+a proper way to any of the functions (<var>A</var> or <var>M</var>) which are passed
+to <code>tfqmr</code>.
+</p>
+<p>The output parameters are:
+</p>
+<ul class="no-bullet">
+<li>- <var>x</var> is the approximation computed.  If the method doesn&rsquo;t
+converge then it is the iterated with the minimum residual.
+
+</li><li>- <var>flag</var> indicates the exit status:
+
+<ul class="no-bullet">
+<li>- 0: iteration converged to the within the chosen tolerance
+
+</li><li>- 1: the maximum number of iterations was reached before convergence
+
+</li><li>- 2: the preconditioner matrix is singular
+
+</li><li>- 3: the algorithm reached stagnation
+
+</li><li>- 4: the algorithm can&rsquo;t continue due to a division by zero
+</li></ul>
+
+</li><li>- <var>relres</var> is the relative residual obtained as
+<code>(<var>A</var>*<var>x</var>-<var>b</var>) / <code>norm (<var>b</var>)</code></code>.
+
+</li><li>- <var>iter</var> is the iteration which <var>x</var> is
+computed.
+
+</li><li>- <var>resvec</var> is a vector containing the residual at each iteration
+(including <code>norm (b - A x0)</code>).
+Doing <code>length (<var>resvec</var>) - 1</code> is possible to see the
+total number of iterations performed.
+
+</li></ul>
+
+<p>Let us consider a trivial problem with a tridiagonal matrix
+</p>
+<div class="example">
+<pre class="example">n = 20;
+A = toeplitz (sparse ([1, 1], [1, 2], [2, 1] * n ^ 2, 1, n))  + ...
+    toeplitz (sparse (1, 2, -1, 1, n) * n / 2, ...
+    sparse (1, 2, 1, 1, n) * n / 2);
+b = A * ones (n, 1);
+restart = 5;
+[M1, M2] = ilu (A); # in this tridiag case it corresponds to chol (A)'
+M = M1 * M2;
+Afun = @(x) A * x;
+Mfun = @(x) M \ x;
+M1fun = @(x) M1 \ x;
+M2fun = @(x) M2 \ x;
+</pre></div>
+
+<p><small>EXAMPLE 1:</small> simplest usage of <code>tfqmr</code>
+</p>
+<div class="example">
+<pre class="example">x = tfqmr (A, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 2:</small> <code>tfqmr</code> with a function which computes
+<code><var>A</var> * <var>x</var></code>
+</p>
+<div class="example">
+<pre class="example">x = tfqmr (Afun, b, [], n)
+</pre></div>
+
+<p><small>EXAMPLE 3:</small> <code>tfqmr</code> with a preconditioner matrix <var>M</var>
+</p>
+<div class="example">
+<pre class="example">x = tfqmr (A, b, [], 1e-06, n, M)
+</pre></div>
+
+<p><small>EXAMPLE 4:</small> <code>tfqmr</code> with a function as preconditioner
+</p>
+<div class="example">
+<pre class="example">x = tfqmr (Afun, b, 1e-6, n, Mfun)
+</pre></div>
+
+<p><small>EXAMPLE 5:</small> <code>tfqmr</code> with preconditioner matrices <var>M1</var>
+and <var>M2</var>
+</p>
+<div class="example">
+<pre class="example">x = tfqmr (A, b, [], 1e-6, n, M1, M2)
+</pre></div>
+
+<p><small>EXAMPLE 6:</small> <code>tfmqr</code> with functions as preconditioners
+</p>
+<div class="example">
+<pre class="example">x = tfqmr (Afun, b, 1e-6, n, M1fun, M2fun)
+</pre></div>
+
+<p><small>EXAMPLE 7:</small> <code>tfqmr</code> with as input a function requiring an argument
+</p>
+<div class="example">
+<pre class="example">function y = Ap (A, x, z) # compute A^z * x
+   y = x;
+   for i = 1:z
+     y = A * y;
+   endfor
+ endfunction
+Apfun = @(x, string, p) Ap (A, x, string, p);
+x = tfqmr (Apfun, b, [], [], [], [], [], 2);
+</pre></div>
+
+<p><small>EXAMPLE 8:</small> explicit example to show that <code>tfqmr</code> uses a
+right preconditioner
+</p>
+<div class="example">
+<pre class="example">[M1, M2] = ilu (A + 0.3 * eye (n)); # factorization of A perturbed
+M = M1 * M2;
+
+## reference solution computed by tfqmr after one iteration
+[x_ref, fl] = tfqmr (A, b, [], 1, M)
+
+## right preconditioning
+[y, fl] = tfqmr (A / M, b, [], 1)
+x = M \ y # compare x and x_ref
+
+</pre></div>
+
+<p>References:
+</p>
+<ol>
+<li> Y. Saad, <cite>Iterative Methods for Sparse Linear Systems</cite>,
+Second edition, 2003, SIAM
+
+</li></ol>
+
+
+<p><strong>See also:</strong> <a href="#XREFbicg">bicg</a>, <a href="#XREFbicgstab">bicgstab</a>, <a href="#XREFcgs">cgs</a>, <a href="#XREFgmres">gmres</a>, <a href="Iterative-Techniques.html#XREFpcg">pcg</a>, <a href="#XREFqmr">qmr</a>, <a href="Iterative-Techniques.html#XREFpcr">pcr</a>.
+</p>
+</dd></dl>
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Functions-of-a-Matrix.html#Functions-of-a-Matrix" accesskey="p" rel="prev">Functions of a Matrix</a>, Up: <a href="Linear-Algebra.html#Linear-Algebra" accesskey="u" rel="up">Linear Algebra</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="Concept-Index.html#Concept-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+</body>
+</html>
