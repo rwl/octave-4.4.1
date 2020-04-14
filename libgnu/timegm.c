@@ -36,5 +36,6 @@ timegm (struct tm *tmp)
 {
   static mktime_offset_t gmtime_offset;
   tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
+//  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
+  return mktime (tmp);
 }

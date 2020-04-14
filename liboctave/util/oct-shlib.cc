@@ -48,7 +48,7 @@ extern void * dlsym (void *, const char *);
 extern int dlclose (void *);
 #  endif
 #elif defined (HAVE_SHL_LOAD_API)
-#  include <dl.h>
+//#  include <dl.h>
 #elif defined (HAVE_LOADLIBRARY_API)
 #  define WIN32_LEAN_AND_MEAN 1
 #  include <windows.h>
@@ -158,7 +158,7 @@ namespace octave
 
   dynamic_library::dynlib_rep dynamic_library::nil_rep;
 
-#if defined (HAVE_DLOPEN_API)
+//#if defined (HAVE_DLOPEN_API)
 
   class
   octave_dlopen_shlib : public dynamic_library::dynlib_rep
@@ -217,25 +217,25 @@ namespace octave
         return;
       }
 
-    library = dlopen (file.c_str (), flags);
-
-    if (! library)
-      {
-        const char *msg = dlerror ();
-
-        if (msg)
-          (*current_liboctave_error_handler) ("%s: failed to load: %s",
-                                              file.c_str (), msg);
-        else
-          (*current_liboctave_error_handler) ("%s: failed to load",
-                                              file.c_str ());
-      }
+//    library = dlopen (file.c_str (), flags);
+//
+//    if (! library)
+//      {
+//        const char *msg = dlerror ();
+//
+//        if (msg)
+//          (*current_liboctave_error_handler) ("%s: failed to load: %s",
+//                                              file.c_str (), msg);
+//        else
+//          (*current_liboctave_error_handler) ("%s: failed to load",
+//                                              file.c_str ());
+//      }
   }
 
   octave_dlopen_shlib::~octave_dlopen_shlib (void)
   {
-    if (library)
-      dlclose (library);
+//    if (library)
+//      dlclose (library);
   }
 
   void *
@@ -244,24 +244,25 @@ namespace octave
   {
     void *function = nullptr;
 
-    if (! is_open ())
-      (*current_liboctave_error_handler)
-        ("shared library %s is not open", file.c_str ());
-
-    std::string sym_name = name;
-
-    if (mangler)
-      sym_name = mangler (name);
-
-    if (search_all_loaded)
-      function = dlsym (RTLD_DEFAULT, sym_name.c_str ());
-    else
-      function = dlsym (library, sym_name.c_str ());
+//    if (! is_open ())
+//      (*current_liboctave_error_handler)
+//        ("shared library %s is not open", file.c_str ());
+//
+//    std::string sym_name = name;
+//
+//    if (mangler)
+//      sym_name = mangler (name);
+//
+//    if (search_all_loaded)
+//      function = dlsym (RTLD_DEFAULT, sym_name.c_str ());
+//    else
+//      function = dlsym (library, sym_name.c_str ());
 
     return function;
   }
 
-#elif defined (HAVE_SHL_LOAD_API)
+//#elif defined (HAVE_SHL_LOAD_API)
+#if defined (HAVE_SHL_LOAD_API)
 
   class
   octave_shl_load_shlib : public dynamic_library::dynlib_rep
@@ -285,7 +286,8 @@ namespace octave
 
   private:
 
-    shl_t library;
+//    shl_t library;
+    void* library;
   };
 
   octave_shl_load_shlib::octave_shl_load_shlib (const std::string& f)
@@ -299,7 +301,7 @@ namespace octave
         return;
       }
 
-    library = shl_load (file.c_str (), BIND_IMMEDIATE, 0L);
+//    library = shl_load (file.c_str (), BIND_IMMEDIATE, 0L);
 
     if (! library)
       {
@@ -310,8 +312,8 @@ namespace octave
 
   octave_shl_load_shlib::~octave_shl_load_shlib (void)
   {
-    if (library)
-      shl_unload (library);
+//    if (library)
+//      shl_unload (library);
   }
 
   void *
@@ -328,14 +330,14 @@ namespace octave
 
     if (mangler)
       sym_name = mangler (name);
-
+/*
     if (search_all_loaded)
       int status = shl_findsym (nullptr, sym_name.c_str (),
                                 TYPE_UNDEFINED, &function);
     else
       int status = shl_findsym (&library, sym_name.c_str (),
                                 TYPE_UNDEFINED, &function);
-
+*/
     return function;
   }
 
@@ -605,17 +607,17 @@ namespace octave
   dynamic_library::dynlib_rep *
   dynamic_library::dynlib_rep::new_instance (const std::string& f)
   {
-#if defined (HAVE_DLOPEN_API)
+//#if defined (HAVE_DLOPEN_API)
     return new octave_dlopen_shlib (f);
-#elif defined (HAVE_SHL_LOAD_API)
-    return new octave_shl_load_shlib (f);
-#elif defined (HAVE_LOADLIBRARY_API)
-    return new octave_w32_shlib (f);
-#elif defined (HAVE_DYLD_API)
-    return new octave_dyld_shlib (f);
-#else
-    (*current_liboctave_error_handler)
-      ("support for dynamically loaded libraries was unavailable or disabled when liboctave was built");
-#endif
+//#elif defined (HAVE_SHL_LOAD_API)
+//    return new octave_shl_load_shlib (f);
+//#elif defined (HAVE_LOADLIBRARY_API)
+//    return new octave_w32_shlib (f);
+//#elif defined (HAVE_DYLD_API)
+//    return new octave_dyld_shlib (f);
+//#else
+//    (*current_liboctave_error_handler)
+//      ("support for dynamically loaded libraries was unavailable or disabled when liboctave was built");
+//#endif
   }
 }

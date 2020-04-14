@@ -185,6 +185,6 @@ c         call error handler if necessary.
 c
       lvl = 0
 10    if(ier.eq.6) lvl = 1
-      if(ier.ne.0) call xerror('abnormal return from  qagi',26,ier,lvl)
+c      if(ier.ne.0) call xerror('abnormal return from  qagi',26,ier,lvl)  FIXME
       return
       end

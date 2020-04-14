@@ -46,28 +46,6 @@ ftello (FILE *fp)
     return -1;
 #endif
 
-#if FTELLO_BROKEN_AFTER_SWITCHING_FROM_READ_TO_WRITE /* Solaris */
-  /* The Solaris stdio leaves the _IOREAD flag set after reading from a file
-     reaches EOF and the program then starts writing to the file.  ftello
-     gets confused by this.  */
-  if (fp_->_flag & _IOWRT)
-    {
-      off_t pos;
-
-      /* Call ftello nevertheless, for the side effects that it does on fp.  */
-      ftello (fp);
-
-      /* Compute the file position ourselves.  */
-      pos = lseek (fileno (fp), (off_t) 0, SEEK_CUR);
-      if (pos >= 0)
-        {
-          if ((fp_->_flag & _IONBF) == 0 && fp_->_base != NULL)
-            pos += fp_->_ptr - fp_->_base;
-        }
-      return pos;
-    }
-#endif
-
 #if defined __SL64 && defined __SCLE /* Cygwin */
   if ((fp->_flags & __SL64) == 0)
     {

@@ -119,7 +119,8 @@ int strerror_r (int errnum, char *buf, size_t buflen);
 #  endif
 # endif
 
-#define program_name getprogname ()
+//#define program_name getprogname ()
+#define program_name "prog"
 
 # if GNULIB_STRERROR_R_POSIX || HAVE_STRERROR_R || defined strerror_r
 #  define __strerror_r strerror_r

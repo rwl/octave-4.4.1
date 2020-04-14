@@ -535,7 +535,7 @@ octave_pclose (FILE *f)
 int
 octave_kbhit (bool wait)
 {
-#if defined (HAVE__KBHIT) && defined (HAVE__GETCH)
+/*#if defined (HAVE__KBHIT) && defined (HAVE__GETCH)
   // This essentially means we are on a Windows system.
   int c;
 
@@ -545,6 +545,7 @@ octave_kbhit (bool wait)
     c = (! _kbhit ()) ? 0 : _getch ();
 
 #else
+*/
   raw_mode (true, wait);
 
   // Get current handler.
@@ -565,7 +566,7 @@ octave_kbhit (bool wait)
   octave::set_interrupt_handler (saved_interrupt_handler, true);
 
   raw_mode (false, true);
-#endif
+//#endif
 
   return c;
 }

@@ -681,25 +681,25 @@ octave_raise_wrapper (int signum)
 static void *
 signal_watcher (void *arg)
 {
-  octave_sig_handler *handler = (octave_sig_handler *) arg;
-
-  octave_unblock_async_signals ();
-
-  const sigset_t *async_signals = octave_async_signals ();
-
-  while (1)
-    {
-      int sig_caught;
-
-      if (sigwait (async_signals, &sig_caught))
-        {
-          // FIXME: what else should we do?
-          abort ();
-        }
-
-      // Let handler have complete control over what to do.
-      (*handler) (sig_caught);
-    }
+//  octave_sig_handler *handler = (octave_sig_handler *) arg;
+//
+//  octave_unblock_async_signals ();
+//
+//  const sigset_t *async_signals = octave_async_signals ();
+//
+//  while (1)
+//    {
+//      int sig_caught;
+//
+//      if (sigwait (async_signals, &sig_caught))
+//        {
+//          // FIXME: what else should we do?
+//          abort ();
+//        }
+//
+//      // Let handler have complete control over what to do.
+//      (*handler) (sig_caught);
+//    }
 }
 #endif
 

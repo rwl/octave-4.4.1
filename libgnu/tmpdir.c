@@ -53,7 +53,7 @@
 # define struct_stat64 struct stat64
 #else
 # define struct_stat64 struct stat
-# define __libc_secure_getenv secure_getenv
+# define __libc_secure_getenv getenv
 # define __xstat64(version, path, buf) stat (path, buf)
 #endif
 

@@ -94,13 +94,13 @@ namespace octave
     group
     group::getgrent (std::string& msg)
     {
-#if defined (HAVE_GETGRENT)
-      msg = "";
-      return group (::getgrent (), msg);
-#else
+//#if defined (HAVE_GETGRENT)
+//      msg = "";
+//      return group (::getgrent (), msg);
+//#else
       msg = NOT_SUPPORTED ("getgrent");
       return group ();
-#endif
+//#endif
     }
 
     group
@@ -113,15 +113,15 @@ namespace octave
     group
     group::getgrgid (gid_t gid, std::string& msg)
     {
-#if defined (HAVE_GETGRGID)
-      msg = "";
-      return group (::getgrgid (gid), msg);
-#else
+//#if defined (HAVE_GETGRGID)
+//      msg = "";
+//      return group (::getgrgid (gid), msg);
+//#else
       octave_unused_parameter (gid);
 
       msg = NOT_SUPPORTED ("getgruid");
       return group ();
-#endif
+//#endif
     }
 
     group
@@ -134,15 +134,15 @@ namespace octave
     group
     group::getgrnam (const std::string& nm, std::string& msg)
     {
-#if defined (HAVE_GETGRNAM)
-      msg = "";
-      return group (::getgrnam (nm.c_str ()), msg);
-#else
+//#if defined (HAVE_GETGRNAM)
+//      msg = "";
+//      return group (::getgrnam (nm.c_str ()), msg);
+//#else
       octave_unused_parameter (nm);
 
       msg = NOT_SUPPORTED ("getgrnam");
       return group ();
-#endif
+//#endif
     }
 
     int
@@ -155,14 +155,14 @@ namespace octave
     int
     group::setgrent (std::string& msg)
     {
-#if defined (HAVE_SETGRENT)
-      msg = "";
-      ::setgrent ();
-      return 0;
-#else
+//#if defined (HAVE_SETGRENT)
+//      msg = "";
+//      ::setgrent ();
+//      return 0;
+//#else
       msg = NOT_SUPPORTED ("setgrent");
       return -1;
-#endif
+//#endif
     }
 
     int
@@ -175,14 +175,14 @@ namespace octave
     int
     group::endgrent (std::string& msg)
     {
-#if defined (HAVE_ENDGRENT)
-      msg = "";
-      ::endgrent ();
-      return 0;
-#else
+//#if defined (HAVE_ENDGRENT)
+//      msg = "";
+//      ::endgrent ();
+//      return 0;
+//#else
       msg = NOT_SUPPORTED ("endgrent");
       return -1;
-#endif
+//#endif
     }
 
     group::group (void *p, std::string& msg)

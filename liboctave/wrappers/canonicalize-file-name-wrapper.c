@@ -36,5 +36,6 @@ along with Octave; see the file COPYING.  If not, see
 char *
 octave_canonicalize_file_name_wrapper (const char *name)
 {
-  return canonicalize_file_name (name);
+//  return canonicalize_file_name (name);
+  return realpath (name, NULL);
 }
